@@ -1,0 +1,102 @@
+{
+    "nav":{
+        "upNav": {
+            "slug": {
+                "slug1": "make your",
+                "slug2": "business",
+                "slug3": "digital"
+            },
+            "blog": "Blog"
+        },
+        "nav":{
+            "sign":{
+                "signIn": "sign In",
+                "signup": "sign Up"
+            },
+            "welcom":"Welcome",
+            "profile":{
+                "profile": "Profile",
+                "setting": "Setting",
+                "help": "Help",
+                "logOut": "LogOut"
+            }
+        }
+    },
+    "home":{
+        "title": "Guide Ni",
+        "desc": "English Lorem ipsum just for testin dolor sit amet consectetur adipisicing elit. Odio aperiam nostrum repellat sunt provident pariatur non. Eos voluptate aperiam quidem minus recusandae? Quam tempora aut mollitia fugit consequuntur, vel officia orem ipsum dolor sit amet consectetur adipisicing elit. Odio aperiam nostrum repellat sunt provident pariatur non. Eos voluptate aperiam quidem minus recusandae? Quam tempora aut mollitia fugit consequuntur, vel officia?",
+        "button":"Get Started"
+    },
+    "categories":{
+        "title": "Jobs Categories",
+        "search": "search for a service"
+    },
+    "services":{
+        "title": "jobs",
+        "search": "search for a service"
+    },
+    "users":{
+        "title": "jobs Provider",
+        "filter": "filter",
+        "cardText":{
+            "totalNote": "Total Note",
+            "rate": "Rate",
+            "btnText": "See Profile"
+        }
+    },
+    "userInfo":{
+        "signAlert": "Sign In to see all the information",
+        "totalNote": "Total Note",
+        "rate": "Rate",
+        "feedBackOrder": "FeedBack",
+        "galerie": "Galerie",
+        "feedback": "feedback",
+        "feedbackWindow":{
+            "feedbackCall": "Rate Me",
+            "error1":"you need to enter a feedback before you submit",
+            "error2":"you need to set a rating",
+            "error3": "you can't rate this user, because you are not loged In or you already give a feedback"
+        }
+    },
+    "signIn":{
+        "title": "Login",
+        "email": "Email",
+        "password": "password",
+        "logInBtn": "Login",
+        "alert": "Don't have an account? create one"
+    },
+    "signUp":{
+        "title": "Sign up",
+        "user": "User",
+        "employe": "Employe",
+        "firstName": "FirstName",
+        "lastName": "LastName",
+        "phone": "Phone",
+        "city": "Select Your City",
+        "email": "Email",
+        "password": "password",
+        "signUpBtn": "Sign Up"
+    },
+    "setting":{
+        "fullName": "Full Name",
+        "email": "Email",
+        "password": "Password",
+        "repeatPass": "Confirm Password",
+        "phone": "Phone",
+        "facebook": "Facebook Account",
+        "instagram": "Instagram Account",
+        "youtube": "Youtube",
+        "personal": "Personal Information",
+        "contact": "Contact Information",
+        "website":"website"
+    },
+    "profile":{
+        "addJob": "Add Job",
+        "enterYourCategory": "enter your category",
+        "enteryourSubCategory":"enter your SubCategory",
+        "phoneNumber":"Phone Number",
+        "add":"Add",
+        "title":"Title",
+        "description":"Description"
+    }
+}

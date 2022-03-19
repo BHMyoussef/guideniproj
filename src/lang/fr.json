@@ -1,0 +1,102 @@
+{
+    "nav":{
+        "upNav": {
+            "slug": {
+                "slug1": "Rendre Ton",
+                "slug2": "travail",
+                "slug3": "digitale"
+            },
+            "blog": "Blog"
+        },
+        "nav":{
+            "sign":{
+                "signIn": "Se connecter",
+                "signup": "S'inscrire"
+            },
+            "welcom":"Bonjour",
+            "profile":{
+                "profile": "Profile",
+                "setting": "paramètre",
+                "help": "aide",
+                "logOut": "Se déconnecter"
+            }
+        }
+    },
+    "home":{
+        "title": "Guide Ni",
+        "desc": "French Lorem ipsum just for testin dolor sit amet consectetur adipisicing elit. Odio aperiam nostrum repellat sunt provident pariatur non. Eos voluptate aperiam quidem minus recusandae? Quam tempora aut mollitia fugit consequuntur, vel officia orem ipsum dolor sit amet consectetur adipisicing elit. Odio aperiam nostrum repellat sunt provident pariatur non. Eos voluptate aperiam quidem minus recusandae? Quam tempora aut mollitia fugit consequuntur, vel officia?",
+        "button":"Demarrer"
+    },
+    "categories":{
+        "title": "Categorie d'emplois",
+        "search": "Recharcher un service"
+    },
+    "services":{
+        "title": "Traveux",
+        "search": "Recharcher un service"
+    },
+    "users":{
+        "title": "Fournisseurs d'emplois",
+        "filter": "filtrer",
+        "cardText":{
+            "rate": "Rate",
+            "totalNote": "Note Totale",
+            "btnText": "voir profil"
+        }
+    },
+    "userInfo":{
+        "signAlert": "Connectez-vous pour voir toutes les informations",
+        "totalNote": "Note totale",
+        "feedBackOrder": "Évaluer",
+        "rate": "Rate",
+        "galerie": "Galerie",
+        "feedback": "FeedBack",
+        "feedbackWindow":{
+            "feedbackCall": "Note Moi",
+            "error1":"vous devez entrer un commentaire avant de soumettre",
+            "error2":"vous devez définir une note",
+            "error3": "vous ne pouvez pas évaluer cet utilisateur, car vous n'êtes pas connecté ou vous avez déjà donné un avis"
+        }
+    },
+    "signIn":{
+        "title": "Se connecter",
+        "email": "E-mail",
+        "password": "Le mot de passe",
+        "logInBtn": "Connexion",
+        "alert": "Vous n'avez pas de compte ? créer une"
+    },
+    "signUp":{
+        "title": "S'inscrire",
+        "user": "Utilisateur",
+        "employe": "Employé",
+        "firstName": "Prénom",
+        "lastName": "Nom de famille",
+        "phone": "Téléphoner",
+        "city": "Sélectionnez votre ville",
+        "email": "E-mail",
+        "password": "Le mot de passe",
+        "signUpBtn": "S'inscrire"
+    },
+    "setting":{
+        "fullName": "Nom Complete",
+        "email": "Email",
+        "password": "Mot de pass",
+        "repeatPass": "Confirmer le mot de passe",
+        "phone": "Téléphone",
+        "facebook": "Compte Facebook",
+        "instagram": "Compte Instagram",
+        "youtube": "Youtube",
+        "personal": "Données Personnelles",
+        "contact": "Coordonnées",
+        "website":"siteweb"
+    },
+    "profile":{
+        "addJob": "Ajouter votre travaille",
+        "enterYourCategory": "Entrez votre catégorie",
+        "enteryourSubCategory":"entrez votre sous-catégorie",
+        "phoneNumber":"Numéro de téléphone",
+        "add":"Aouter",
+        "title":"Titre",
+        "description":"Description"
+    }
+}
