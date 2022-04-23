@@ -36,7 +36,7 @@
         "search": "إبحث عن عمل"
     },
     "users":{
-        "title": "موظفون",
+        "title": "مزود خدمة",
         "filterPlaceholder": "اختر المدينة",
         "filter": "فرز",
         "cardText":{
@@ -68,8 +68,8 @@
     },
     "signUp":{
         "title": "التسجيل",
-        "user": "مستخدم",
-        "employe": "موظف",
+        "user": "زبون",
+        "employe": "مزود خدمة",
         "firstName": "اسم",
         "lastName": "اسم عائلة",
         "phone": "هاتف",
