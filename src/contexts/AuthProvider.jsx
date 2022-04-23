@@ -39,17 +39,14 @@ export default function AuthProvider({ children }) {
 				.then((result) => {
 					//get the current user
 					const user = result.user;
-					const [firstName,lastName] = user.displayName.split(" ");
-
 					const docData = {
-                        firstName: firstName + " " + lastName ,
-                        email: user.email,
-                        phone: user.phoneNumber,
-                        rank: 'Bronze',
-                        rating: 0,
-                        totalRating: 0,
-                        userId: user.uid
-                    }
+            email: user.email,
+            phone: user.phoneNumber,
+            rank: 'Bronze',
+            rating: 0,
+            totalRating: 0,
+            userId: user.uid
+          }
 					const newDoc = doc(firestore,`users/${user.uid}`);
 					setDoc(newDoc,docData)
 				  }).catch((error) => {
@@ -61,10 +58,7 @@ export default function AuthProvider({ children }) {
 				signInWithPopup(auth, facebookProvider)
 				.then((result) => {
 					const user = result.user;
-					const [firstName,lastName] = user.displayName.split(" ");
-
 					const docData = {
-                        firstName: firstName + " " + lastName ,
                         email: user.email,
                         phone: user.phoneNumber,
                         rank: 'Bronze',

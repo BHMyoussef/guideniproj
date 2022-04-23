@@ -82,6 +82,7 @@
         "fullName": "Nom Complete",
         "email": "Email",
         "password": "Mot de pass",
+        "addJob": "Ajouter votre travaille",
         "repeatPass": "Confirmer le mot de passe",
         "phone": "Téléphone",
         "facebook": "Compte Facebook",
@@ -97,7 +98,8 @@
 
     },
     "profile":{
-        "addJob": "Ajouter votre travaille",
+        "firstname": "Prenom",
+        "lastname": "Nom",
         "enterYourCategory": "Entrez votre catégorie",
         "enteryourSubCategory":"entrez votre sous-catégorie",
         "phoneNumber":"Numéro de téléphone",

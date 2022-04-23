@@ -1,7 +1,10 @@
 import { addDoc, collection, doc, getDoc, getDocs, query  , where } from 'firebase/firestore';
+import { FaFacebookF, FaYoutube, FaInstagram} from 'react-icons/fa'
+import { SiWebflow } from 'react-icons/si'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import FeedBack from '../components/Feedback';
+import Icon from '../components/Icon';
 import Stars from '../components/Stars';
 import StarsRate from '../components/StarsRate';
 import { useAuth } from '../contexts/AuthProvider';
@@ -134,7 +137,8 @@ export default function UserInfo() {
         ratedUserId: userInformation.userId,
         raterId: currentUserInfo.userId,
         rating: rating,
-        ratingDetails: feedback
+        ratingDetails: feedback,
+        ratingId:null
       }
       const colRef = collection(firestore,'ratings');
       addDoc(colRef,doc).then(docRef=>{
@@ -168,7 +172,7 @@ export default function UserInfo() {
                   {userInformation.firstName}
                 </h3>
                   <Stars rate={userInformation.rating}/>
-                <span className='block text-lg font-light mb-4'>{userJob&&userJob.jobName[currentLang]}</span>
+                <span className='block text-lg font-light mb-2'>{userJob&&userJob.jobName[currentLang]}</span>
                 {
                     !currentUser?
                       <div className='border-2 border-secondary px-4 py-2 hover:bg-secondary hover:text-white'>
@@ -176,8 +180,15 @@ export default function UserInfo() {
                       </div>
                     :
                     <>
-                      <span className='block text-lg'>{userInformation.phone}</span>
-                      <span className='block text-lg'>{userCity}</span>
+                      <span className='block text-md'>{userCity}</span>
+                      <span className='block text-md'>Email: {userInformation.email}</span>
+                      <span className='block text-md'>Phone: {userInformation.phone}</span>
+                      <div className='md:flex gap-x-4 mt-2'>
+                          <Icon icon={ <a href={userInformation.facebookAccountUrl} target="blank"><FaFacebookF className='group-hover:text-blue-500'/></a> } />
+                          <Icon icon={ <a href={userInformation.instagramAccountUrl} target="blank"><FaInstagram className='group-hover:text-pink-400'/></a> } />
+                          <Icon icon={ <a href={userInformation.youtubeAccountUrl} target="blank"><FaYoutube className='group-hover:text-red-500'/></a> } />
+                          <Icon icon={ <a href={userInformation.websiteUrl} target="blank"><SiWebflow className='group-hover:text-blue-800'/></a> } />
+                      </div>
                     </>
                 }
             </div>

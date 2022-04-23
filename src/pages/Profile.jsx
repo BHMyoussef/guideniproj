@@ -1,4 +1,6 @@
 import { collection, doc, getDoc, getDocs, query, addDoc, where, updateDoc } from "firebase/firestore";
+import { FaFacebookF, FaYoutube, FaInstagram} from 'react-icons/fa'
+import { SiWebflow } from 'react-icons/si'
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import FeedBack from "../components/Feedback";
@@ -11,6 +13,7 @@ import { AiFillCloseCircle } from "react-icons/ai"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import Input from "../components/Input";
 import Joi from "joi";
+import Icon from "../components/Icon";
 
 function Profile() {
     const [ userJob, setUserJob ] = useState();
@@ -210,17 +213,24 @@ function Profile() {
                     {currentUserInfo.firstName}
                   </h3>
                     {userJob&&<Stars rate={currentUserInfo.rating}/>}
-                  <span className='block text-lg font-light mb-4'>{userJob&&userJob.jobName[currentLang]}</span>
+                  <span className='block text-lg font-light mb-2'>{userJob&&userJob.jobName[currentLang]}</span>
                   {
                       <>
-                        <span className='block text-lg'>{currentUserInfo.phone}</span>
-                        <span className='block text-lg'>{userCity}</span>
+                        <span className='block text-md'>{userCity}</span>
+                        <span className='block text-md'>Email: {currentUserInfo.email}</span>
+                        <span className='block text-md'>{currentUserInfo.phone}</span>
+                        <div className='md:flex gap-x-4 mt-2'>
+                            <Icon icon={ <a href={currentUserInfo.facebookAccountUrl} target="blank"><FaFacebookF className='group-hover:text-blue-500'/></a> } />
+                            <Icon icon={ <a href={currentUserInfo.instagramAccountUrl} target="blank"><FaInstagram className='group-hover:text-pink-400'/></a> } />
+                            <Icon icon={ <a href={currentUserInfo.youtubeAccountUrl} target="blank"><FaYoutube className='group-hover:text-red-500'/></a> } />
+                            <Icon icon={ <a href={currentUserInfo.websiteUrl} target="blank"><SiWebflow className='group-hover:text-blue-800'/></a> } />
+                        </div>
                       </>
                   }
               </div>
               <div className={`mt-8 flex md:flex-col gap-x-16 gap-4${(currentLang==="ar")?" md:mr-auto":" md:ml-auto"}`}>
                   {
-                      currentUserInfo.jobId ?
+                      currentUserInfo.jobId &&
                       <>
                           <div className='text-center text-lg'>
                               <p>{usersInfoTxt&&usersInfoTxt.totalNote}</p>
@@ -231,13 +241,6 @@ function Profile() {
                           <   span className='block font-bold'>{currentUserInfo?.rating}/5</span>
                           </div>
                       </>
-                      :
-                        <Link to="/addJob" className="py-2 px-4 mt-2 border-2 text-lg rounded-lg border-secondary hover:scale-110 hover:bg-secondary hover:text-white font-bold"
-                        >
-                              <FaPlusCircle className="mx-auto" size={28} />
-                              {profile?.addJob}
-                            
-                        </Link>
                   }                
               </div>
           </div>

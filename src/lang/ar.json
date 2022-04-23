@@ -81,6 +81,7 @@
     "setting":{
         "fullName": "الاسم الكامل",
         "email": "البريد الالكتروني",
+        "addJob": "أضف الوظيفة",
         "password": "كلمة المرور",
         "repeatPass": "تأكيد كلمة المرور",
         "phone": "الهاتف",
@@ -96,7 +97,8 @@
         "account": "حساب"
     },
     "profile":{
-        "addJob": "أضف الوظيفة",
+        "firstname": "اسم",
+        "lastname": "نسب",
         "enterYourCategory": "أدخل فئتك",
         "enteryourSubCategory":"أدخل الفئة الفرعية الخاصة بك",
         "phoneNumber":"رقم الهاتف",

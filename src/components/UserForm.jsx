@@ -10,8 +10,7 @@ import { langContext } from '../contexts/LangProvider'
 
 export default class UserForm extends Form {
     state = {
-		data:{  firstName: '' ,
-                lastName: '',
+		data:{  
                 email:'',
                 password:''
             },
@@ -21,13 +20,6 @@ export default class UserForm extends Form {
 	}
 
     schema = {
-        firstName:Joi.string()
-        .min(2)
-        .max(12),
-
-        lastName:Joi.string()
-        .min(2)
-        .max(12),
 
         email: Joi.string()
         .email({ minDomainSegments: 2, tlds: {  } })
@@ -47,7 +39,6 @@ export default class UserForm extends Form {
 		createUserWithEmailAndPassword(auth,data.email,data.password)
 		.then((userCredential=>{
 			const docData = {
-				firstName: data.firstName + " " + data.lastName ,
                 email: data.email,
                 rank: 'Bronze',
                 rating: 0,
@@ -76,8 +67,6 @@ export default class UserForm extends Form {
                 <div className="flex flex-col items-center mt-4">
                     { this.state.signError && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{this.state.signError}</div>}
                     <form onSubmit={ this.handleSubmit } >
-                        {   this.renderInput('firstName',value.signUp &&value.signUp.firstName)    }
-                        {   this.renderInput('lastName',value.signUp &&value.signUp.lastName)    }
                         {	this.renderInput('email',value.signUp &&value.signUp.email,'Email')		}
                         {	this.renderInput('password',value.signUp &&value.signUp.password,'password')	}
                         {	this.renderButton(value.signUp &&value.signUp.signUpBtn,this.state.loading)	}

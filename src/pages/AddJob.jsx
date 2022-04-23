@@ -14,6 +14,8 @@ function AddJob() {
     const [ subCategories, setSubCategories ] = useState();
     const [ error, setError ] = useState()
 
+    const [firstname, setFirstname] = useState();
+    const [lastname, setLastname] = useState();
     const [ city,setCity ] = useState();
     const [ category,setCategory ] = useState();
     const [ subCategory,setSubCategory ] = useState();
@@ -24,6 +26,8 @@ function AddJob() {
     const navigate = useNavigate();
 
     const schema = {
+        firstname: Joi.string().required(),
+        lastname: Joi.string().required(),
         city: Joi.string().required(),
         category: Joi.string().required(),
         subCategory: Joi.string().required(),
@@ -43,12 +47,12 @@ function AddJob() {
     },[category])
 
     useEffect(()=>{
-        const result = Joi.object(schema).validate({city,category,subCategory,phone})
+        const result = Joi.object(schema).validate({firstname, lastname, city, category, subCategory, phone})
         if(result.error)
             setError(result.error.details[0].message)
         else
             setError()
-    },[city,category,subCategory,phone])
+    },[firstname, lastname, city, category, subCategory, phone])
 
     function getCities(){
         const citiesRef = collection(firestore,"cities");
@@ -63,6 +67,17 @@ function AddJob() {
                 }
                 citiesdb = [...citiesdb,obj]
             });
+
+            citiesdb.sort((a,b)=>{
+                if ( a.name < b.name ){
+                    return -1;
+                }
+                if ( a.name > b.name ){
+                    return 1;
+                }
+                return 0;
+            })
+
             setCities(citiesdb)
         })
         .catch(error=>{
@@ -115,6 +130,7 @@ function AddJob() {
     function handleSubmit(){
         const docRef = doc(firestore,`users/${currentUserInfo.userId}`)
         updateDoc(docRef,{
+            firstName: firstname + " " + lastname,
             jobId: subCategory,
             phone,
             userCity:city,
@@ -129,6 +145,8 @@ function AddJob() {
         !currentUser || currentUserInfo.jobId ? <Navigate to="/" /> :
         <div className="container mx-auto">
             { error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
+            <Input name="firstname" type="text" value={firstname} label={profile?.firstname} onChange={(e)=>setFirstname(e.target.value)}  />
+            <Input name="lastname" type="text" value={lastname} label={profile?.lastname} onChange={(e)=>setLastname(e.target.value)}  />
             <SelectForm title={signUp &&signUp.city} choices={ cities } setProperty={(city)=>setCity(city)}/>
             <SelectForm title={profile?.enterYourCategory} choices={ categories } setProperty={(cat)=>setCategory(cat)}/>
             <SelectForm title={profile?.enteryourSubCategory} choices={ subCategories } setProperty={(subCat)=>setSubCategory(subCat)}/>

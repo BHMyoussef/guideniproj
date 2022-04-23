@@ -81,6 +81,7 @@
     "setting":{
         "fullName": "Full Name",
         "email": "Email",
+        "addJob": "Add Job",
         "password": "Password",
         "repeatPass": "Confirm Password",
         "phone": "Phone",
@@ -98,7 +99,8 @@
 
     },
     "profile":{
-        "addJob": "Add Job",
+        "firstname": "Firstname",
+        "lastname": "Lastname",
         "enterYourCategory": "enter your category",
         "enteryourSubCategory":"enter your SubCategory",
         "phoneNumber":"Phone Number",

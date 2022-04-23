@@ -1,12 +1,15 @@
 import styled from 'styled-components'
+import { FaPlusCircle } from "react-icons/fa"
 // import image
 import { useEffect, useState } from 'react'
 import { firestore, storage } from '../firebase'
 import { doc, updateDoc } from 'firebase/firestore'
 import { useAuth } from '../contexts/AuthProvider'
-import { Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { useLang } from '../contexts/LangProvider'
+
+
 const Settings = ({ userId }) => {
   // form data ::
   const { currentUser, currentUserInfo, updateUserInfo, updatePassword } = useAuth();
@@ -146,6 +149,9 @@ const Settings = ({ userId }) => {
             <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="phone">{setting?.phone}</label>
             <input onChange={change} type="tel" id="phone" placeholder={formData?.phone} name="phone" />
           </div>}
+
+          
+
           {currentUserInfo.jobId && <div>
             <h2 className='my-8 font-medium'>{setting?.contact} </h2>
             <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""} `}>
@@ -165,8 +171,16 @@ const Settings = ({ userId }) => {
               <input onChange={change} type="text" id="website" placeholder={formData?.website} name="website"  />
             </div>
           </div>}
-
-          <button id='btn' className={`save-btn border-2 rounded border-sky-500 bg-sky-500 text-white hover:bg-white hover:text-sky-500  px-5 py-1 flex-start ${currentLang=='ar'?'self-start':'self-end'}`}>{setting?.save}</button>
+            <div className='text-center'>
+              {
+                !currentUserInfo.jobId && 
+                <Link to="/addJob" className={`save-btn inline-block mr-2 border-2 rounded border-sky-500 bg-sky-500 text-white hover:bg-white hover:text-sky-500  px-5 `}
+                >
+                        {setting?.addJob}
+                </Link>
+              }
+              <button id='btn' className={`save-btn border-2 rounded border-sky-500 bg-sky-500 text-white hover:bg-white hover:text-sky-500  px-5`}>{setting?.save}</button>
+            </div>
         </StyledForm>
       </StyledSettings>
   )
