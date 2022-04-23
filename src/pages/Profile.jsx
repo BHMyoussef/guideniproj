@@ -197,7 +197,7 @@ function Profile() {
     return ( 
         !currentUser ? <Navigate to="/" /> :
         <div className="profile container mx-auto">
-            <div className='flex flex-col md:flex-row items-center'>
+            <div className={`flex flex-col md:flex-row items-center ${(currentLang==="ar")&&" md:flex-row-reverse"}`}>
               <div className='image-container w-48 h-48 mb-4'>
                   <img 
                       className='h-full w-full rounded-full'
@@ -218,7 +218,7 @@ function Profile() {
                       </>
                   }
               </div>
-              <div className='mt-8 flex md:flex-col gap-x-16 md:ml-auto gap-4'>
+              <div className={`mt-8 flex md:flex-col gap-x-16 gap-4${(currentLang==="ar")?" md:mr-auto":" md:ml-auto"}`}>
                   {
                       currentUserInfo.jobId ?
                       <>

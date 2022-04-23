@@ -40,8 +40,8 @@ export default function Jobs() {
     }
     return (
         <div className='container mx-auto'>
-        <div className="w-full flex justify-between items-center mb-2">
-            <h3 className='text-xl font-medium '>{servicesTxt && servicesTxt.title}: </h3>
+        <div className={`w-full flex justify-between items-center mb-2 ${(currentLang==="ar")&&" flex-row-reverse"}`}>
+            <h3 className='text-xl font-medium '>{servicesTxt && servicesTxt.title} </h3>
             <SearchBar jobs={jobs} getFiltredJob={getFiltredJob} nameKey="jobName" placeHolder={servicesTxt && servicesTxt.search} />
         </div>
         <hr />

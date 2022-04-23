@@ -23,6 +23,15 @@ export default function JobsProvider() {
             results.forEach(city=>{
                 citiesdb = [...citiesdb,city.data()]
             });
+            citiesdb.sort((a,b)=>{
+              if ( a.cityName < b.cityName ){
+                return -1;
+              }
+              if ( a.cityName > b.cityName ){
+                return 1;
+              }
+              return 0;
+            })
             setCities(citiesdb)
         })
         .catch(error=>{
@@ -69,8 +78,8 @@ export default function JobsProvider() {
 
     return (
     <div className='container mx-auto'>
-        <div className="w-full flex justify-between items-center mb-2">
-            <h3 className='text-xl font-medium '>{usersTxt && usersTxt.title}: </h3>
+        <div className={`w-full flex justify-between items-center mb-2 ${(currentLang==="ar")&&" flex-row-reverse"}`}>
+            <h3 className='text-xl font-medium '>{usersTxt && usersTxt.title} </h3>
             <Filter users={usersList} cities={cities} getFiltredUsers={getFiltredUsers} />
         </div>
         <hr />

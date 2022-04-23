@@ -37,6 +37,7 @@
     },
     "users":{
         "title": "Fournisseurs d'emplois",
+        "filterPlaceholder": "Filtrer par ville",
         "filter": "filtrer",
         "cardText":{
             "rate": "Rate",

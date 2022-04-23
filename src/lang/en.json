@@ -38,6 +38,7 @@
     "users":{
         "title": "jobs Provider",
         "filter": "filter",
+        "filterPlaceholder": "Filter By City",
         "cardText":{
             "totalNote": "Total Note",
             "rate": "Rate",

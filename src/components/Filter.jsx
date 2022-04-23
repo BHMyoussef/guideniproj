@@ -7,7 +7,10 @@ export default function Filter({users, getFiltredUsers, cities}){
 
     function handleSelect(event){
         const city = event.target.value;
-        const filtredUser = users.filter(elmt=>elmt.userCity===city)
+        console.log(city)
+        let filtredUser = users;
+        if(city!=="")
+            filtredUser = users.filter(elmt=>elmt.userCity===city)
         getFiltredUsers(filtredUser)
     }
     return(
@@ -17,6 +20,7 @@ export default function Filter({users, getFiltredUsers, cities}){
             </label>
             <select name='cityId'  className="form-select appearance-none px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0
             focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" onChange={handleSelect}>
+                <option value="">--Filter By City--</option>
                 { cities && cities.map((choice,i)=>{
                     return(
                         <option key={i} value={choice.cityId}>{ choice.cityName} </option>

@@ -2,10 +2,10 @@ import { Link } from "react-router-dom"
 import { useLang } from "../contexts/LangProvider"
 
 export default function Home() {
-  const { home:homeTxt } = useLang()
+  const { home:homeTxt, currentLang } = useLang()
   return (
-      <div className="container mx-auto md:text-left md:flex mt-12">
-        <div className="desc flex-1 mt-16">
+      <div className={`container mx-auto md:text-left md:flex mt-12 ${(currentLang==="ar")&&" flex-row-reverse"}`}>
+        <div className={`desc flex-1 mt-16 ${(currentLang==="ar")&&" text-right"}`}>
             <h1 className="text-4xl text-additional font-semibold">{homeTxt && homeTxt.title}</h1>
             <p className="font-medium mt-8 mb-2">
                 {homeTxt && homeTxt.desc}

@@ -155,7 +155,7 @@ export default function UserInfo() {
     {
     userInformation && 
       <div className='container mx-auto bg-bgcolor pt-4 pb-4 px-8 rounded-md'>
-          <div className='flex flex-col md:flex-row items-center'>
+          <div className={`flex flex-col md:flex-row items-center ${(currentLang==="ar")&&" md:flex-row-reverse"}`}>
             <div className='image-container w-48 h-48 mb-4'>
                   <img 
                       className='h-full w-full rounded-full'
@@ -181,7 +181,7 @@ export default function UserInfo() {
                     </>
                 }
             </div>
-            <div className='mt-8 flex md:flex-col gap-x-16 md:ml-auto gap-4'>
+            <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang==="ar")?" md:mr-auto":" md:ml-auto"}`}>
               <div className='text-center text-lg'>
                   <p>{usersInfoTxt&&usersInfoTxt.totalNote}</p>
                   <span className='font-bold text-lg'>{userInformation.rating}</span>

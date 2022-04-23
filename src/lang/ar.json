@@ -37,6 +37,7 @@
     },
     "users":{
         "title": "موظفون",
+        "filterPlaceholder": "اختر المدينة",
         "filter": "فرز",
         "cardText":{
             "rate": "التقييم",

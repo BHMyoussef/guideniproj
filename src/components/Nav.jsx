@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Icon from './Icon'
 import { Link } from 'react-router-dom'
 import { FaFacebookF, FaLinkedinIn ,FaYoutube, FaInstagram, FaRegHeart, FaRegUser} from 'react-icons/fa'
@@ -18,10 +18,10 @@ export default function Nav() {
 }
 
 function UpNave(){
-    const { nav } = useLang();
+    const { nav, currentLang} = useLang();
     return(
         <div className="bg-bgcolor w-full">
-            <div className="container mx-auto flex justify-between items-center">
+            <div className={`container mx-auto flex justify-between items-center${(currentLang==="ar")&&" flex-row-reverse"}`}>
                 <p>{nav&&nav.upNav.slug.slug1} <span className='font-bold'>{nav&&nav.upNav.slug.slug2}</span> {nav&&nav.upNav.slug.slug3}</p>
                 <Link to="/blog"className="hover:text-additional">{nav&&nav.upNav.blog}</Link>
                 <div className='hidden md:flex justify-between gap-x-4'>
@@ -40,13 +40,26 @@ function UpNave(){
 
 function SelectLanguage({ choices }){
     const [ language, setLanguage ] = useState("English");
-    const { handleSelectedLang } = useLang()
+    const { handleSelectedLang } = useLang();
+    const checkbox = useRef();
+
+    const handleClick = ()=>{
+        function handleClickOutside(event) {
+            if(event.target.tagName !== "LI")
+                checkbox.current.checked=false;
+          }
+          // Bind the event listener
+        document.addEventListener("mousedown", handleClickOutside);
+    }
+
     useEffect(()=>{
         handleSelectedLang(language);
+        checkbox.current.checked=false;
+        handleClick();
     },[language])
     return(
         <div className="relative group">
-            <input type="checkbox" className='hidden peer' id="Lang"/>
+            <input ref={checkbox} type="checkbox" className='hidden peer' id="Lang"/>
             <label htmlFor='Lang'>
                 {language} <span className='absolute group-hover:rotate-90 transition-all ease-out'>{'>'}</span> 
             </label>
@@ -55,7 +68,7 @@ function SelectLanguage({ choices }){
                     choices.map((choice,index)=>{
                         return(
                             <div key={index}>
-                                <li  className='relative bg-bgcolor px-4 pt-2 pb-2 hover:bg-primary hover:text-white cursor-pointer'  onClick={()=>{setLanguage(choice)}}>{choice}</li>
+                                <li className='relative bg-bgcolor px-4 pt-2 pb-2 hover:bg-primary hover:text-white cursor-pointer'  onClick={()=>{setLanguage(choice)}}>{choice}</li>
                                 <hr/>
                             </div>
                             )

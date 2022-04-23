@@ -142,7 +142,7 @@ const Settings = ({ userId }) => {
             <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="cpassword">{setting?.repeatPass}</label>
             <input onChange={changePasswd} value={pass2} type="password" id="cpassword" name="cpassword" placeholder='Confirm Password' />
           </div>
-          {currentUserInfo.jobId && <div className="inputs">
+          {currentUserInfo.jobId && <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""}`}>
             <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="phone">{setting?.phone}</label>
             <input onChange={change} type="tel" id="phone" placeholder={formData?.phone} name="phone" />
           </div>}
