@@ -45,12 +45,12 @@ export default function LangProvider({ children }) {
                 break;
         }
     }
-    const { nav, home, categories, services, userInfo, users, signIn, signUp, setting, profile} = currentLangResources || {};
-    
+    const { nav, home, categories, services, userInfo, users, signIn, signUp, setting, profile, contact} = currentLangResources || {};
+
     const value = {
         currentLang,
         handleSelectedLang,
-        nav,home,categories,services,userInfo,users,signIn,signUp,setting,profile
+        nav,home,categories,services,userInfo,users,signIn,signUp,setting,profile, contact
     }
   return (
     <langContext.Provider value={ value }>

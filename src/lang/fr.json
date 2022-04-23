@@ -88,7 +88,12 @@
         "youtube": "Youtube",
         "personal": "Données Personnelles",
         "contact": "Coordonnées",
-        "website":"siteweb"
+        "website":"siteweb",
+        "save": "Sauvegarder",
+        "Change password": "Changer le mot de pass",
+        "update": "Màj",
+        "account": "Compte"
+
     },
     "profile":{
         "addJob": "Ajouter votre travaille",
@@ -98,5 +103,21 @@
         "add":"Aouter",
         "title":"Titre",
         "description":"Description"
+    },
+
+    "contact": {
+      "title": "Contactez-nous",
+      "header": "PRENEZ CONTACT AVEC NOUS",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eius tempor incididunt ut labore et dolore magna aliqua. Ut enim adiqua minim veniam quis nostrud exercitation ullamco",
+      "location": "Notre emplacement",
+      "address": "99 St Jomblo Park Pekanbaru 28292. Indonésie",
+      "phone": "Numéro de téléphone",
+      "email": "Adresse e-mail",
+      "name": "Votre nom",
+      "yourMail": "Votre e-mail",
+      "yourPhone": "Votre téléphone",
+      "message": "PRENEZ CONTACT AVEC NOUS0",
+      "send": "PRENEZ CONTACT AVEC NOUS1"
     }
+
 }

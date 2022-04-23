@@ -17,22 +17,24 @@ import Bloga from './blogs/pages/Home'
 import Blog from './blogs/pages/Blog'
 import Edit from './blogs/pages/Edit'
 import ResetMail from './pages/ResetMail'
+import Contact from './pages/Contact'
 
 function App() {
-  
+
   return (
     <LangProvider>
       <AuthProvider>
         <Nav />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/services" element={ <JobsCategories />} />  
-          <Route path="/service/:id"  element = { <Jobs />} />  
+          <Route path="/services" element={ <JobsCategories />} />
+          <Route path="/service/:id"  element = { <Jobs />} />
           <Route path="/users/:id" element = { <JobsProvider />} />
           <Route path="/user/:id" element = { <UserInfo />}/>
           <Route path="/profile" element = { <Profile/>} />
           <Route path="/addJob" element = { <AddJob/>} />
           <Route path="/setting" element = { <Setting/>} />
+          <Route path="/help" element = { <Contact/>} />
           <Route path="/blog" element = { <Bloga/>} />
           <Route path="/blog/:id" element = { <Blog/>} />
           <Route path="/edit/:id" element = { <Edit/>} />

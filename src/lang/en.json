@@ -88,7 +88,13 @@
         "youtube": "Youtube",
         "personal": "Personal Information",
         "contact": "Contact Information",
-        "website":"website"
+        "website":"website",
+        "save": "Save",
+        "Change password": "Change password",
+        "update": "Update",
+        "account": "Account"
+
+
     },
     "profile":{
         "addJob": "Add Job",
@@ -98,5 +104,19 @@
         "add":"Add",
         "title":"Title",
         "description":"Description"
+    },
+    "contact": {
+      "title": "Contact US",
+      "header": "GET IN TOUCH WITH US",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eius tempor incididunt ut labore et dolore magna aliqua. Ut enim adiqua minim veniam quis nostrud exercitation ullamco",
+      "location": "Our Location",
+      "address": "99 S.t Jomblo Park Pekanbaru 28292. Indonesia",
+      "phone": "Phone Number",
+      "email": "Email Address",
+      "name": "Your Name",
+      "yourMail": "Your Email",
+      "yourPhone": "Your Phone",
+      "message": "Your Message",
+      "send": "Send Message"
     }
 }
