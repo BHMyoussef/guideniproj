@@ -103,7 +103,8 @@
         "phoneNumber":"Numéro de téléphone",
         "add":"Aouter",
         "title":"Titre",
-        "description":"Description"
+        "description":"Description",
+        "rank": "Grade"
     },
 
     "contact": {

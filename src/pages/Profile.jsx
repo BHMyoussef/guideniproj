@@ -6,7 +6,7 @@ import Stars from "../components/Stars";
 import { useAuth } from "../contexts/AuthProvider";
 import { useLang } from "../contexts/LangProvider";
 import { firestore, storage } from "../firebase";
-import {FaPlusCircle, FaArrowLeft} from "react-icons/fa"
+import {FaPlusCircle, FaArrowLeft,FaAward} from "react-icons/fa"
 import { AiFillCloseCircle } from "react-icons/ai"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import Input from "../components/Input";
@@ -21,7 +21,7 @@ function Profile() {
     const [ disabledbtn, setDisabledbtn ] = useState(true);
     const [ feedback, setFeedback ] = useState();
     const [ error, setError ] = useState();
-    
+
     const [ title, setTitle] = useState()
     const [ description, setDescription] = useState()
     const [ images, setImages ]= useState([]);
@@ -49,7 +49,7 @@ function Profile() {
           setError(result.error.details[0].message)
       else
           setError()
-      
+
     },[title,description,images])
 
     function getPortfolio(){
@@ -101,7 +101,7 @@ function Profile() {
           .then(result=>{
             setUserCity(result.data()?.cityName)
           })
-        }    
+        }
     }
 
     function switchButton(e){
@@ -141,7 +141,7 @@ function Profile() {
                 const test = [...prev]
                 test[i].progress = progress
                 return  test
-              }) 
+              })
             }, // to handle Errors
             (err) => {
               console.error('Error: ', err)
@@ -187,26 +187,26 @@ function Profile() {
       getDoc(docRef)
       .then(result=>{
         const filtredImages=result.data().medias.filter(image=>image.mediaId!=imageId)
-        
+
         updateDoc(docRef,{medias:filtredImages})
       })
       .then(()=>{
         getPortfolio()
       })
     }
-    return ( 
+    return (
         !currentUser ? <Navigate to="/" /> :
         <div className="profile container mx-auto">
             <div className={`flex flex-col md:flex-row items-center ${(currentLang==="ar")&&" md:flex-row-reverse"}`}>
               <div className='image-container w-48 h-48 mb-4'>
-                  <img 
+                  <img
                       className='h-full w-full rounded-full'
-                      src={currentUserInfo.imageUrl ||`${window.location.origin}/resources/profile.png`} 
-                      alt="profile photo" 
+                      src={currentUserInfo.imageUrl ||`${window.location.origin}/resources/profile.png`}
+                      alt="profile photo"
                   />
               </div>
               <div className='ml-14'>
-                  <h3 className='font-semibold text-2xl mt-2'>
+                  <h3 className='font-semibold text-2xl mt-2 flex justify-evenly items-center'>
                     {currentUserInfo.firstName}
                   </h3>
                     {userJob&&<Stars rate={currentUserInfo.rating}/>}
@@ -218,14 +218,21 @@ function Profile() {
                       </>
                   }
               </div>
-              <div className={`mt-8 flex md:flex-col gap-x-16 gap-4${(currentLang==="ar")?" md:mr-auto":" md:ml-auto"}`}>
+              <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang==="ar")?" md:mr-auto":" md:ml-auto"}`}>
                   {
                       currentUserInfo.jobId ?
                       <>
-                          <div className='text-center text-lg'>
-                              <p>{usersInfoTxt&&usersInfoTxt.totalNote}</p>
-                              <span className='font-bold text-lg'>{currentUserInfo?.rating}</span>
-                          </div>
+                      <div className={`text-center text-lg px-4 py-2 flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
+                          <p className="pr-4">{Profile?.rank}</p>
+                        <div className={`flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
+                            <FaAward color={currentUserInfo?.rank} size={30}/>
+                            <span>{currentUserInfo?.rank}</span>
+                        </div>
+                      </div>
+                      <div className='text-center text-lg'>
+                          <p>{usersInfoTxt&&usersInfoTxt.totalNote}</p>
+                          <span className='font-bold text-lg'>{currentUserInfo?.rating}</span>
+                      </div>
                           <div className='text-center text-lg'>
                               <p>{usersInfoTxt&&usersInfoTxt.rate}</p>
                           <   span className='block font-bold'>{currentUserInfo?.rating}/5</span>
@@ -236,9 +243,9 @@ function Profile() {
                         >
                               <FaPlusCircle className="mx-auto" size={28} />
                               {profile?.addJob}
-                            
+
                         </Link>
-                  }                
+                  }
               </div>
           </div>
           <div>
@@ -278,7 +285,7 @@ function Profile() {
                         </button>
                       </div>
                       {
-                        addGallerie && 
+                        addGallerie &&
                         <div className="fixed w-9/12 rounded-md z-20 shadow-lg top-1/2 left-1/2 -translate-x-1/2 items-center justify-between -translate-y-1/2 flex flex-col px-4 py-8 bg-bgcolor">
                           <div onClick={()=>{setAddGallerie(false)}} className="w-full"><FaArrowLeft size={23} className="mb-4 cursor-pointer hover:scale-110"/></div>
                           { error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
@@ -294,7 +301,7 @@ function Profile() {
                           <div className="images flex gap-2 flex-wrap">
                             { images&&images.map((image,i)=>
                               <div key={i} className="">
-                                <img className="w-32 mb-4 h-24" src={image.imageUrl} alt="image" /> 
+                                <img className="w-32 mb-4 h-24" src={image.imageUrl} alt="image" />
                                 <div className="progress input bg-secondary h-3">
                                   <div
                                     className="progress-bar progress-bar-stripped flex justify-center items-center text-[10px] bg-additional h-3"
@@ -313,7 +320,7 @@ function Profile() {
                 :
                   feedback && feedback.map((feed,i)=>{
                     return(
-                      <FeedBack 
+                      <FeedBack
                         key={i}
                         name = {feed.name}
                         image = { feed.image }
