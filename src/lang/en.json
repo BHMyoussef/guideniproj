@@ -106,7 +106,8 @@
         "phoneNumber":"Phone Number",
         "add":"Add",
         "title":"Title",
-        "description":"Description"
+        "description":"Description",
+        "rank": "Rank"
     },
     "contact": {
       "title": "Contact US",

@@ -104,7 +104,8 @@
         "phoneNumber":"رقم الهاتف",
         "add":"اضف",
         "title":"العنوان",
-        "description":"الوصف"
+        "description":"الوصف",
+        "rank": "رتبة"
     },
 
     "contact": {
