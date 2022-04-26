@@ -1,11 +1,14 @@
 import Icon from './Icon'
-import { BsStar,BsStarFill }from 'react-icons/bs'
+import { FaAward }from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import Stars from './Stars'
 
-export default function Card({id, name, image, jobName, rate, totalRating, texts, city}) {
+export default function Card({id, name, image, jobName, rate, totalRating, texts, city, rank}) {
   return (
-    <div className='card inline-block bg-bgcolor pt-4 pb-4 px-8 rounded-xl hover:scale-105 transition-all ease-linear'>
+    <div className='card inline-block bg-bgcolor pt-4 pb-4 px-8 rounded-xl hover:scale-105 transition-all ease-linear relative'>
+        <div className={`flex items-center justify-evenly absolute right-0`}>
+            <FaAward color={rank} size={30}/>
+        </div>
         <div className='flex items-center gap-x-10 mb-4'>
             <div className='image-container w-32 h-32'>
                 <img 

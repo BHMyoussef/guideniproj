@@ -116,6 +116,7 @@ export default function JobsProvider() {
                     rate = { user.rating }
                     totalRating = { user.totalRating }
                     texts = { usersTxt && usersTxt.cardText}
+                    rank = { user.rank }
                   />
                 );
               })
