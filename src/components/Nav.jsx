@@ -84,31 +84,37 @@ function NavBare(){
     const { nav } = useLang();
     
     return (
-    <div className="container flex justify-between items-center mx-auto mt-5">
-        <Link className='md:mr-24 md:flex-grow-[2]' to="/">
-            <img className='inline-block w-16 ' src={`${window.location.origin}/logo192.png`} alt="guideNi Logo" />
-            <span className='font-bold block md:inline-block text-blue-900 text-lg'>guideNi</span>
-        </Link>
-        <div className='text-center'>
-            {
-                !currentUser ?
-                <>
-                    <Link className='mr-4 md:mr-8 hover:border-b-2' to="/signin">{nav&&nav.nav.sign.signIn}</Link>
-                    <Link className='mr-4 hover:border-b-2' to="/signup">{nav&&nav.nav.sign.signup}</Link> 
-                </>
-                :
-                    <p className='mx-4'>{nav&&nav.nav.welcom} <span className='font-semibold'>{currentUserInfo?.firstName}</span></p>
+    <>
+        <div className="container flex justify-between items-center mx-auto mt-5 h-24">
+            <Link className='' to="/">
+                <img className='inline-block w-16 ' src={`${window.location.origin}/logo192.png`} alt="guideNi Logo" />
+                <span className='font-bold block md:inline-block text-blue-900 text-lg'>guideNi</span>
+            </Link>
+            <span className='hidden lg:flex flex-grow-[2] h-full bg-gray-600 text-white justify-center mx-2 items-center'>Ads Here</span>
+            <div className='text-center'>
+                {
+                    !currentUser ?
+                    <>
+                        <Link className='mr-4 md:mr-8 hover:border-b-2' to="/signin">{nav&&nav.nav.sign.signIn}</Link>
+                        <Link className='mr-4 hover:border-b-2' to="/signup">{nav&&nav.nav.sign.signup}</Link> 
+                    </>
+                    :
+                        <p className='mx-4'>{nav&&nav.nav.welcom} <span className='font-semibold'>{currentUserInfo?.firstName}</span></p>
+                }
+            </div>
+            {currentUser && 
+                <div className='flex gap-x-3 relative'>
+                    <Icon icon={<FaRegHeart size={35} className='hover:text-secondary group'/>} />
+                    <Icon icon={<FaRegUser size={35} className='hover:text-secondary'/>}>
+                        <DropDownMenu />
+                    </Icon>
+                </div>
             }
         </div>
-        {currentUser && 
-            <div className='flex gap-x-3 relative'>
-                <Icon icon={<FaRegHeart size={35} className='hover:text-secondary group'/>} />
-                <Icon icon={<FaRegUser size={35} className='hover:text-secondary'/>}>
-                    <DropDownMenu />
-                </Icon>
-            </div>
-        }
-    </div>
+        <div>
+            <span className='flex lg:hidden flex-grow-[2] h-20 bg-gray-600 text-white justify-center mx-2 items-center'>Ads Here</span>
+        </div>
+    </>
     )
 }
 

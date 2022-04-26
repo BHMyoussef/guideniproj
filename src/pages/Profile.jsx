@@ -199,8 +199,11 @@ function Profile() {
     }
     return (
         !currentUser ? <Navigate to="/" /> :
-        <div className="profile container mx-auto">
-            <div className={`flex flex-col md:flex-row items-center ${(currentLang==="ar")&&" md:flex-row-reverse"}`}>
+        <div className="profile container lg:grid grid-flow-row-dense grid-cols-10 gap-4 auto-rows-auto mx-auto">
+            <div className="hidden col-span-2 row-span-2 text-white lg:block">
+              <span className='bg-gray-600 w-40 h-[600px] flex items-center justify-center'>Ads Here</span>
+            </div>
+            <div className={`col-start-3 col-span-6 flex flex-col md:flex-row items-center ${(currentLang==="ar")&&" md:flex-row-reverse"}`}>
               <div className='image-container w-48 h-48 mb-4'>
                   <img
                       className='h-full w-full rounded-full'
@@ -219,7 +222,7 @@ function Profile() {
                         <span className='block text-md'>{userCity}</span>
                         <span className='block text-md'>Email: {currentUserInfo.email}</span>
                         <span className='block text-md'>{currentUserInfo.phone}</span>
-                        <div className='md:flex gap-x-4 mt-2'>
+                        <div className='flex gap-x-4 mt-2'>
                             <Icon icon={ <a href={currentUserInfo.facebookAccountUrl} target="blank"><FaFacebookF className='group-hover:text-blue-500'/></a> } />
                             <Icon icon={ <a href={currentUserInfo.instagramAccountUrl} target="blank"><FaInstagram className='group-hover:text-pink-400'/></a> } />
                             <Icon icon={ <a href={currentUserInfo.youtubeAccountUrl} target="blank"><FaYoutube className='group-hover:text-red-500'/></a> } />
@@ -251,7 +254,7 @@ function Profile() {
                   }                
               </div>
           </div>
-          <div>
+          <div className="col-span-6 col-start-3">
             <div className='buttons mt-8'>
               <button className={`w-1/2 pt-4 pb-4 px-8 ${galerieSelected? 'bg-secondary':'bg-bgcolor'} border-4 border-secondary font-medium text-lg hover:bg-opacity-90`}
                       onClick={switchButton}
@@ -334,6 +337,9 @@ function Profile() {
                   })
               }
             </div>
+          </div>
+          <div className="hidden col-span-2 row-span-2 text-white lg:block">
+            <span className='bg-gray-600 w-40 h-[600px] flex items-center justify-center ml-auto'>Ads Here</span>
           </div>
         </div>
      );
