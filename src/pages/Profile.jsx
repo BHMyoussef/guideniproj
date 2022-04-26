@@ -32,6 +32,11 @@ function Profile() {
     const { currentUser, currentUserInfo, updateUserInfo } = useAuth();
     const { userInfo:usersInfoTxt, currentLang, profile } = useLang();
 
+    // show/hide the popup modal
+    const [showModal, setShowModal] = useState(false);
+    // get the image url to popup
+    const [imgUrl, setImgUrl] = useState(null);
+
     const schema = {
       title: Joi.string().required(),
       description: Joi.string().required(),
@@ -197,14 +202,23 @@ function Profile() {
         getPortfolio()
       })
     }
+
+    // Handle PopUp
+    // popup image function:
+    function popupImg(url){
+      setImgUrl(url);
+      setShowModal(true);
+    }
     return (
         !currentUser ? <Navigate to="/" /> :
+        <>
         <div className="profile container lg:grid grid-flow-row-dense grid-cols-10 gap-4 auto-rows-auto mx-auto">
             <div className="hidden col-span-2 row-span-2 text-white lg:block">
               <span className='bg-gray-600 w-40 h-[600px] flex items-center justify-center'>Ads Here</span>
             </div>
             <div className={`col-start-3 col-span-6 flex flex-col md:flex-row items-center ${(currentLang==="ar")&&" md:flex-row-reverse"}`}>
-              <div className='image-container w-48 h-48 mb-4'>
+              <div className='image-container w-48 h-48 mb-4 cursor-pointer' onClick={() => popupImg(currentUserInfo?.imageUrl)}
+                data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen">
                   <img
                       className='h-full w-full rounded-full'
                       src={currentUserInfo.imageUrl ||`${window.location.origin}/resources/profile.png`}
@@ -223,10 +237,11 @@ function Profile() {
                         <span className='block text-md'>Email: {currentUserInfo.email}</span>
                         <span className='block text-md'>{currentUserInfo.phone}</span>
                         <div className='flex gap-x-4 mt-2'>
-                            <Icon icon={ <a href={currentUserInfo.facebookAccountUrl} target="blank"><FaFacebookF className='group-hover:text-blue-500'/></a> } />
-                            <Icon icon={ <a href={currentUserInfo.instagramAccountUrl} target="blank"><FaInstagram className='group-hover:text-pink-400'/></a> } />
-                            <Icon icon={ <a href={currentUserInfo.youtubeAccountUrl} target="blank"><FaYoutube className='group-hover:text-red-500'/></a> } />
-                            <Icon icon={ <a href={currentUserInfo.websiteUrl} target="blank"><SiWebflow className='group-hover:text-blue-800'/></a> } />
+                          {/* Just removed the 'Url' word at the end of the property*/}
+                            <Icon icon={ <a href={currentUserInfo.facebookAccount} target="blank"><FaFacebookF className='group-hover:text-blue-500'/></a> } />
+                            <Icon icon={ <a href={currentUserInfo.instagramAccount} target="blank"><FaInstagram className='group-hover:text-pink-400'/></a> } />
+                            <Icon icon={ <a href={currentUserInfo.youtubeAccount} target="blank"><FaYoutube className='group-hover:text-red-500'/></a> } />
+                          <Icon icon={ <a href={currentUserInfo.website} target="blank"><SiWebflow className='group-hover:text-blue-800'/></a> } />
                         </div>
                       </>
                   }
@@ -251,7 +266,7 @@ function Profile() {
                           <   span className='block font-bold'>{currentUserInfo?.rating}/5</span>
                           </div>
                       </>
-                  }                
+                  }
               </div>
           </div>
           <div className="col-span-6 col-start-3">
@@ -342,7 +357,48 @@ function Profile() {
             <span className='bg-gray-600 w-40 h-[600px] flex items-center justify-center ml-auto'>Ads Here</span>
           </div>
         </div>
+
+        {showModal && <PopupModal url={imgUrl} setShowModal={setShowModal}/>}
+        </>
      );
 }
+
+function PopupModal({url,setShowModal}) {
+  function handleExit(e) {
+    if(e.target.classList.contains('popup')){
+      setShowModal(false);
+    }
+  }
+  return (
+    <>
+          <div
+            onClick={handleExit}
+            className="popup justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-auto mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-neutral-100 outline-none focus:outline-none">
+                {/*body*/}
+                <div className="relative p-6 pb-0 flex-auto rounded-lg overflow-hidden">
+                  <img className="object-fill max-h-[600px] max-w-full rounded-lg" src={url} alt="Popup image"/>
+                </div>
+                {/*footer*/}
+                <div className="flex items-center justify-center rounded-b p-4">
+                  <button
+                    className="bg-red-500 text-white border-solid border-2 border-rose-500 rounded-lg  font-bold uppercase px-10 py-4 text-sm outline-none focus:outline-none  ease-linear transition-all duration-150 hover:text-red-500 hover:bg-white hover:border-red-500"
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-80 fixed inset-0 z-40 bg-black"></div>
+        </>
+  )
+}
+
 
 export default Profile;

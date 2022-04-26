@@ -1,6 +1,7 @@
 import { addDoc, collection, doc, getDoc, getDocs, query  , where } from 'firebase/firestore';
 import { FaFacebookF, FaYoutube, FaInstagram} from 'react-icons/fa'
 import { SiWebflow } from 'react-icons/si'
+
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import FeedBack from '../components/Feedback';
@@ -10,7 +11,7 @@ import StarsRate from '../components/StarsRate';
 import { useAuth } from '../contexts/AuthProvider';
 import { useLang } from '../contexts/LangProvider';
 import { firestore } from '../firebase';
-import {FaWindowClose} from "react-icons/fa";
+import {FaWindowClose, FaAward} from "react-icons/fa";
 
 
 export default function UserInfo() {
@@ -29,7 +30,6 @@ export default function UserInfo() {
 
     const { currentUser, currentUserInfo } = useAuth()
     const { userInfo:usersInfoTxt, currentLang } = useLang();
-
     const params = useParams('id')
 
 
@@ -169,19 +169,15 @@ export default function UserInfo() {
   return (
     <>
     {
-<<<<<<< HEAD
     userInformation &&
-      <div className='container mx-auto bg-bgcolor pt-4 pb-4 px-8 rounded-md'>
-          <div className={`flex flex-col md:flex-row items-center ${(currentLang==="ar")&&" md:flex-row-reverse"}`}>
-=======
-    userInformation && 
       <div className='container lg:grid grid-flow-row-dense grid-cols-10 gap-4 auto-rows-auto mx-auto bg-bgcolor pt-4 pb-4 px-8 rounded-md'>
           <div className="hidden col-span-2 row-span-2 text-white lg:block">
             <span className='bg-gray-600 w-40 h-[600px] flex items-center justify-center'>Ads Here</span>
           </div>
           <div className={`col-start-3 col-span-6 flex flex-col md:flex-row items-center ${(currentLang==="ar")&&" md:flex-row-reverse"}`}>
->>>>>>> usef
-            <div className='image-container w-48 h-48 mb-4'>
+
+            <div className='image-container w-48 h-48 mb-4 cursor-pointer' onClick={() => popupImg(userInformation?.imageUrl)}
+              data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen">
                   <img
                       className='h-full w-full rounded-full'
                       src={userInformation.imageUrl ||`${window.location.origin}/resources/profile.png`}
@@ -214,6 +210,10 @@ export default function UserInfo() {
                 }
             </div>
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang==="ar")?" md:mr-auto":" md:ml-auto"}`}>
+                <div className={`flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
+                  <FaAward color={userInformation?.rank} size={30}/>
+                  <span className="font-bold">{userInformation?.rank}</span>
+              </div>
               <div className='text-center text-lg'>
                   <p>{usersInfoTxt&&usersInfoTxt.totalNote}</p>
                   <span className='font-bold text-lg'>{userInformation.rating}</span>
@@ -251,7 +251,7 @@ export default function UserInfo() {
                 ?
                     portFolio && portFolio.map(elm=>
                       elm.map((media,i)=>
-                        <div key={i} target="blank" href={media.mediaUrl} onClick={() => popupImg(media.mediaUrl)}
+                        <div key={i}  onClick={() => popupImg(media.mediaUrl)}
                           data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen"
                           className="overflow-hidden max-h-96">
                           <img src={media.mediaUrl} alt={media.mediaType} className="w-full h-full object-cover hover:scale-105 transition-all ease-in-out"/>
@@ -338,11 +338,9 @@ function RateMe({getRatingInformation, canRate, hiddeRate,txts}){
 function PopupModal({url,setShowModal}) {
   function handleExit(e) {
     if(e.target.classList.contains('popup')){
-      console.log({d: e.target.classList.contains('popup')})
       setShowModal(false);
     }
   }
-  console.log({url, setShowModal});
   return (
     <>
           <div

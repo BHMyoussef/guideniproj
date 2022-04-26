@@ -58,11 +58,26 @@ export default function JobsProvider() {
             results.forEach(doc=>{
               tmpJobProvider = [ ...tmpJobProvider,doc.data()]
             })
+            // Filter out the users by their rank
+            // User will be shown in this order: Gold --> Bronze --> Silver
+            const bronze = [];
+            const gold = [];
+            const silver = [];
+            tmpJobProvider.map(item => {
+              if(item?.rank.toLowerCase() === "gold"){
+                gold.push(item);
+              }else if (item?.rank.toLowerCase() === "bronze"){
+                bronze.push(item)
+              }else{
+                silver.push(item)
+              }
+            })
+            tmpJobProvider = [...gold, ...bronze, ...silver];
            setUsersList(tmpJobProvider)
           })
         .catch(error=>{
             console.log('error occured: ',error);
-        });        
+        });
     }
     function getJobName(){
       const docRef = doc(firestore,`jobs/${params.id}`);
@@ -75,6 +90,8 @@ export default function JobsProvider() {
     function getFiltredUsers(jobs){
       setFiltredUser(jobs)
     }
+
+
 
     return (
     <div className='container mx-auto'>
@@ -89,7 +106,7 @@ export default function JobsProvider() {
                 <img className='absolute left-1/2 -translate-x-1/2' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
               : filtredUser.map((user,index)=>{
                 return(
-                  <Card 
+                  <Card
                     key={index}
                     id={ user.userId }
                     name = {user.firstName }
