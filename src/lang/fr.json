@@ -24,8 +24,9 @@
     },
     "home":{
         "title": "Guide Ni",
-        "desc": "French Lorem ipsum just for testin dolor sit amet consectetur adipisicing elit. Odio aperiam nostrum repellat sunt provident pariatur non. Eos voluptate aperiam quidem minus recusandae? Quam tempora aut mollitia fugit consequuntur, vel officia orem ipsum dolor sit amet consectetur adipisicing elit. Odio aperiam nostrum repellat sunt provident pariatur non. Eos voluptate aperiam quidem minus recusandae? Quam tempora aut mollitia fugit consequuntur, vel officia?",
-        "button":"Demarrer"
+        "desc": "Trouvez tout ce que vous cherchez dans un seul endroit",
+        "button":"Demarrer",
+        "download":"Téléchargez l'application"
     },
     "categories":{
         "title": "Categorie d'emplois",

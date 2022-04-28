@@ -18,6 +18,7 @@ import Blog from './blogs/pages/Blog'
 import Edit from './blogs/pages/Edit'
 import ResetMail from './pages/ResetMail'
 import Contact from './pages/Contact'
+import Download from './pages/Download'
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/addJob" element = { <AddJob/>} />
           <Route path="/setting" element = { <Setting/>} />
           <Route path="/help" element = { <Contact/>} />
+          <Route path="/download" element = { <Download/>} />
           <Route path="/blog" element = { <Bloga/>} />
           <Route path="/blog/:id" element = { <Blog/>} />
           <Route path="/edit/:id" element = { <Edit/>} />

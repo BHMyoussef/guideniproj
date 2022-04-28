@@ -253,8 +253,8 @@ function Profile() {
                       <div className={`text-center text-lg px-4 py-2 flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
                           <p className="pr-4">{Profile?.rank}</p>
                         <div className={`flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
-                            <FaAward color={currentUserInfo?.rank} size={30}/>
-                            <span>{currentUserInfo?.rank}</span>
+                        <img src={`${window.origin}/resources/rank/${currentUserInfo?.rank.toLowerCase()}.svg`} alt={currentUserInfo?.rank} />
+                      <span className={`font-bold text-${currentUserInfo?.rank}`}>{currentUserInfo?.rank}</span>
                         </div>
                       </div>
                       <div className='text-center text-lg'>

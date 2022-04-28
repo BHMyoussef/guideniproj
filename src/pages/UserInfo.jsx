@@ -211,8 +211,9 @@ export default function UserInfo() {
             </div>
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang==="ar")?" md:mr-auto":" md:ml-auto"}`}>
                 <div className={`flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
-                  <FaAward color={userInformation?.rank} size={30}/>
-                  <span className="font-bold">{userInformation?.rank}</span>
+                  {/*<FaAward color={userInformation?.rank} size={30}/>*/}
+                    <img src={`${window.origin}/resources/rank/${userInformation?.rank.toLowerCase()}.svg`} alt={userInformation?.rank} />
+                  <span className={`font-bold text-${userInformation?.rank}`}>{userInformation?.rank}</span>
               </div>
               <div className='text-center text-lg'>
                   <p>{usersInfoTxt&&usersInfoTxt.totalNote}</p>

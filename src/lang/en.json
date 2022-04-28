@@ -24,8 +24,10 @@
     },
     "home":{
         "title": "Guide Ni",
-        "desc": "English Lorem ipsum just for testin dolor sit amet consectetur adipisicing elit. Odio aperiam nostrum repellat sunt provident pariatur non. Eos voluptate aperiam quidem minus recusandae? Quam tempora aut mollitia fugit consequuntur, vel officia orem ipsum dolor sit amet consectetur adipisicing elit. Odio aperiam nostrum repellat sunt provident pariatur non. Eos voluptate aperiam quidem minus recusandae? Quam tempora aut mollitia fugit consequuntur, vel officia?",
-        "button":"Get Started"
+        "desc": "Find everything you’re looking for in one place",
+        "button":"Get Started",
+        "download":"Get the application"
+
     },
     "categories":{
         "title": "Jobs Categories",

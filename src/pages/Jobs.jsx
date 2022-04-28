@@ -3,7 +3,7 @@ import Service from '../components/Service'
 import { useParams } from 'react-router-dom'
 import { collection, getDocs, query, where} from 'firebase/firestore'
 import { firestore } from '../firebase'
-import SearchBar from '../components/SearchBar' 
+import SearchBar from '../components/SearchBar'
 import { useLang } from '../contexts/LangProvider'
 
 
@@ -29,6 +29,7 @@ export default function Jobs() {
             results.forEach(doc=>{
                 tmpJobs = [...tmpJobs,doc.data()]
             })
+            console.log(tmpJobs)
             setJobs(tmpJobs)
         })
         .catch(error=>{
@@ -46,12 +47,12 @@ export default function Jobs() {
         </div>
         <hr />
         <div className="grid-template-250 mt-4 grid gap-2">
-            { !filtredJobsCategories? 
+            { !filtredJobsCategories?
                 <img className='absolute left-1/2 -translate-x-1/2' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
             :
              filtredJobsCategories.map((job,index)=>{
                 return (
-                    <Service 
+                    <Service
                         key={index}
                         id={job.jobId}
                         icon={ job.jobIconUrl }
@@ -64,4 +65,3 @@ export default function Jobs() {
     </div>
     )
 }
-
