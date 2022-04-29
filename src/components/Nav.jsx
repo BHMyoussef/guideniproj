@@ -39,7 +39,7 @@ function UpNave(){
 
 
 function SelectLanguage({ choices }){
-    const [ language, setLanguage ] = useState("English");
+    const [ language, setLanguage ] = useState();
     const { handleSelectedLang } = useLang();
     const checkbox = useRef();
 
@@ -51,11 +51,15 @@ function SelectLanguage({ choices }){
           // Bind the event listener
         document.addEventListener("mousedown", handleClickOutside);
     }
-
     useEffect(()=>{
+        handleClick();
+        const DefaultLanguage = localStorage.getItem("Lang")||"English";
+        setLanguage(DefaultLanguage);
+    },[]);
+    useEffect(()=>{
+        localStorage.setItem("Lang",language);
         handleSelectedLang(language);
         checkbox.current.checked=false;
-        handleClick();
     },[language])
     return(
         <div className="relative group">

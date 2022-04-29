@@ -117,42 +117,44 @@ const Settings = ({ userId }) => {
   }
 
   return (
-    !currentUser ? <Navigate to="/" /> :
+    !currentUser ? 
+      <img className='absolute left-1/2 -translate-x-1/2' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
+    :
       <StyledSettings className='container shadow'>
         <StyledForm  onSubmit={handleSubmit}>
           <h2 className='text-2xl block mx-auto font-semibold mb-4'>{setting?.personal}</h2>
           <div className="inputs edit-image">
             <div className="image">
               <label htmlFor="image">
-                <img src={currentUserInfo.imageUrl ?? `${window.location.origin}/resources/profile.png`} alt="image" />
+                <img src={currentUserInfo?.imageUrl ?? `${window.location.origin}/resources/profile.png`} alt="image" />
               </label>
               <input onChange={changeImage} type="file" id="image" name="image" hidden />
             </div>
           </div>
-          <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""}`}>
-            <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="fullName">{setting?.fullName}</label>
-            <input onChange={change} type="text" id="fullName" name="firstName" placeholder={formData.firstName} />
+          <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""}`}>
+            <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="fullName">{setting?.fullName}</label>
+            <input onChange={change} type="text" id="fullName" name="firstName" placeholder={formData?.firstName} />
           </div>
-          <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""} `}>
-            <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="email">{setting?.email}</label>
-            <input onChange={change} type="email" placeholder={formData.email} id="email" name="email" />
+          <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+            <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="email">{setting?.email}</label>
+            <input onChange={change} type="email" placeholder={formData?.email} id="email" name="email" />
           </div>
-          <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""} `}>
-            <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="password">{setting?.password}</label>
+          <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+            <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="password">{setting?.password}</label>
             <input onChange={changePasswd} value={pass1} type="password" id="password" name="password" placeholder='password' />
           </div>
-          <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""} `}>
-            <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="cpassword">{setting?.repeatPass}</label>
+          <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+            <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="cpassword">{setting?.repeatPass}</label>
             <input onChange={changePasswd} value={pass2} type="password" id="cpassword" name="cpassword" placeholder='Confirm Password' />
           </div>
-          {currentUserInfo.jobId && <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""}`}>
-            <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="phone">{setting?.phone}</label>
+          {currentUserInfo?.jobId && <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""}`}>
+            <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="phone">{setting?.phone}</label>
             <input onChange={change} type="tel" id="phone" placeholder={formData?.phone} name="phone" />
           </div>}
 
           
 
-          {currentUserInfo.jobId && <div>
+          {currentUserInfo?.jobId && <div>
             <h2 className='my-8 font-medium'>{setting?.contact} </h2>
             <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""} `}>
               <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="facebook">{setting?.facebook}</label>
@@ -173,7 +175,7 @@ const Settings = ({ userId }) => {
           </div>}
             <div className='text-center'>
               {
-                !currentUserInfo.jobId && 
+                !currentUserInfo?.jobId && 
                 <Link to="/addJob" className={`save-btn inline-block mr-2 border-2 rounded border-sky-500 bg-sky-500 text-white hover:bg-white hover:text-sky-500  px-5 `}
                 >
                         {setting?.addJob}

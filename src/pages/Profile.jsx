@@ -209,156 +209,158 @@ function Profile() {
       setImgUrl(url);
       setShowModal(true);
     }
+    
     return (
-        !currentUser ? <Navigate to="/" /> :
+        !currentUser ?
+        <img className='absolute left-1/2 -translate-x-1/2' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
+        :
         <>
-        <div className="profile container lg:grid grid-flow-row-dense grid-cols-10 gap-4 auto-rows-auto mx-auto">
-            <div className="hidden col-span-2 row-span-2 text-white lg:block">
-              <span className='bg-gray-600 w-40 h-[600px] flex items-center justify-center'>Ads Here</span>
-            </div>
-            <div className={`col-start-3 col-span-6 flex flex-col md:flex-row items-center ${(currentLang==="ar")&&" md:flex-row-reverse"}`}>
-              <div className='image-container w-48 h-48 mb-4 cursor-pointer' onClick={() => popupImg(currentUserInfo?.imageUrl)}
-                data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen">
-                  <img
-                      className='h-full w-full rounded-full'
-                      src={currentUserInfo.imageUrl ||`${window.location.origin}/resources/profile.png`}
-                      alt="profile photo"
-                  />
+          <div className="profile container lg:grid grid-flow-row-dense grid-cols-10 gap-4 auto-rows-auto mx-auto">
+              <div className="hidden col-span-2 row-span-2 text-white lg:block">
+                <span className='bg-gray-600 w-40 h-[600px] flex items-center justify-center'>Ads Here</span>
               </div>
-              <div className='ml-14'>
-                  <h3 className='font-semibold text-2xl mt-2 flex justify-evenly items-center'>
-                    {currentUserInfo.firstName}
-                  </h3>
-                    {userJob&&<Stars rate={currentUserInfo.rating}/>}
-                  <span className='block text-lg font-light mb-2'>{userJob&&userJob.jobName[currentLang]}</span>
-                  {
-                      <>
-                        <span className='block text-md'>{userCity}</span>
-                        <span className='block text-md'>Email: {currentUserInfo.email}</span>
-                        <span className='block text-md'>{currentUserInfo.phone}</span>
-                        <div className='flex gap-x-4 mt-2'>
-                          {/* Just removed the 'Url' word at the end of the property*/}
-                            <Icon icon={ <a href={currentUserInfo.facebookAccount} target="blank"><FaFacebookF className='group-hover:text-blue-500'/></a> } />
-                            <Icon icon={ <a href={currentUserInfo.instagramAccount} target="blank"><FaInstagram className='group-hover:text-pink-400'/></a> } />
-                            <Icon icon={ <a href={currentUserInfo.youtubeAccount} target="blank"><FaYoutube className='group-hover:text-red-500'/></a> } />
-                          <Icon icon={ <a href={currentUserInfo.website} target="blank"><SiWebflow className='group-hover:text-blue-800'/></a> } />
-                        </div>
-                      </>
-                  }
-              </div>
-              <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang==="ar")?" md:mr-auto":" md:ml-auto"}`}>
-                  {
-                      currentUserInfo.jobId &&
-                      <>
-                      <div className={`text-center text-lg px-4 py-2 flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
-                          <p className="pr-4">{Profile?.rank}</p>
-                        <div className={`flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
-                        <img src={`${window.origin}/resources/rank/${currentUserInfo?.rank.toLowerCase()}.svg`} alt={currentUserInfo?.rank} />
-                      <span className={`font-bold text-${currentUserInfo?.rank}`}>{currentUserInfo?.rank}</span>
-                        </div>
-                      </div>
-                      <div className='text-center text-lg'>
-                          <p>{usersInfoTxt&&usersInfoTxt.totalNote}</p>
-                          <span className='font-bold text-lg'>{currentUserInfo?.rating}</span>
-                      </div>
-                          <div className='text-center text-lg'>
-                              <p>{usersInfoTxt&&usersInfoTxt.rate}</p>
-                          <   span className='block font-bold'>{currentUserInfo?.rating}/5</span>
+              <div className={`col-start-3 col-span-6 flex flex-col md:flex-row items-center ${(currentLang==="ar")&&" md:flex-row-reverse"}`}>
+                <div className='image-container w-48 h-48 mb-4 cursor-pointer' onClick={() => popupImg(currentUserInfo?.imageUrl)}
+                  data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen">
+                    <img
+                        className='h-full w-full rounded-full'
+                        src={currentUserInfo?.imageUrl ||`${window.location.origin}/resources/profile.png`}
+                        alt="profile photo"
+                    />
+                </div>
+                <div className='ml-14'>
+                    <h3 className='font-semibold text-2xl mt-2 flex justify-evenly items-center'>
+                      {currentUserInfo?.firstName}
+                    </h3>
+                      {userJob&&<Stars rate={currentUserInfo?.rating}/>}
+                    <span className='block text-lg font-light mb-2'>{userJob&&userJob.jobName[currentLang]}</span>
+                    {
+                        <>
+                          <span className='block text-md'>{userCity}</span>
+                          <span className='block text-md'>Email: {currentUserInfo?.email}</span>
+                          <span className='block text-md'>{currentUserInfo?.phone}</span>
+                          <div className='flex gap-x-4 mt-2'>
+                            {/* Just removed the 'Url' word at the end of the property*/}
+                              <Icon icon={ <a href={currentUserInfo?.facebookAccount} target="blank"><FaFacebookF className='group-hover:text-blue-500'/></a> } />
+                              <Icon icon={ <a href={currentUserInfo?.instagramAccount} target="blank"><FaInstagram className='group-hover:text-pink-400'/></a> } />
+                              <Icon icon={ <a href={currentUserInfo?.youtubeAccount} target="blank"><FaYoutube className='group-hover:text-red-500'/></a> } />
+                            <Icon icon={ <a href={currentUserInfo?.website} target="blank"><SiWebflow className='group-hover:text-blue-800'/></a> } />
                           </div>
-                      </>
-                  }
-              </div>
-          </div>
-          <div className="col-span-6 col-start-3">
-            <div className='buttons mt-8'>
-              <button className={`w-1/2 pt-4 pb-4 px-8 ${galerieSelected? 'bg-secondary':'bg-bgcolor'} border-4 border-secondary font-medium text-lg hover:bg-opacity-90`}
-                      onClick={switchButton}
-                      id="galerie"
-              >
-                {usersInfoTxt&&usersInfoTxt.galerie}
-              </button>
-              <button className={`w-1/2 pt-4 pb-4 px-8 ${galerieSelected?'bg-bgcolor': 'bg-secondary'} border-4 border-secondary font-medium text-lg hover:bg-opacity-90`}
-                      onClick={switchButton}
-                      id="feedback"
-              >
-                {usersInfoTxt&&usersInfoTxt.feedback}
-              </button>
-            </div>
-            <div className={`px-8 py-4 pb-8 border-b-4 border-l-4 border-r-4 border-secondary ${galerieSelected?'grid md:grid-cols-2 lg:grid-cols-3 gap-2':'block'} `}>
-              {
-                galerieSelected
-                ? <>
-                  {
-                    portFolio && portFolio.map(elm=>
-                      elm.medias.map((media,i)=>
-                        <div className="hover:scale-105 transition-all relative ease-in-out">
-                          <a key={i} target="blank" href={media.mediaUrl} className="overflow-hidden max-h-96">
-                            <img src={media.mediaUrl} alt={media.mediaType} className="w-full h-full object-cover"/>
-                          </a>
-                          <button onClick={()=>{deleteImage(elm.docId, media.mediaId)}} className="text-red-500 absolute top-0 right-0 z-10 hover:scale-105"><AiFillCloseCircle size={32}/></button>
+                        </>
+                    }
+                </div>
+                <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang==="ar")?" md:mr-auto":" md:ml-auto"}`}>
+                    {
+                        currentUserInfo?.jobId &&
+                        <>
+                        <div className={`text-center text-lg px-4 py-2 flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
+                            <p className="pr-4">{Profile?.rank}</p>
+                          <div className={`flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
+                          <img src={`${window.origin}/resources/rank/${currentUserInfo?.rank.toLowerCase()}.svg`} alt={currentUserInfo?.rank} />
+                        <span className={`font-bold text-${currentUserInfo?.rank}`}>{currentUserInfo?.rank}</span>
+                          </div>
                         </div>
+                        <div className='text-center text-lg'>
+                            <p>{usersInfoTxt&&usersInfoTxt.totalNote}</p>
+                            <span className='font-bold text-lg'>{currentUserInfo?.rating}</span>
+                        </div>
+                            <div className='text-center text-lg'>
+                                <p>{usersInfoTxt&&usersInfoTxt.rate}</p>
+                            <   span className='block font-bold'>{currentUserInfo?.rating}/5</span>
+                            </div>
+                        </>
+                    }
+                </div>
+            </div>
+            <div className="col-span-6 col-start-3">
+              <div className='buttons mt-8'>
+                <button className={`w-1/2 pt-4 pb-4 px-8 ${galerieSelected? 'bg-secondary':'bg-bgcolor'} border-4 border-secondary font-medium text-lg hover:bg-opacity-90`}
+                        onClick={switchButton}
+                        id="galerie"
+                >
+                  {usersInfoTxt&&usersInfoTxt.galerie}
+                </button>
+                <button className={`w-1/2 pt-4 pb-4 px-8 ${galerieSelected?'bg-bgcolor': 'bg-secondary'} border-4 border-secondary font-medium text-lg hover:bg-opacity-90`}
+                        onClick={switchButton}
+                        id="feedback"
+                >
+                  {usersInfoTxt&&usersInfoTxt.feedback}
+                </button>
+              </div>
+              <div className={`px-8 py-4 pb-8 border-b-4 border-l-4 border-r-4 border-secondary ${galerieSelected?'grid md:grid-cols-2 lg:grid-cols-3 gap-2':'block'} `}>
+                {
+                  galerieSelected
+                  ? <>
+                    {
+                      portFolio && portFolio.map(elm=>
+                        elm.medias.map((media,i)=>
+                          <div className="hover:scale-105 transition-all relative ease-in-out">
+                            <a key={i} target="blank" href={media.mediaUrl} className="overflow-hidden max-h-96">
+                              <img src={media.mediaUrl} alt={media.mediaType} className="w-full h-full object-cover"/>
+                            </a>
+                            <button onClick={()=>{deleteImage(elm.docId, media.mediaId)}} className="text-red-500 absolute top-0 right-0 z-10 hover:scale-105"><AiFillCloseCircle size={32}/></button>
+                          </div>
+                        )
                       )
-                    )
-                  }
-                      <div className="flex justify-center items-center">
-                        <button onClick={()=>setAddGallerie(true)} className="h-20 w-20 flex justify-center items-center rounded-full bg-secondary object-cover hover:scale-105 transition-all ease-in-out">
-                          <FaPlusCircle size={38} color="#ffffff" />
-                        </button>
-                      </div>
-                      {
-                        addGallerie &&
-                        <div className="fixed w-9/12 rounded-md z-20 shadow-lg top-1/2 left-1/2 -translate-x-1/2 items-center justify-between -translate-y-1/2 flex flex-col px-4 py-8 bg-bgcolor">
-                          <div onClick={()=>{setAddGallerie(false)}} className="w-full"><FaArrowLeft size={23} className="mb-4 cursor-pointer hover:scale-110"/></div>
-                          { error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
-                          <Input name="text" type="text" value={title} label={profile?.title} onChange={(e)=>setTitle(e.target.value)}  />
-                          <div className="mb-4 w-full">
-                            <label
-                                    className="inline-block text-lg font-medium "
-                                    htmlFor = "description">{profile?.description}
-                            </label>
-                            <textarea id="description" className="resize-none border-2 rounded-md outline-none py-1 px-2 w-full h-28" value={description} onChange={(e)=>setDescription(e.target.value)}  />
-                          </div>
-                          <input type="file" multiple name="image" id="image" className="mb-2" onChange={handleImageChange}/>
-                          <div className="images flex gap-2 flex-wrap">
-                            { images&&images.map((image,i)=>
-                              <div key={i} className="">
-                                <img className="w-32 mb-4 h-24" src={image.imageUrl} alt="image" />
-                                <div className="progress input bg-secondary h-3">
-                                  <div
-                                    className="progress-bar progress-bar-stripped flex justify-center items-center text-[10px] bg-additional h-3"
-                                    style={{ width: `${image.progress}%` }}
-                                  >
-                                    {`${image.progress}%`}
+                    }
+                        <div className="flex justify-center items-center">
+                          <button onClick={()=>setAddGallerie(true)} className="h-20 w-20 flex justify-center items-center rounded-full bg-secondary object-cover hover:scale-105 transition-all ease-in-out">
+                            <FaPlusCircle size={38} color="#ffffff" />
+                          </button>
+                        </div>
+                        {
+                          addGallerie &&
+                          <div className="fixed w-9/12 rounded-md z-20 shadow-lg top-1/2 left-1/2 -translate-x-1/2 items-center justify-between -translate-y-1/2 flex flex-col px-4 py-8 bg-bgcolor">
+                            <div onClick={()=>{setAddGallerie(false)}} className="w-full"><FaArrowLeft size={23} className="mb-4 cursor-pointer hover:scale-110"/></div>
+                            { error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
+                            <Input name="text" type="text" value={title} label={profile?.title} onChange={(e)=>setTitle(e.target.value)}  />
+                            <div className="mb-4 w-full">
+                              <label
+                                      className="inline-block text-lg font-medium "
+                                      htmlFor = "description">{profile?.description}
+                              </label>
+                              <textarea id="description" className="resize-none border-2 rounded-md outline-none py-1 px-2 w-full h-28" value={description} onChange={(e)=>setDescription(e.target.value)}  />
+                            </div>
+                            <input type="file" multiple name="image" id="image" className="mb-2" onChange={handleImageChange}/>
+                            <div className="images flex gap-2 flex-wrap">
+                              { images&&images.map((image,i)=>
+                                <div key={i} className="">
+                                  <img className="w-32 mb-4 h-24" src={image.imageUrl} alt="image" />
+                                  <div className="progress input bg-secondary h-3">
+                                    <div
+                                      className="progress-bar progress-bar-stripped flex justify-center items-center text-[10px] bg-additional h-3"
+                                      style={{ width: `${image.progress}%` }}
+                                    >
+                                      {`${image.progress}%`}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            )}
+                              )}
+                            </div>
+                            <button onClick={handleSubmit} disabled={disabledbtn && error} className="px-4 py-2 bg-additional text-white font-medium text-lg rounded-md hover:bg-secondary hover:text-white mt-4 disabled:opacity-80">{profile?.add}</button>
                           </div>
-                          <button onClick={handleSubmit} disabled={disabledbtn && error} className="px-4 py-2 bg-additional text-white font-medium text-lg rounded-md hover:bg-secondary hover:text-white mt-4 disabled:opacity-80">{profile?.add}</button>
-                        </div>
-                      }
-                  </>
-                :
-                  feedback && feedback.map((feed,i)=>{
-                    return(
-                      <FeedBack
-                        key={i}
-                        name = {feed.name}
-                        image = { feed.image }
-                        rateDetails = { feed.rateDetails }
-                        rate = { feed.rate }
-                      />
-                    )
-                  })
-              }
+                        }
+                    </>
+                  :
+                    feedback && feedback.map((feed,i)=>{
+                      return(
+                        <FeedBack
+                          key={i}
+                          name = {feed.name}
+                          image = { feed.image }
+                          rateDetails = { feed.rateDetails }
+                          rate = { feed.rate }
+                        />
+                      )
+                    })
+                }
+              </div>
+            </div>
+            <div className="hidden col-span-2 row-span-2 text-white lg:block">
+              <span className='bg-gray-600 w-40 h-[600px] flex items-center justify-center ml-auto'>Ads Here</span>
             </div>
           </div>
-          <div className="hidden col-span-2 row-span-2 text-white lg:block">
-            <span className='bg-gray-600 w-40 h-[600px] flex items-center justify-center ml-auto'>Ads Here</span>
-          </div>
-        </div>
-
-        {showModal && <PopupModal url={imgUrl} setShowModal={setShowModal}/>}
+          {showModal && <PopupModal url={imgUrl} setShowModal={setShowModal}/>}
         </>
      );
 }
