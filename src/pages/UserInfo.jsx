@@ -1,7 +1,7 @@
 import { addDoc, collection, doc, getDoc, getDocs, query  , where } from 'firebase/firestore';
 import { FaFacebookF, FaYoutube, FaInstagram} from 'react-icons/fa'
 import { SiWebflow } from 'react-icons/si'
-
+import Share  from '../components/Share';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import FeedBack from '../components/Feedback';
@@ -229,6 +229,7 @@ export default function UserInfo() {
               >
                 {usersInfoTxt&&usersInfoTxt.feedBackOrder}
               </button>
+              <Share />
             </div>
           </div>
           <div className='col-span-6 col-start-3'>
