@@ -53,6 +53,8 @@ export default function JobsProvider() {
       const colRef = collection(firestore, 'users')
         const q = query( colRef, where('jobId','==',params.id));
         let tmpJobProvider = []
+        // here onSnapshot will be more usefull than gteDocs
+        // cuz onSnapshot gives us the data on real time, immidiatly after any changes
         getDocs(q)
         .then(results =>{
             results.forEach(doc=>{
@@ -72,7 +74,7 @@ export default function JobsProvider() {
                 silver.push(item)
               }
             })
-            tmpJobProvider = [...gold, ...bronze, ...silver];
+            tmpJobProvider = [...gold, ...silver, ...bronze];
            setUsersList(tmpJobProvider)
           })
         .catch(error=>{

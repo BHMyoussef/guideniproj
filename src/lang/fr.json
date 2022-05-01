@@ -107,7 +107,16 @@
         "add":"Aouter",
         "title":"Titre",
         "description":"Description",
-        "rank": "Grade"
+        "rank": "Grade",
+        "pharmacy": "Pharmacie de guarde",
+        "retToNormal": "Passer à une Pharmacie",
+        "from": "De:",
+        "to": "À:",
+        "save": "Sauvegarder",
+        "cancel": "Cancel",
+        "yes": "Oui",
+        "sure": "Êtes-vous sûr ?",
+        "sureText": "En cliquant sur oui, vous terminez votre période de garde"
     },
 
     "contact": {

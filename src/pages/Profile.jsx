@@ -1,5 +1,5 @@
-import { collection, doc, getDoc, getDocs, query, addDoc, where, updateDoc } from "firebase/firestore";
-import { FaFacebookF, FaYoutube, FaInstagram} from 'react-icons/fa'
+import { collection, doc, getDoc, getDocs, query, addDoc, where, updateDoc, deleteField } from "firebase/firestore";
+import { FaFacebookF, FaYoutube, FaInstagram, FaCalendar} from 'react-icons/fa'
 import { SiWebflow } from 'react-icons/si'
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
@@ -7,15 +7,33 @@ import FeedBack from "../components/Feedback";
 import Stars from "../components/Stars";
 import { useAuth } from "../contexts/AuthProvider";
 import { useLang } from "../contexts/LangProvider";
-import { firestore, storage } from "../firebase";
+import { firestore, storage, functions } from "../firebase";
 import {FaPlusCircle, FaArrowLeft,FaAward} from "react-icons/fa"
 import { AiFillCloseCircle } from "react-icons/ai"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import Input from "../components/Input";
 import Joi from "joi";
 import Icon from "../components/Icon";
+import {httpsCallable } from "firebase/functions";
+
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+
 
 function Profile() {
+  /**
+  console.log({httpsCallable, functions});
+  for later use:
+  const func_name = httpsCallable(functions, 'func_name');
+  func_name({ params })
+  .then((result) => {
+    // Read result of the Cloud Function.
+    const data = result.data;
+    ...
+  });
+  ['normal']
+  */
     const [ userJob, setUserJob ] = useState();
     const [ userCity, setUserCity ] = useState("");
     const [ galerieSelected , setgalerieSelected ] = useState(true);
@@ -34,6 +52,10 @@ function Profile() {
 
     // show/hide the popup modal
     const [showModal, setShowModal] = useState(false);
+    //  datePicker modal
+    const [datePicker, setDatePicker] = useState(false);
+    // are u sure modal
+    const [showSure, setShowSure] = useState(false);
     // get the image url to popup
     const [imgUrl, setImgUrl] = useState(null);
 
@@ -209,7 +231,7 @@ function Profile() {
       setImgUrl(url);
       setShowModal(true);
     }
-    
+
     return (
         !currentUser ?
         <img className='absolute left-1/2 -translate-x-1/2' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
@@ -229,7 +251,8 @@ function Profile() {
                     />
                 </div>
                 <div className='ml-14'>
-                    <h3 className='font-semibold text-2xl mt-2 flex justify-evenly items-center'>
+                      {/* For the name i just changed justify-evenly --> justify-start  */}
+                    <h3 className='font-semibold text-2xl mt-2  flex justify-start items-center'>
                       {currentUserInfo?.firstName}
                     </h3>
                       {userJob&&<Stars rate={currentUserInfo?.rating}/>}
@@ -246,6 +269,33 @@ function Profile() {
                               <Icon icon={ <a href={currentUserInfo?.youtubeAccount} target="blank"><FaYoutube className='group-hover:text-red-500'/></a> } />
                             <Icon icon={ <a href={currentUserInfo?.website} target="blank"><SiWebflow className='group-hover:text-blue-800'/></a> } />
                           </div>
+
+                          {currentUserInfo?.jobId.toLowerCase() === "normalpharmacy"?
+                          <button
+                            onClick={() => setDatePicker(true)}
+                           className="
+                              my-[1rem] bg-transparent
+                              hover:bg-green-500 text-green-500
+                              font-semibold hover:text-white
+                              py-2 px-4 border border-green-500
+                              hover:border-transparent rounded
+                            ">
+                          {profile?.pharmacy}
+                          </button> : ''}
+
+                          {currentUserInfo?.jobId.toLowerCase() === "guardpharmacy"?
+                          <button
+                            onClick={() => setShowSure(true)}
+                           className="
+                            my-[1rem] bg-transparent
+                            hover:bg-rose-500 text-rose-500
+                            font-semibold hover:text-white
+                            py-2 px-4 border border-rose-500
+                            hover:border-transparent rounded
+                            ">
+                          {profile?.retToNormal}
+                          </button> : ''}
+
                         </>
                     }
                 </div>
@@ -361,6 +411,24 @@ function Profile() {
             </div>
           </div>
           {showModal && <PopupModal url={imgUrl} setShowModal={setShowModal}/>}
+          {datePicker &&
+            <DatePickers
+              setDatePicker={setDatePicker}
+              profile={profile}
+              currentLang={currentLang}
+              currentUserInfo={currentUserInfo}
+              updateUserInfo={updateUserInfo}
+              />
+          }
+          {showSure &&
+            <AreUSure
+              setShowSure={setShowSure}
+              profile={profile}
+              currentLang={currentLang}
+              currentUserInfo={currentUserInfo}
+              updateUserInfo={updateUserInfo}
+              />
+          }
         </>
      );
 }
@@ -402,5 +470,229 @@ function PopupModal({url,setShowModal}) {
   )
 }
 
+function DatePickers({setDatePicker, profile, currentLang, currentUserInfo, updateUserInfo}){
+  const [from, setFrom] = useState(new Date());
+  const [to, setTo] = useState(new Date());
+
+  function handleExit(e){
+    if(e.target.classList.contains('popup')){
+      setDatePicker(false);
+    }
+  }
+/**
+
+JobId:
+normalPharmacy
+guardPharmacy
+jobDetails
+(map)
+endDate 1651363200000
+jobWhenEndDate "normalPharmacy"
+startDate 1651363200000
+*/
+
+  function handleSubmit(){
+    const docRef = doc(firestore, `users/${currentUserInfo.userId}`);
+    const data = {
+      "jobId": "guardPharmacy",
+      "jobDetails": {
+        "endDate": to.getTime(),
+        "jobWhenEndDate": "normalPharmacy",
+        "startDate": to.getTime(),
+      }
+    }
+    updateDoc(docRef, data)
+      .then(result => {
+        console.log({result});
+        updateUserInfo();
+        setDatePicker(false)
+      })
+    console.log({from, to})
+    console.log({docRef})
+  }
+
+  return (
+    <>
+          <div
+            onClick={handleExit}
+            className="popup justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-auto mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-neutral-100 outline-none focus:outline-none">
+                {/*body*/}
+                <div className="relative w-full p-6 pb-0 flex-auto rounded-lg ">
+                <div className="flex flex-col">
+                  <h2 className={currentLang === "ar"&&"text-right"}>{profile.from} </h2>
+                  <div className="
+                  bg-white
+                  w-full
+                  flex items-center rounded  p-1 my-[1rem] cursor-pointer">
+                    <label htmlFor="datepicker1">
+                      <FaCalendar
+                       size="25"
+                       className="cursor-pointer w-full h-full"
+                       />
+                      </label>
+                    <DatePicker
+                    id="datepicker1"
+                    selected={from}
+                    onChange={date => setFrom(date)}
+                    isClearable
+                    minDate={new Date()}
+                    className="outline-none text-gray-900 sm:text-sm  block w-full pl-10 p-2 ml-[0.5rem]"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <h2 className={currentLang === "ar"&&"text-right"}>{profile.to} </h2>
+                  <div className="
+                  bg-white
+                  w-full
+                  flex items-center rounded  p-1 my-[1rem] cursor-pointer
+                  ">
+                    <label htmlFor="datepicker2">
+                      <FaCalendar
+                       size="25"
+                       className="cursor-pointer w-full h-full"
+                       />
+                      </label>
+                    <DatePicker
+                    id="datepicker2"
+                    selected={to}
+                    onChange={date => setTo(date)}
+                    isClearable
+                    minDate={new Date()}
+                    className="outline-none text-gray-900 sm:text-sm  block w-full pl-10 p-2 ml-[0.5rem]"
+                    />
+                  </div>
+                </div>
+                </div>
+                {/* Err msg*/}
+
+                <div className="flex items-center justify-center rounded-b p-4">
+                <button
+                  className="mr-[1rem] bg-blue-500 text-white border-solid border-2 border-blue-500 rounded-lg  font-bold uppercase px-10 py-4 text-sm outline-none focus:outline-none  ease-linear transition-all duration-150 hover:text-blue-500 hover:bg-white hover:border-blue-500"
+                  type="button"
+                  onClick={handleSubmit}
+                >
+                  {profile?.save}
+                </button>
+
+                <button
+                  className="bg-red-500 text-white border-solid border-2 border-rose-500 rounded-lg  font-bold uppercase px-10 py-4 text-sm outline-none focus:outline-none  ease-linear transition-all duration-150 hover:text-red-500 hover:bg-white hover:border-red-500"
+                  type="button"
+                  onClick={() => setDatePicker(false)}
+                >
+                {profile?.cancel}
+
+                </button>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-80 fixed inset-0 z-40 bg-black"></div>
+        </>
+  )
+}
+
+function AreUSure({setShowSure, profile, currentLang, currentUserInfo, updateUserInfo}){
+
+  function handleExit(e){
+    if(e.target.classList.contains('popup')){
+      setShowSure(false);
+    }
+  }
+
+  function handleSubmit(){
+    console.log('Back to normal');
+    const docRef = doc(firestore, `users/${currentUserInfo.userId}`);
+    const data = {
+      "jobId": "normalPharmacy",
+      jobDetails: deleteField()
+
+    }
+    updateDoc(docRef, data)
+      .then(result => {
+        console.log({result});
+        updateUserInfo();
+        setShowSure(false)
+      })
+    setShowSure(false);
+
+  }
+
+  return (
+    <>
+    <div
+    onClick={handleExit}
+
+      className="
+        popup
+        overflow-y-auto overflow-x-hidden
+        fixed top-0 right-0 left-0 z-50
+        md:inset-0 h-modal md:h-full
+        flex items-center justify-center
+      ">
+      <div className="relative p-4 w-full max-w-md h-full md:h-auto">
+        <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <button
+              onClick={() => setShowSure(false)}
+              type="button"
+              className="
+                absolute top-3 right-2.5 text-gray-400
+                bg-transparent rounded-lg text-sm p-1.5
+                ml-auto inline-flex items-center
+                dark:hover:bg-gray-800 dark:hover:text-white
+                ">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+            <div className="p-6 text-center">
+                <svg className="mx-auto mb-4 w-14 h-14 text-gray-400 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <h3
+                className="
+                  mb-5 text-lg font-normal
+                  text-gray-500 dark:text-gray-400
+                  ">
+                  {profile?.sureText}
+              </h3>
+                <button
+                  onClick={handleSubmit}
+                  type="button"
+                  className="
+                    text-white bg-red-600 hover:bg-red-500
+                    focus:ring-4 font-medium rounded-lg text-sm
+                     inline-flex items-center px-5 py-2.5 text-center mr-2
+                   ">
+                    {profile?.yes}
+                </button>
+                <button
+                  onClick={() => setShowSure(false)}
+                  type="button"
+                  className="
+                    text-gray-500 bg-white
+                    hover:bg-gray-100 focus:ring-4
+                    focus:outline-none focus:ring-gray-200
+                    rounded-lg border border-gray-200
+                    text-sm font-medium px-5 py-2.5
+                    hover:text-gray-500 focus:z-10
+                    dark:bg-gray-700 dark:text-gray-300
+                    dark:border-gray-500 dark:hover:text-white
+                    dark:hover:bg-gray-600 dark:focus:ring-gray-600
+                ">
+                {profile?.cancel}
+                </button>
+            </div>
+        </div>
+      </div>
+      </div>
+
+          <div className="opacity-80 fixed inset-0 z-40 bg-black"></div>
+        </>
+    )
+}
 
 export default Profile;

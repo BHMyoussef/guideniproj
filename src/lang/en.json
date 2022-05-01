@@ -109,7 +109,16 @@
         "add":"Add",
         "title":"Title",
         "description":"Description",
-        "rank": "Rank"
+        "rank": "Rank",
+        "pharmacy": "Guard Pharmacy",
+        "retToNormal": "Switch to Normal Pharmacy",
+        "from": "From:",
+        "to": "To:",
+        "save": "Save",
+        "cancel": "Cancel",
+        "yes": "Yes",
+        "sure": "Are you sure?",
+        "sureText": "By clicking on yes, you will end your up your guard period"
     },
     "contact": {
       "title": "Contact US",

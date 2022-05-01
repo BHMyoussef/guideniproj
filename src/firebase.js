@@ -2,7 +2,7 @@ import { initializeApp} from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectStorageEmulator, getStorage } from "firebase/storage"
 import { getFirestore, connectFirestoreEmulator} from "firebase/firestore"
-
+import { getFunctions, httpsCallable } from "firebase/functions";
 const firebaseConfig = {
     apiKey: "AIzaSyC91dVQ8rDzFUhpHq0AqzJQn_gzWCBvdPs",
     authDomain: "services-app-73974.firebaseapp.com",
@@ -16,6 +16,7 @@ const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const auth = getAuth(app)
 const storage = getStorage(app)
+const functions = getFunctions();
 // if(window.location.hostname==='localhost'){
 //   connectFirestoreEmulator(firestore, 'localhost', 8081);
 //   connectAuthEmulator(auth, "http://localhost:9099");
@@ -23,4 +24,4 @@ const storage = getStorage(app)
 // }
 
 
-export { firestore, auth, storage };
+export { firestore, auth, storage, functions };
