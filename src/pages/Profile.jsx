@@ -230,6 +230,11 @@ function Profile() {
       setImgUrl(url);
       setShowModal(true);
     }
+    function handleExit(e) {
+      if(e.target.classList.contains("popup")){
+        setAddGallerie(false)
+      }
+    }
 
     return (
         !currentUser ?
@@ -387,8 +392,13 @@ function Profile() {
                         </div>
                         {
                           addGallerie &&
+                          <>
+                          <div
+                            onClick={handleExit}
+                            className="popup justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                          >
                           <div className="fixed w-9/12 rounded-md z-20 shadow-lg top-1/2 left-1/2 -translate-x-1/2 items-center justify-between -translate-y-1/2 flex flex-col px-4 py-8 bg-bgcolor">
-                            <div onClick={()=>{setAddGallerie(false)}} className="w-full"><FaArrowLeft size={23} className="mb-4 cursor-pointer hover:scale-110"/></div>
+                            <div onClick={()=>{setAddGallerie(false)}} className="self-start"><FaArrowLeft size={23} className="mb-4 cursor-pointer hover:scale-110"/></div>
                             { error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
                             <Input name="text" type="text" value={title} label={profile?.title} onChange={(e)=>setTitle(e.target.value)}  />
                             <div className="mb-4 w-full">
@@ -398,7 +408,7 @@ function Profile() {
                               </label>
                               <textarea id="description" className="resize-none border-2 rounded-md outline-none py-1 px-2 w-full h-28" value={description} onChange={(e)=>setDescription(e.target.value)}  />
                             </div>
-                            <input type="file" multiple name="image" id="image" className="mb-2" onChange={handleImageChange}/>
+                            <input  type="file" multiple name="image" id="image" className="my-[1rem] cursor-pointer" onChange={handleImageChange}/>
                             <div className="images flex gap-2 flex-wrap">
                               { images&&images.map((image,i)=>
                                 <div key={i} className="">
@@ -414,8 +424,12 @@ function Profile() {
                                 </div>
                               )}
                             </div>
-                            <button onClick={handleSubmit} disabled={disabledbtn && error} className="px-4 py-2 bg-additional text-white font-medium text-lg rounded-md hover:bg-secondary hover:text-white mt-4 disabled:opacity-80">{profile?.add}</button>
+                            <button onClick={handleSubmit} disabled={disabledbtn && error} className="px-4 py-2 bg-additional text-white font-medium text-lg rounded-md hover:bg-secondary hover:text-white mt-4 disabled:opacity-80 cursor-pointer">{profile?.add}</button>
                           </div>
+                          </div>
+                          <div
+                           className="opacity-80 fixed inset-0 z-40 bg-black"></div>
+                          </>
                         }
                     </>
                   :

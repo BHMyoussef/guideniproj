@@ -63,6 +63,7 @@
         "to": "À:",
         "save": "Sauvegarder",
         "cancel": "Cancel",
+        "close": "Fermer",
         "yes": "Oui",
         "sure": "Êtes-vous sûr ?",
         "sureText": "En cliquant sur oui, vous terminez votre période de garde"
@@ -111,7 +112,7 @@
         "enterYourCategory": "Entrez votre catégorie",
         "enteryourSubCategory":"entrez votre sous-catégorie",
         "phoneNumber":"Numéro de téléphone",
-        "add":"Aouter",
+        "add":"Ajouter",
         "title":"Titre",
         "description":"Description",
         "rank": "Grade",
