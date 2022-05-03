@@ -32,6 +32,7 @@ export default function UserInfo() {
     const { userInfo:usersInfoTxt, currentLang } = useLang();
     const params = useParams('id')
 
+    console.log({params})
 
 
     useEffect(()=>{
@@ -208,6 +209,33 @@ export default function UserInfo() {
                       </div>
                     </>
                 }
+                {
+                  // show the guard time availabilality
+                  currentUserInfo?.jobId.toLowerCase() === "guardpharmacy"?
+                <div
+                  className='
+                    w-full
+                    p-[0.5rem] my-2
+                    flex flex-col
+                    shadow-lg
+                  '
+                >
+                <h2
+                  className={`flex items-center justify-between ${currentLang==='ar'&&'flex-row-reverse'}`}
+                >{profile?.from}
+                <span>{new Date(currentUserInfo?.jobDetails.startDate).toLocaleString()}</span>
+
+                </h2>
+                <h2
+                  className={`flex items-center justify-between ${currentLang==='ar'&&'flex-row-reverse'}`}
+                >{profile?.to}
+                <span>{new Date(currentUserInfo?.jobDetails.endDate).toLocaleString()}</span>
+
+                </h2>
+
+              </div>
+              : ''
+              }
             </div>
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang==="ar")?" md:mr-auto":" md:ml-auto"}`}>
                 <div className={`flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
@@ -294,7 +322,7 @@ function RateMe({getRatingInformation, canRate, hiddeRate,txts}){
 
   function submit(){
     setbtn(true)
-    if(feedbackMessage === "" || feedbackMessage===undefined){
+    if(feedbackMessage.trim() === " " || feedbackMessage===undefined){
       setError(txts&&txts.error1);
     }
     else if(rating===undefined){

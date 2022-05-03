@@ -256,6 +256,7 @@ function Profile() {
                     </h3>
                       {userJob&&<Stars rate={currentUserInfo?.rating}/>}
                     <span className='block text-lg font-light mb-2'>{userJob&&userJob.jobName[currentLang]}</span>
+
                     {
                         <>
                           <span className='block text-md'>{userCity}</span>
@@ -269,6 +270,33 @@ function Profile() {
                             <Icon icon={ <a href={currentUserInfo?.website} target="blank"><SiWebflow className='group-hover:text-blue-800'/></a> } />
                           </div>
 
+                          {
+                            // show the guard time availabilality
+                            currentUserInfo?.jobId.toLowerCase() === "guardpharmacy"?
+                          <div
+                            className='
+                              w-full
+                              p-[0.5rem] my-2
+                              flex flex-col
+                              shadow-lg
+                            '
+                          >
+                          <h2
+                            className={`flex items-center justify-between ${currentLang==='ar'&&'flex-row-reverse'}`}
+                          >{profile?.from}
+                          <span>{new Date(currentUserInfo?.jobDetails.startDate).toLocaleString()}</span>
+
+                          </h2>
+                          <h2
+                            className={`flex items-center justify-between ${currentLang==='ar'&&'flex-row-reverse'}`}
+                          >{profile?.to}
+                          <span>{new Date(currentUserInfo?.jobDetails.endDate).toLocaleString()}</span>
+
+                          </h2>
+
+                        </div>
+                        : ''
+                        }
                           {currentUserInfo?.jobId.toLowerCase() === "normalpharmacy"?
                           <button
                             onClick={() => setDatePicker(true)}
@@ -478,17 +506,6 @@ function DatePickers({setDatePicker, profile, currentLang, currentUserInfo, upda
       setDatePicker(false);
     }
   }
-/**
-
-JobId:
-normalPharmacy
-guardPharmacy
-jobDetails
-(map)
-endDate 1651363200000
-jobWhenEndDate "normalPharmacy"
-startDate 1651363200000
-*/
 
   function handleSubmit(){
     const docRef = doc(firestore, `users/${currentUserInfo.userId}`);
@@ -497,7 +514,7 @@ startDate 1651363200000
       "jobDetails": {
         "endDate": to.getTime(),
         "jobWhenEndDate": "normalPharmacy",
-        "startDate": to.getTime(),
+        "startDate": from.getTime(),
       }
     }
     updateDoc(docRef, data)
