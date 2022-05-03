@@ -16,9 +16,8 @@ import Joi from "joi";
 import Icon from "../components/Icon";
 import {httpsCallable } from "firebase/functions";
 
-import DatePicker from "react-datepicker";
-
-import "react-datepicker/dist/react-datepicker.css";
+// import DatePicker from "react-datepicker";
+import DateTimePicker from 'react-datetime-picker';
 
 
 function Profile() {
@@ -216,7 +215,7 @@ function Profile() {
       const docRef = doc(firestore, `users/${currentUserInfo.userId}/portfolio/${docId}`)
       getDoc(docRef)
       .then(result=>{
-        const filtredImages=result.data().medias.filter(image=>image.mediaId!=imageId)
+        const filtredImages=result.data().medias.filter(image=>image.mediaId!==imageId)
 
         updateDoc(docRef,{medias:filtredImages})
       })
@@ -303,9 +302,9 @@ function Profile() {
                     {
                         currentUserInfo?.jobId &&
                         <>
-                        <div className={`text-center text-lg px-4 py-2 flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
+                        <div className={`text-center text-lg px-4 py-2 flex items-center justify-evenly ${currentLang==="ar" ? "flex-row-reverse" :""}`}>
                             <p className="pr-4">{Profile?.rank}</p>
-                          <div className={`flex items-center justify-evenly ${currentLang=="ar" ? "flex-row-reverse" :""}`}>
+                          <div className={`flex items-center justify-evenly ${currentLang==="ar" ? "flex-row-reverse" :""}`}>
                           <img src={`${window.origin}/resources/rank/${currentUserInfo?.rank.toLowerCase()}.svg`} alt={currentUserInfo?.rank} />
                         <span className={`font-bold text-${currentUserInfo?.rank}`}>{currentUserInfo?.rank}</span>
                           </div>
@@ -528,19 +527,27 @@ startDate 1651363200000
                   bg-white
                   w-full
                   flex items-center rounded  p-1 my-[1rem] cursor-pointer">
-                    <label htmlFor="datepicker1">
-                      <FaCalendar
-                       size="25"
-                       className="cursor-pointer w-full h-full"
-                       />
-                      </label>
-                    <DatePicker
-                    id="datepicker1"
-                    selected={from}
-                    onChange={date => setFrom(date)}
-                    isClearable
-                    minDate={new Date()}
-                    className="outline-none text-gray-900 sm:text-sm  block w-full pl-10 p-2 ml-[0.5rem]"
+                    <DateTimePicker
+                      calendarIcon={
+                        <FaCalendar
+                           size="25"
+                           className="cursor-pointer w-full h-full"
+                           />
+                      }
+                      clearIcon={
+                        <AiFillCloseCircle
+                          size={25}
+                          />}
+                      value={from}
+                      onChange={date => setFrom(date)}
+                      required={true}
+                      minDate={new Date()}
+                      maxDetail="second"
+                      showLeadingZeros
+                      className="
+                      border-0
+                      w-full
+                      flex items-center justify-between rounded  cursor-pointer"
                     />
                   </div>
                 </div>
@@ -551,20 +558,29 @@ startDate 1651363200000
                   w-full
                   flex items-center rounded  p-1 my-[1rem] cursor-pointer
                   ">
-                    <label htmlFor="datepicker2">
+
+                  <DateTimePicker
+                    calendarIcon={
                       <FaCalendar
-                       size="25"
-                       className="cursor-pointer w-full h-full"
-                       />
-                      </label>
-                    <DatePicker
-                    id="datepicker2"
-                    selected={to}
+                         size="25"
+                         className="cursor-pointer w-full h-full"
+                         />
+                    }
+                    clearIcon={
+                      <AiFillCloseCircle
+                        size={25}
+                        />}
+                    value={to}
                     onChange={date => setTo(date)}
-                    isClearable
+                    required={true}
                     minDate={new Date()}
-                    className="outline-none text-gray-900 sm:text-sm  block w-full pl-10 p-2 ml-[0.5rem]"
-                    />
+                    maxDetail="second"
+                    showLeadingZeros
+                    className="
+                      border-0
+                      w-full
+                      flex items-center justify-between rounded cursor-pointer"
+                  />
                   </div>
                 </div>
                 </div>
@@ -619,7 +635,6 @@ function AreUSure({setShowSure, profile, currentLang, currentUserInfo, updateUse
         updateUserInfo();
         setShowSure(false)
       })
-    setShowSure(false);
 
   }
 
@@ -647,7 +662,7 @@ function AreUSure({setShowSure, profile, currentLang, currentUserInfo, updateUse
                 dark:hover:bg-gray-800 dark:hover:text-white
                 ">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path>
                 </svg>
             </button>
             <div className="p-6 text-center">

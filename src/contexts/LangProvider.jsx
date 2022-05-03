@@ -13,7 +13,7 @@ export function useLang(){
 export default function LangProvider({ children }) {
     const [ currentLang, setCurrentLang ] = useState();
     const [ currentLangResources, setCurrentLangResources ] = useState();
-
+    console.log({currentLang})
     useEffect(()=>{
         switch (currentLang) {
             case "ar":

@@ -19,4 +19,9 @@
   .grid-template-370 {
     grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
   }
+  /* some basic styling for datetime picker component.... */
+  input[type="number"] {
+    outline: none;
+    border: none;
+  }
 }

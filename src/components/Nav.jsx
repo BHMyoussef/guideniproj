@@ -13,7 +13,7 @@ export default function Nav() {
         <UpNave />
         <NavBare />
     </>
-    
+
   )
 }
 
@@ -53,7 +53,10 @@ function SelectLanguage({ choices }){
     }
     useEffect(()=>{
         handleClick();
-        const DefaultLanguage = localStorage.getItem("Lang")||"English";
+        // i get an issue here, most of the time this line doesn't work
+        // like expected, so the quick/easy solution i found is:
+        // to change the name of the `key` inside the storage (in this case it: `lang`)
+        const DefaultLanguage = localStorage.getItem("Lang") || "English";
         setLanguage(DefaultLanguage);
     },[]);
     useEffect(()=>{
@@ -65,7 +68,7 @@ function SelectLanguage({ choices }){
         <div className="relative group">
             <input ref={checkbox} type="checkbox" className='hidden peer' id="Lang"/>
             <label htmlFor='Lang'>
-                {language} <span className='absolute group-hover:rotate-90 transition-all ease-out'>{'>'}</span> 
+                {language} <span className='absolute group-hover:rotate-90 transition-all ease-out'>{'>'}</span>
             </label>
             <ul className="absolute scale-0 w-28 peer-checked:scale-100 transition-all ease-out z-10">
                 {
@@ -86,7 +89,7 @@ function SelectLanguage({ choices }){
 function NavBare(){
     const { currentUser,currentUserInfo } = useAuth()
     const { nav } = useLang();
-    
+
     return (
     <>
         <div className="container flex justify-between items-center mx-auto mt-5 h-24">
@@ -100,13 +103,13 @@ function NavBare(){
                     !currentUser ?
                     <>
                         <Link className='mr-4 md:mr-8 hover:border-b-2' to="/signin">{nav&&nav.nav.sign.signIn}</Link>
-                        <Link className='mr-4 hover:border-b-2' to="/signup">{nav&&nav.nav.sign.signup}</Link> 
+                        <Link className='mr-4 hover:border-b-2' to="/signup">{nav&&nav.nav.sign.signup}</Link>
                     </>
                     :
                         <p className='mx-4'>{nav&&nav.nav.welcom} <span className='font-semibold'>{currentUserInfo?.firstName}</span></p>
                 }
             </div>
-            {currentUser && 
+            {currentUser &&
                 <div className='flex gap-x-3 relative'>
                     <Icon icon={<FaRegHeart size={35} className='hover:text-secondary group'/>} />
                     <Icon icon={<FaRegUser size={35} className='hover:text-secondary'/>}>
