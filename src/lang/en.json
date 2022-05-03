@@ -140,5 +140,10 @@
       "yourPhone": "Your Phone",
       "message": "Your Message",
       "send": "Send Message"
+    },
+    "shareTxt": {
+      "title": "Share",
+      "text": "Share this link via",
+      "copy": "copy"
     }
 }

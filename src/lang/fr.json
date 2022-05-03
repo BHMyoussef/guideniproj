@@ -139,6 +139,12 @@
       "yourPhone": "Votre téléphone",
       "message": "PRENEZ CONTACT AVEC NOUS0",
       "send": "PRENEZ CONTACT AVEC NOUS1"
-    }
+    },
+    "shareTxt": {
+    "title": "Partager",
+    "text": "Partager ce lien via",
+    "orText": "Ou copier le lien",
+    "copy": "copier"
+  }
 
 }

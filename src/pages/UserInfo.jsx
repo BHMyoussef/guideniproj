@@ -211,7 +211,7 @@ export default function UserInfo() {
                 }
                 {
                   // show the guard time availabilality
-                  currentUserInfo?.jobId.toLowerCase() === "guardpharmacy"?
+                  userInformation?.jobId.toLowerCase() === "guardpharmacy"?
                 <div
                   className='
                     w-full
@@ -309,7 +309,7 @@ export default function UserInfo() {
           { rateme && <RateMe txts={usersInfoTxt&&usersInfoTxt.feedbackWindow} hiddeRate={hiddeRate} canRate={canRate}  getRatingInformation={rateUser} /> }
       </div>
     }
-    {showModal && <PopupModal url={imgUrl} setShowModal={setShowModal}/>}
+    {showModal && <PopupModal usersInfoTxt={usersInfoTxt} url={imgUrl} setShowModal={setShowModal}/>}
     </>
   )
 }
@@ -365,7 +365,7 @@ function RateMe({getRatingInformation, canRate, hiddeRate,txts}){
   );
 }
 
-function PopupModal({url,setShowModal}) {
+function PopupModal({url,setShowModal, usersInfoTxt}) {
   function handleExit(e) {
     if(e.target.classList.contains('popup')){
       setShowModal(false);
@@ -391,7 +391,7 @@ function PopupModal({url,setShowModal}) {
                     type="button"
                     onClick={() => setShowModal(false)}
                   >
-                    Close
+                    {usersInfoTxt?.close}
                   </button>
                 </div>
               </div>

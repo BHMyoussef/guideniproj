@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { FacebookShareButton, TwitterShareButton, WhatsappShareButton, EmailShareButton } from 'react-share';
 import { AiOutlineMail } from "react-icons/ai"
 import { FaShareAlt } from "react-icons/fa"
+import { useLang } from '../contexts/LangProvider';
+
 
 
 export default function Share(){
     const [ sharePanel, setSharePanel] = useState(false);
+        const { shareTxt, currentLang } = useLang();
+
     const Url = window.location.href;
     function copy(){
         /* Get the text field */
@@ -20,22 +24,32 @@ export default function Share(){
 
         /* Alert the copied text */
     }
+    function handleExit(e) {
+      if(e.target.classList.contains('popup')){
+        setSharePanel(false);
+      }
+    }
     return(
         <>
         <button className='py-1 px-2 mt-2 border-2 border-secondary hover:bg-secondary hover:text-white font-semibold'
                 onClick={()=>setSharePanel(true)}      ><FaShareAlt className='inline' /> Share</button>
         {sharePanel===true &&
+          <>
+          <div
+            onClick={handleExit}
+            className="popup justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+            >
         <div id='panel' className="bg-gray-100 w-full mx-4 p-4 rounded-xl md:w-1/2 lg:w-1/3 fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2">
             {/* <!--MODAL HEADER--> */}
             <div
-            className="flex justify-between items center border-b border-gray-200 py-3"
+            className={`flex justify-between items center border-b border-gray-200 py-3 ${currentLang==="ar"&&"flex-row-reverse"}`}
             >
-            <div className="flex items-center justify-center">
-                <p className="text-xl font-bold text-gray-800">Share</p>
+            <div className={`flex w-full items-center justify-start ${currentLang==="ar"&&"justify-end"}`}>
+                <p className={`text-xl font-bold text-gray-800 px-[1rem]`}>{shareTxt?.title}</p>
             </div>
 
             <div    onClick={()=>setSharePanel(false)}
-                className="bg-gray-300 hover:bg-gray-500 cursor-pointer hover:text-gray-300 font-sans text-gray-500 w-8 h-8 flex items-center justify-center rounded-full"
+                className="bg-gray-300 hover:bg-gray-500 cursor-pointer hover:text-gray-300 font-sans text-gray-500 w-[2rem] h-[2rem] flex items-center justify-center rounded-full"
             >
                 x
             </div>
@@ -43,12 +57,18 @@ export default function Share(){
 
             {/* <!--MODAL BODY--> */}
             <div className="my-4">
-            <p className="text-sm">Share this link via</p>
+            <p className={`text-sm ${currentLang==="ar"&&"text-right"}`}>{shareTxt?.text}</p>
 
             <div className="flex justify-around my-4">
                 {/* <!--FACEBOOK ICON--> */}
-                <FacebookShareButton url={Url}
-                className="border hover:bg-[#1877f2] w-12 h-12 fill-[#1877f2] hover:fill-white border-blue-200 rounded-full flex items-center justify-center shadow-xl hover:shadow-blue-500/50 cursor-pointer"
+                <FacebookShareButton  url={Url}
+                className="
+                border-gray-500
+                border-10
+                w-12  h-12 fill-[#1877f2]
+                border-blue-200 shadow-lg
+                rounded-full flex items-center
+                justify-center cursor-pointer"
                 >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +83,7 @@ export default function Share(){
                 </FacebookShareButton>
                 {/* <!--TWITTER ICON--> */}
                 <TwitterShareButton url={Url}
-                className="border hover:bg-[#1d9bf0] w-12 h-12 fill-[#1d9bf0] hover:fill-white border-blue-200 rounded-full flex items-center justify-center shadow-xl hover:shadow-sky-500/50 cursor-pointer"
+                className="border w-12 h-12 fill-[#1d9bf0]  border-blue-200 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
                 >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +98,7 @@ export default function Share(){
                 </TwitterShareButton>
                 {/* <!--WHATSAPP ICON--> */}
                 <WhatsappShareButton url={Url}
-                className="border hover:bg-[#25D366] w-12 h-12 fill-[#25D366] hover:fill-white border-green-200 rounded-full flex items-center justify-center shadow-xl hover:shadow-green-500/50 cursor-pointer"
+                className="border w-12 h-12 fill-[#25D366] border-green-200 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
                 >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -94,14 +114,14 @@ export default function Share(){
                 </svg>
                 </WhatsappShareButton>
                 <EmailShareButton url={Url}
-                    className="border hover:bg-[#25D366] w-12 h-12 fill-[#25D366] hover:fill-white border-green-200 rounded-full flex items-center justify-center shadow-xl hover:shadow-green-500/50 cursor-pointer"
+                    className="border w-12 h-12 fill-[#25D366] border-green-200 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
                 >
                     <AiOutlineMail />
                 </EmailShareButton>
 
             </div>
 
-            <p className="text-sm">Or copy link</p>
+            <p className={`text-sm ${currentLang==="ar"&&"text-right"}`}>{shareTxt?.orText}</p>
             {/* <!--BOX LINK--> */}
             <div className="border-2 border-gray-200 flex justify-between items-center mt-4 py-2">
                 <svg
@@ -120,11 +140,16 @@ export default function Share(){
                 </svg>
                 <input type="text" id='txt' value={Url} className='overflow-hidden outline-none w-full' />
                 <button onClick={copy} className="bg-indigo-500 text-white rounded text-sm py-2 px-5 mr-2 hover:bg-indigo-600">
-                    Copy
+                    {shareTxt?.copy}
                 </button>
             </div>
             </div>
-        </div>}
+        </div>
+        </div>
+        <div className="opacity-80 fixed inset-0 z-40 bg-black"></div>
+        </>
+      }
+
         </>
     )
 }
