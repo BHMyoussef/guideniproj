@@ -59,7 +59,14 @@
             "error1":"you need to enter a feedback before you submit",
             "error2":"you need to set a rating",
             "error3": "you can't rate this user, because you are not loged In or you already give a feedback"
-        }
+        },
+        "from": "From:",
+        "to": "To:",
+        "save": "Save",
+        "cancel": "Cancel",
+        "yes": "Yes",
+        "sure": "Are you sure?",
+        "sureText": "By clicking on yes, you will end your up your guard period"
     },
     "signIn":{
         "title": "Login",

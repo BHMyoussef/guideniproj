@@ -58,7 +58,14 @@
             "error1":"vous devez entrer un commentaire avant de soumettre",
             "error2":"vous devez définir une note",
             "error3": "vous ne pouvez pas évaluer cet utilisateur, car vous n'êtes pas connecté ou vous avez déjà donné un avis"
-        }
+        },
+        "from": "De:",
+        "to": "À:",
+        "save": "Sauvegarder",
+        "cancel": "Cancel",
+        "yes": "Oui",
+        "sure": "Êtes-vous sûr ?",
+        "sureText": "En cliquant sur oui, vous terminez votre période de garde"
     },
     "signIn":{
         "title": "Se connecter",

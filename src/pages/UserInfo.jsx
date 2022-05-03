@@ -222,13 +222,13 @@ export default function UserInfo() {
                 >
                 <h2
                   className={`flex items-center justify-between ${currentLang==='ar'&&'flex-row-reverse'}`}
-                >{profile?.from}
+                >{usersInfoTxt?.from}
                 <span>{new Date(currentUserInfo?.jobDetails.startDate).toLocaleString()}</span>
 
                 </h2>
                 <h2
                   className={`flex items-center justify-between ${currentLang==='ar'&&'flex-row-reverse'}`}
-                >{profile?.to}
+                >{usersInfoTxt?.to}
                 <span>{new Date(currentUserInfo?.jobDetails.endDate).toLocaleString()}</span>
 
                 </h2>
