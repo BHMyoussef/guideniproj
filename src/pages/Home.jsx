@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom"
 import { useLang } from "../contexts/LangProvider"
 import {FaGooglePlay} from "react-icons/fa"
+// animation things
+import {motion} from "framer-motion"
+import {fadeIn} from "../animation";
+
 const style = {
     wrapper: `container relative mx-auto md:text-left md:flex mt-12`,
     contentWrapper: `flex h-screen relative justify-center flex-wrap items-center`,
@@ -16,7 +20,11 @@ const style = {
 export default function Home() {
   const { home:homeTxt, currentLang } = useLang()
   return (
-    <div className={style.wrapper}>
+    <motion.div
+       variants={fadeIn}
+       initial="hidden"
+       animate="show"
+       className={style.wrapper}>
       <div className="hidden lg:flex bg-gray-600 text-white items-center justify-center w-40 mr-8">ads Here</div>
              <div className={`${style.contentWrapper} ${(currentLang==="ar")&&" flex-row-reverse"}`}>
                  <div className={style.copyContainer}>
@@ -47,7 +55,7 @@ export default function Home() {
              </div>
          <div className="hidden lg:flex bg-gray-600 text-white items-center justify-center w-40 ml-8">ads Here</div>
 
-     </div>
+     </motion.div>
   )
 }
 
