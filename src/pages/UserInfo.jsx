@@ -285,28 +285,24 @@ export default function UserInfo() {
               {
                 galerieSelected
                   ?
-                  <AnimatePresence>
-                    {/** Guess it might not work here as we expected, but let's give it a try..*/}
-                    {
+                  // <AnimatePresence>
 
-                      portFolio && portFolio.map((elm) => {
 
-                        elm.map((media, i) => (
-                          <motion.div
-                            key={i} onClick={() => popupImg(media.mediaUrl)}
-                            variants={popup}
-                            initial="hidden"
-                            animate="show"
-                            data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen"
-                            className="overflow-hidden max-h-96">
-                            <motion.img layoutId={media.mediaUrl} src={media.mediaUrl} alt={media.mediaType} className="w-full h-full object-cover hover:scale-105 transition-all ease-in-out" />
-                          </motion.div>
-                        ))
+                  portFolio && portFolio.map((elm) => {
 
-                      })
+                    elm.map((media, i) => (
+                      <motion.div
+                        key={i} onClick={() => popupImg(media.mediaUrl)}
+                        variants={popup}
+                        initial="hidden"
+                        animate="show"
+                        data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen"
+                        className="overflow-hidden max-h-96">
+                        <motion.img layoutId={media.mediaUrl} src={media.mediaUrl} alt={media.mediaType} className="w-full h-full object-cover hover:scale-105 transition-all ease-in-out" />
+                      </motion.div>
+                    ))
 
-                    }
-                  </AnimatePresence>
+                  })
                   :
                   feedback && feedback.map((feed, i) => {
                     return (
@@ -441,5 +437,3 @@ function PopupModal({ url, setShowModal, usersInfoTxt }) {
     </>
   )
 }
-
-
