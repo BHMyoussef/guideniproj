@@ -6,6 +6,9 @@ import { firestore } from '../firebase'
 import SearchBar from '../components/SearchBar'
 import { useLang } from '../contexts/LangProvider'
 
+// animation
+import {motion} from "framer-motion"
+import {fadeIn, popup} from "../animation"
 
 export default function Jobs() {
     const [jobs, setJobs] = useState()
@@ -43,7 +46,13 @@ export default function Jobs() {
         setFiltredJobsCategories(jobs)
     }
     return (
-        <div className='container mx-auto'>
+        <motion.div
+
+          variants={fadeIn}
+          initial="hidden"
+          animate="show"
+
+         className='container mx-auto'>
             <div className={`w-full flex justify-between items-center mb-2 ${(currentLang === "ar") && " flex-row-reverse"}`}>
                 <h3 className='text-xl font-medium '>{servicesTxt && servicesTxt.title} </h3>
                 <SearchBar jobs={jobs} getFiltredJob={getFiltredJob} nameKey="jobName" placeHolder={servicesTxt && servicesTxt.search} />
@@ -51,7 +60,10 @@ export default function Jobs() {
             <hr />
             <div className="grid-template-250 mt-4 grid gap-2">
                 {!filtredJobsCategories ?
-                    <img className='absolute left-1/2 -translate-x-1/2' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
+                    <img
+
+                        className='absolute left-1/2 -translate-x-1/2 max-w-[30%]' 
+                        src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
                     :
                     filtredJobsCategories.map((job, index) => {
                         return (
@@ -65,6 +77,6 @@ export default function Jobs() {
                         );
                     })}
             </div>
-        </div>
+        </motion.div>
     )
 }

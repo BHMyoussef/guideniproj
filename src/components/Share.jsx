@@ -6,6 +6,10 @@ import { useLang } from '../contexts/LangProvider';
 
 
 
+// animation things
+import { motion, AnimatePresence } from "framer-motion"
+import { fadeIn, popup, dropIn } from "../animation";
+
 export default function Share(){
     const [ sharePanel, setSharePanel] = useState(false);
         const { shareTxt, currentLang } = useLang();
@@ -31,11 +35,28 @@ export default function Share(){
     }
     return(
         <>
-        <button className='py-1 px-2 mt-2 border-2 border-secondary hover:bg-secondary hover:text-white font-semibold'
-                onClick={()=>setSharePanel(true)}      ><FaShareAlt className='inline' /> Share</button>
+        <button 
+            className='
+            py-1 px-2 mt-2 border-2
+            border-secondary hover:bg-secondary
+            hover:text-white font-semibold
+            rounded-[5px]'
+
+            onClick={()=>setSharePanel(true)}>
+                <FaShareAlt className='inline' /> Share</button>
+        
+        <AnimatePresence
+            exitBeforeEnter={true}
+
+        >
         {sharePanel===true &&
           <>
-          <div
+          <motion.div
+            variants={dropIn}
+            initial="hidden"
+            animate="show"
+            exit="exit"
+            drag
             onClick={handleExit}
             className="popup justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
             >
@@ -145,10 +166,11 @@ export default function Share(){
             </div>
             </div>
         </div>
-        </div>
+        </motion.div>
         <div className="opacity-80 fixed inset-0 z-40 bg-black"></div>
         </>
       }
+      </AnimatePresence>
 
         </>
     )

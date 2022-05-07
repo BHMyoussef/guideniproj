@@ -18,7 +18,7 @@ import { httpsCallable } from "firebase/functions";
 
 // Animations stuff
 import { motion, AnimatePresence } from "framer-motion";
-import { fadeIn, popup } from "../animation"
+import { fadeIn, popup, dropIn } from "../animation"
 
 // import DatePicker from "react-datepicker";
 import DateTimePicker from 'react-datetime-picker';
@@ -62,6 +62,10 @@ function Profile() {
   // get the image url to popup
   const [imgUrl, setImgUrl] = useState(null);
 
+  // format date in a nice way
+  const [formatedDate1, setFormatedDate1] = useState('');
+  const [formatedDate2, setFormatedDate2] = useState('');
+
   const schema = {
     title: Joi.string().required(),
     description: Joi.string().required(),
@@ -74,6 +78,7 @@ function Profile() {
     getUserCity();
     getPortfolio();
     getFeedback();
+    formatDate(currentUserInfo?.jobDetails?.startDate, currentUserInfo?.jobDetails?.endDate);
   }, [])
 
   useEffect(() => {
@@ -84,6 +89,12 @@ function Profile() {
       setError()
 
   }, [title, description, images])
+
+  useEffect(() => {
+    if(!currentUserInfo) return;
+
+    formatDate()
+  }, [currentLang,])
 
   function getPortfolio() {
     if (!currentUserInfo) return
@@ -239,6 +250,23 @@ function Profile() {
       setAddGallerie(false)
     }
   }
+  
+  function formatDate(from=currentUserInfo?.jobDetails?.startDate, to=currentUserInfo?.jobDetails?.endDate){
+    if(currentUserInfo?.jobId.toLowerCase() === "guardpharmacy"){
+
+    const start = new Date(from);
+    const end = new Date(to);
+
+    const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const formateLang = (currentLang === "eng") ? 'en-us' : (currentLang === 'fr') ? 'fr' : 'ar-ma';
+    
+    console.log({formateLang})
+    setFormatedDate1(start.toLocaleDateString(formateLang, options))
+    setFormatedDate2(end.toLocaleDateString(formateLang, options))
+    console.log({start, end})
+
+    }
+  }
 
   return (
     !currentUser ?
@@ -261,7 +289,7 @@ function Profile() {
               onClick={() => popupImg(currentUserInfo?.imageUrl)}
               data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen">
               <motion.img
-                layouId={currentUserInfo?.imageUrl}
+                layoutId={currentUserInfo?.imageUrl}
                 className='h-full w-full rounded-full'
                 src={currentUserInfo?.imageUrl || `${window.location.origin}/resources/profile.png`}
                 alt="profile photo"
@@ -273,7 +301,29 @@ function Profile() {
                 {currentUserInfo?.firstName}
               </h3>
               {userJob && <Stars rate={currentUserInfo?.rating} />}
-              <span className='block text-lg font-light mb-2'>{userJob && userJob.jobName[currentLang]}</span>
+              <span className='block py-2 w-full text-lg font-light mb-2'>
+                {userJob && userJob.jobName[currentLang]}
+                {
+                  // show the guard time availabilality
+                  currentUserInfo?.jobId.toLowerCase() === "guardpharmacy" &&
+                  <div
+                    className='w-full px-10 flex flex-col border-gray-100 border-2 rounded-2xl'>
+                    <h2
+                      className={`${currentLang === 'ar' && 'self-end'}`}
+                    >{profile?.from}
+                    </h2>
+                      <h2 className="pl-2">{formatedDate1}</h2>
+
+                    <h2
+                      className={`${currentLang === 'ar' && 'self-end'}`}
+                    >{profile?.to}
+                    </h2>
+
+                      <h2 className="pl-2">{formatedDate2}</h2>
+
+                  </div>
+                }
+              </span>
 
               {
                 <>
@@ -282,39 +332,13 @@ function Profile() {
                   <span className='block text-md'>{currentUserInfo?.phone}</span>
                   <div className='flex gap-x-4 mt-2'>
                     {/* Just removed the 'Url' word at the end of the property*/}
-                    <Icon icon={<a href={currentUserInfo?.facebookAccount} target="blank"><FaFacebookF className='group-hover:text-blue-500' /></a>} />
-                    <Icon icon={<a href={currentUserInfo?.instagramAccount} target="blank"><FaInstagram className='group-hover:text-pink-400' /></a>} />
-                    <Icon icon={<a href={currentUserInfo?.youtubeAccount} target="blank"><FaYoutube className='group-hover:text-red-500' /></a>} />
-                    <Icon icon={<a href={currentUserInfo?.website} target="blank"><SiWebflow className='group-hover:text-blue-800' /></a>} />
+                    <Icon icon={<a href={currentUserInfo?.facebookAccount} target="blank"><FaFacebookF size={25} className='group-hover:text-blue-500' /></a>} />
+                    <Icon icon={<a href={currentUserInfo?.instagramAccount} target="blank"><FaInstagram size={25} className='group-hover:text-pink-400' /></a>} />
+                    <Icon icon={<a href={currentUserInfo?.youtubeAccount} target="blank"><FaYoutube size={25} className='group-hover:text-red-500' /></a>} />
+                    <Icon icon={<a href={currentUserInfo?.website} target="blank"><SiWebflow size={25} className='group-hover:text-blue-800' /></a>} />
                   </div>
 
-                  {
-                    // show the guard time availabilality
-                    currentUserInfo?.jobId.toLowerCase() === "guardpharmacy" ?
-                      <div
-                        className='
-                              w-full
-                              p-[0.5rem] my-2
-                              flex flex-col
-                              shadow-lg
-                            '
-                      >
-                        <h2
-                          className={`flex items-center justify-between ${currentLang === 'ar' && 'flex-row-reverse'}`}
-                        >{profile?.from}
-                          <span>{new Date(currentUserInfo?.jobDetails.startDate).toLocaleString()}</span>
 
-                        </h2>
-                        <h2
-                          className={`flex items-center justify-between ${currentLang === 'ar' && 'flex-row-reverse'}`}
-                        >{profile?.to}
-                          <span>{new Date(currentUserInfo?.jobDetails.endDate).toLocaleString()}</span>
-
-                        </h2>
-
-                      </div>
-                      : ''
-                  }
                   {currentUserInfo?.jobId.toLowerCase() === "normalpharmacy" ?
                     <button
                       onClick={() => setDatePicker(true)}
@@ -328,18 +352,7 @@ function Profile() {
                       {profile?.pharmacy}
                     </button> : ''}
 
-                  {currentUserInfo?.jobId.toLowerCase() === "guardpharmacy" ?
-                    <button
-                      onClick={() => setShowSure(true)}
-                      className="
-                            my-[1rem] bg-transparent
-                            hover:bg-rose-500 text-rose-500
-                            font-semibold hover:text-white
-                            py-2 px-4 border border-rose-500
-                            hover:border-transparent rounded
-                            ">
-                      {profile?.retToNormal}
-                    </button> : ''}
+
 
                 </>
               }
@@ -363,6 +376,19 @@ function Profile() {
                     <p>{usersInfoTxt && usersInfoTxt.rate}</p>
                     <   span className='block font-bold'>{currentUserInfo?.rating}/5</span>
                   </div>
+                  {currentUserInfo?.jobId.toLowerCase() === "guardpharmacy" ?
+                    <button
+                      onClick={() => setShowSure(true)}
+                      className="
+                            m-1 bg-transparent
+                            hover:bg-rose-500 text-rose-500
+                            font-semibold hover:text-white
+                            p-2 border border-rose-500
+                            hover:border-transparent rounded
+                            text-left 
+                            ">
+                      {profile?.retToNormal}
+                    </button> : ''}
                 </>
               }
             </div>
@@ -386,78 +412,77 @@ function Profile() {
               {
                 galerieSelected
                   ? <>
-                    {
-                      <AnimatePresence>
-                        {/** Guess it might not work here as we expected, but let's give it a try..*/}
-                        {
+                    <AnimatePresence
+                      exitBeforeEnter={true}
+                    >
 
-                          portFolio && portFolio.map(elm =>
-                            elm.medias.map((media, i) =>
-                              <motion.div
-                                variants={popup}
-                                initial="hidden"
-                                animate="show"
-                                className="hover:scale-105 transition-all relative ease-in-out">
-                                <a key={i} target="blank" href={media.mediaUrl} className="overflow-hidden max-h-96">
-                                  <motion.img layoutId={media.mediaUrl} src={media.mediaUrl} alt={media.mediaType} className="w-full h-full object-cover" />
-                                </a>
-                                <button onClick={() => { deleteImage(elm.docId, media.mediaId) }} className="text-red-500 absolute top-0 right-0 z-10 hover:scale-105"><AiFillCloseCircle size={32} /></button>
-                              </motion.div>
-                            )
-                          )}
-                      </AnimatePresence>
-                    }
+                      {
+
+                        portFolio && portFolio.map(elm =>
+                          elm.medias.map((media, i) =>
+                            <motion.div
+                              variants={popup}
+                              initial="hidden"
+                              animate="show"
+                              className="hover:scale-105 transition-all relative ease-in-out">
+                              <a key={i} target="blank" href={media.mediaUrl} className="overflow-hidden max-h-96">
+                                <motion.img layoutId={media.mediaUrl} src={media.mediaUrl} alt={media.mediaType} className="w-full h-full object-cover" />
+                              </a>
+                              <button onClick={() => { deleteImage(elm.docId, media.mediaId) }} className="text-red-500 absolute top-0 right-0 z-10 hover:scale-105"><AiFillCloseCircle size={32} /></button>
+                            </motion.div>
+                          )
+                        )
+                      }
+                    </AnimatePresence>
                     <div className="flex justify-center items-center">
                       <button onClick={() => setAddGallerie(true)} className="h-20 w-20 flex justify-center items-center rounded-full bg-secondary object-cover hover:scale-105 transition-all ease-in-out">
                         <FaPlusCircle size={38} color="#ffffff" />
                       </button>
                     </div>
                     {
-                      <AnimatePresence>
 
-                        addGallerie &&
-                        <>
-                          <motion.div
-                            onClick={handleExit}
-                            className="popup justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-                            variants={popup}
-                            initial="hidden"
-                            animate="show"
-                          >
-                            <div className="fixed w-9/12 rounded-md z-20 shadow-lg top-1/2 left-1/2 -translate-x-1/2 items-center justify-between -translate-y-1/2 flex flex-col px-4 py-8 bg-bgcolor">
-                              <div onClick={() => { setAddGallerie(false) }} className="self-start"><FaArrowLeft size={23} className="mb-4 cursor-pointer hover:scale-110" /></div>
-                              {error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
-                              <Input name="text" type="text" value={title} label={profile?.title} onChange={(e) => setTitle(e.target.value)} />
-                              <div className="mb-4 w-full">
-                                <label
-                                  className="inline-block text-lg font-medium "
-                                  htmlFor="description">{profile?.description}
-                                </label>
-                                <textarea id="description" className="resize-none border-2 rounded-md outline-none py-1 px-2 w-full h-28" value={description} onChange={(e) => setDescription(e.target.value)} />
-                              </div>
-                              <input type="file" multiple name="image" id="image" className="my-[1rem] cursor-pointer" onChange={handleImageChange} />
-                              <div className="images flex gap-2 flex-wrap">
-                                {images && images.map((image, i) =>
-                                  <div key={i} className="">
-                                    <img className="w-32 mb-4 h-24" src={image.imageUrl} alt="image" />
-                                    <div className="progress input bg-secondary h-3">
-                                      <div
-                                        className="progress-bar progress-bar-stripped flex justify-center items-center text-[10px] bg-additional h-3"
-                                        style={{ width: `${image.progress}%` }}
-                                      >
-                                        {`${image.progress}%`}
-                                      </div>
+                      addGallerie &&
+                      <>
+                        <motion.div
+                          onClick={handleExit}
+                          className="popup justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                          variants={popup}
+                          initial="hidden"
+                          animate="show"
+                        >
+                          <div className="fixed w-9/12 rounded-md z-20 shadow-lg top-1/2 left-1/2 -translate-x-1/2 items-center justify-between -translate-y-1/2 flex flex-col px-4 py-8 bg-bgcolor">
+                            <div onClick={() => { setAddGallerie(false) }} className="self-start"><FaArrowLeft size={23} className="mb-4 cursor-pointer hover:scale-110" /></div>
+                            {error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
+                            <Input name="text" type="text" value={title} label={profile?.title} onChange={(e) => setTitle(e.target.value)} />
+                            <div className="mb-4 w-full">
+                              <label
+                                className="inline-block text-lg font-medium "
+                                htmlFor="description">{profile?.description}
+                              </label>
+                              <textarea id="description" className="resize-none border-2 rounded-md outline-none py-1 px-2 w-full h-28" value={description} onChange={(e) => setDescription(e.target.value)} />
+                            </div>
+                            <input type="file" multiple name="image" id="image" className="my-[1rem] cursor-pointer" onChange={handleImageChange} />
+                            <div className="images flex gap-2 flex-wrap">
+                              {images && images.map((image, i) =>
+                                <div key={i} className="">
+                                  <img className="w-32 mb-4 h-24" src={image.imageUrl} alt="image" />
+                                  <div className="progress input bg-secondary h-3">
+                                    <div
+                                      className="progress-bar progress-bar-stripped flex justify-center items-center text-[10px] bg-additional h-3"
+                                      style={{ width: `${image.progress}%` }}
+                                    >
+                                      {`${image.progress}%`}
                                     </div>
                                   </div>
-                                )}
-                              </div>
-                              <button onClick={handleSubmit} disabled={disabledbtn && error} className="px-4 py-2 bg-additional text-white font-medium text-lg rounded-md hover:bg-secondary hover:text-white mt-4 disabled:opacity-80 cursor-pointer">{profile?.add}</button>
+                                </div>
+                              )}
                             </div>
-                          </motion.div>
-                          <div
-                            className="opacity-80 fixed inset-0 z-40 bg-black"></div>
-                        </>
-                      </AnimatePresence>
+                            <button onClick={handleSubmit} disabled={disabledbtn && error} className="px-4 py-2 bg-additional text-white font-medium text-lg rounded-md hover:bg-secondary hover:text-white mt-4 disabled:opacity-80 cursor-pointer">{profile?.add}</button>
+                          </div>
+                        </motion.div>
+                        <div
+                          className="opacity-80 fixed inset-0 z-40 bg-black"></div>
+                      </>
                     }
                   </>
                   :
@@ -485,9 +510,6 @@ function Profile() {
             showModal &&
 
             <PopupModal
-              variants={popup}
-              initial="hidden"
-              animate="show"
               url={imgUrl}
               setShowModal={setShowModal}
             />
@@ -498,13 +520,12 @@ function Profile() {
           {datePicker &&
             <DatePickers
               setDatePicker={setDatePicker}
+              formatDate={formatDate}
               profile={profile}
               currentLang={currentLang}
               currentUserInfo={currentUserInfo}
               updateUserInfo={updateUserInfo}
-              variants={popup}
-              initial="hidden"
-              animate="show"
+              
             />
           }
         </AnimatePresence>
@@ -517,9 +538,7 @@ function Profile() {
               currentLang={currentLang}
               currentUserInfo={currentUserInfo}
               updateUserInfo={updateUserInfo}
-              variants={popup}
-              initial="hidden"
-              animate="show"
+              
             />
           }
         </AnimatePresence>
@@ -536,6 +555,11 @@ function PopupModal({ url, setShowModal }) {
   return (
     <>
       <motion.div
+
+        variants={popup}
+        initial="hidden"
+        animate="show"
+        exit="exit"
         onClick={handleExit}
         className="popup justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
       >
@@ -564,7 +588,7 @@ function PopupModal({ url, setShowModal }) {
   )
 }
 
-function DatePickers({ setDatePicker, profile, currentLang, currentUserInfo, updateUserInfo }) {
+function DatePickers({ setDatePicker, formatDate, profile, currentLang, currentUserInfo, updateUserInfo }) {
   const [from, setFrom] = useState(new Date());
   const [to, setTo] = useState(new Date());
 
@@ -584,19 +608,29 @@ function DatePickers({ setDatePicker, profile, currentLang, currentUserInfo, upd
         "startDate": from.getTime(),
       }
     }
+
     updateDoc(docRef, data)
       .then(result => {
         console.log({ result });
         updateUserInfo();
         setDatePicker(false)
+        formatDate(from, to);
       })
     console.log({ from, to })
     console.log({ docRef })
+
+
   }
 
   return (
     <>
-      <motion.div
+    <motion.div
+    
+      variants={popup}
+      initial="hidden"
+      animate="show"
+      exit="exit"
+
         onClick={handleExit}
         className="popup justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
       >
@@ -691,9 +725,9 @@ function DatePickers({ setDatePicker, profile, currentLang, currentUserInfo, upd
             </div>
           </div>
         </div>
-      </motion.div>
+    </motion.div>
       <div className="opacity-80 fixed inset-0 z-40 bg-black"></div>
-    </>
+      </>
   )
 }
 
@@ -723,8 +757,13 @@ function AreUSure({ setShowSure, profile, currentLang, currentUserInfo, updateUs
   }
 
   return (
-    <>
-      <motion.div
+      <>
+    <motion.div
+      variants={dropIn}
+      initial="hidden"
+      animate="show"
+      exit="exit"
+
         onClick={handleExit}
 
         className="
@@ -763,7 +802,7 @@ function AreUSure({ setShowSure, profile, currentLang, currentUserInfo, updateUs
                 type="button"
                 className="
                     text-white bg-red-600 hover:bg-red-500
-                    focus:ring-4 font-medium rounded-lg text-sm
+                    font-medium rounded-lg text-sm
                      inline-flex items-center px-5 py-2.5 text-center mr-2
                    ">
                 {profile?.yes}
@@ -773,8 +812,7 @@ function AreUSure({ setShowSure, profile, currentLang, currentUserInfo, updateUs
                 type="button"
                 className="
                     text-gray-500 bg-white
-                    hover:bg-gray-100 focus:ring-4
-                    focus:outline-none focus:ring-gray-200
+                    hover:bg-gray-100 
                     rounded-lg border border-gray-200
                     text-sm font-medium px-5 py-2.5
                     hover:text-gray-500 focus:z-10
@@ -787,10 +825,10 @@ function AreUSure({ setShowSure, profile, currentLang, currentUserInfo, updateUs
             </div>
           </div>
         </div>
-      </motion.div>
 
+    </motion.div>
       <div className="opacity-80 fixed inset-0 z-40 bg-black"></div>
-    </>
+      </>
   )
 }
 

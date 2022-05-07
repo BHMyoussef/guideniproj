@@ -5,6 +5,10 @@ import { collection, getDocs } from 'firebase/firestore';
 import { firestore } from '../firebase'
 import { useLang } from '../contexts/LangProvider';
 
+// Animation
+import {motion} from "framer-motion";
+import {fadeIn} from "../animation";
+
 
 export default function JobsCategories() {
     const [jobsCategoriesList, setJobsCategoriesList] = useState();
@@ -58,7 +62,12 @@ export default function JobsCategories() {
         setFiltredJobsCategories(jobs)
     }
     return (
-        <div className='container mx-auto'>
+        <motion.div
+         variants={fadeIn}
+         initial="hidden"
+         animate="show"
+
+         className='container mx-auto'>
             <div className={`w-full flex justify-between items-center mb-2 ${(currentLang === "ar") && " flex-row-reverse"}`}>
                 <h3 className='text-xl font-medium '>{categoriesTxt && categoriesTxt.title} </h3>
                 <SearchBar jobs={jobsCategoriesList} getFiltredJob={getFiltredJob} nameKey="categoryName" placeHolder={categoriesTxt && categoriesTxt.search} />
@@ -79,7 +88,7 @@ export default function JobsCategories() {
                         )
                     })}
             </div>
-        </div>
+        </motion.div>
     )
 }
 

@@ -9,6 +9,9 @@ import { Link, Navigate } from 'react-router-dom'
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { useLang } from '../contexts/LangProvider'
 
+// animations
+import {motion} from "framer-motion";
+import {fadeIn} from "../animation";
 
 const Settings = ({ userId }) => {
   // form data ::
@@ -120,13 +123,20 @@ const Settings = ({ userId }) => {
     !currentUser ? 
       <img className='absolute left-1/2 -translate-x-1/2' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
     :
-      <StyledSettings className='container shadow'>
+      <StyledSettings
+        variants={fadeIn}
+        initial="hidden"
+        animate="show"
+        exit="exit"
+
+         className='container shadow'>
+        }
         <StyledForm  onSubmit={handleSubmit}>
           <h2 className='text-2xl block mx-auto font-semibold mb-4'>{setting?.personal}</h2>
           <div className="inputs edit-image">
             <div className="image">
               <label htmlFor="image">
-                <img src={currentUserInfo?.imageUrl ?? `${window.location.origin}/resources/profile.png`} alt="image" />
+                <motion.img layoutId={currentUserInfo?.imageUrl} src={currentUserInfo?.imageUrl ?? `${window.location.origin}/resources/profile.png`} alt="image" />
               </label>
               <input onChange={changeImage} type="file" id="image" name="image" hidden />
             </div>
@@ -188,7 +198,7 @@ const Settings = ({ userId }) => {
   )
 }
 
-const StyledSettings = styled.div`
+const StyledSettings = styled(motion.div)`
   position: relative;
   z-index:1;
   width: 95%;
@@ -206,7 +216,7 @@ const StyledSettings = styled.div`
     margin-top: 1rem;
   }
   `
-const StyledForm = styled.form`
+const StyledForm = styled(motion.form)`
 @media screen and (max-width: 640px) {
   .inputs {
     &:not(&.edit-image){

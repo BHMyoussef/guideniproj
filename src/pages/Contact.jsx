@@ -1,13 +1,24 @@
 
 import { useLang } from '../contexts/LangProvider'
 
+// animation
+import {motion} from "framer-motion"
+
+import {fadeIn} from "../animation"
+
 function Contact() {
 
   const {currentLang, contact} = useLang();
   console.log({currentLang, contact})
 
   return (
-    <section className="container bg-white py-20 lg:py-[120px] overflow-hidden relative">
+    <motion.section
+
+      variants={fadeIn}
+      initial="hidden"
+      animate="show"
+
+     className="container bg-white py-20 lg:py-[120px] overflow-hidden relative">
       <div className="container shadow">
       <div className={`flex flex-wrap lg:justify-between -mx-4 ${currentLang=="ar"?"flex-reverse lg:flex-row-reverse text-right":""} `}>
          <div className="w-full lg:w-1/2 xl:w-6/12 px-4">
@@ -113,7 +124,7 @@ function Contact() {
       </div>
    </div>
  </div>
-</section>
+</motion.section>
 
   )
 }

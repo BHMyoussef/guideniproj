@@ -6,6 +6,11 @@ import Filter from '../components/Filter';
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { useLang } from '../contexts/LangProvider';
 
+// Animation 
+
+import {motion} from "framer-motion";
+import {fadeIn} from "../animation"
+
 export default function JobsProvider() {
     const [ usersList, setUsersList ] = useState([]);
     const [ filtredUser, setFiltredUser] = useState([]);
@@ -96,7 +101,12 @@ export default function JobsProvider() {
 
 
     return (
-    <div className='container mx-auto'>
+    <motion.div
+     variants={fadeIn}
+     initial="hidden"
+     animate="show"
+
+     className='container mx-auto'>
         <div className={`w-full flex justify-between items-center mb-2 ${(currentLang==="ar")&&" flex-row-reverse"}`}>
             <h3 className='text-xl font-medium '>{usersTxt && usersTxt.title} </h3>
             <Filter users={usersList} cities={cities} getFiltredUsers={getFiltredUsers} />
@@ -124,6 +134,6 @@ export default function JobsProvider() {
               })
             }
         </div>
-    </div>
+    </motion.div>
   )
 }

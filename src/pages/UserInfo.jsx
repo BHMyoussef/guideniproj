@@ -14,7 +14,7 @@ import { firestore } from '../firebase';
 import { FaWindowClose, FaAward } from "react-icons/fa";
 // animation things
 import { motion, AnimatePresence } from "framer-motion"
-import { fadeIn, popup } from "../animation";
+import { fadeIn, popup, dropIn } from "../animation";
 
 
 export default function UserInfo() {
@@ -31,6 +31,10 @@ export default function UserInfo() {
   // get the image url to popup
   const [imgUrl, setImgUrl] = useState(null);
 
+  // formate date
+  const [formatedDate1, setFormatedDate1] = useState('');
+  const [formatedDate2, setFormatedDate2] = useState('');
+
   const { currentUser, currentUserInfo } = useAuth()
   const { userInfo: usersInfoTxt, currentLang } = useLang();
   const params = useParams('id')
@@ -42,7 +46,8 @@ export default function UserInfo() {
     getUserInfo();
     getPortfolio();
     getFeedback();
-    getCanRate()
+    getCanRate();
+    formatDate();
   }, [])
 
   useEffect(() => {
@@ -170,8 +175,30 @@ export default function UserInfo() {
     setShowModal(true);
   }
 
+  function formatDate(){
+    if(currentUserInfo?.jobId.toLowerCase() === "guardpharmacy"){
+
+    const start = new Date(currentUserInfo?.jobDetails.startDate);
+    const end = new Date(currentUserInfo?.jobDetails.endDate);
+
+    const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const formateLang = (currentLang === "eng") ? 'en-us' : (currentLang === 'fr') ? 'fr' : 'ar-ma';
+    
+    console.log({formateLang})
+    setFormatedDate1(start.toLocaleDateString(formateLang, options))
+    setFormatedDate2(end.toLocaleDateString(formateLang, options))
+    console.log({start, end})
+
+    }
+  }
+
   return (
-    <>
+    <motion.div
+      variants={fadeIn}
+      initial="hidden"
+      animate="show"
+
+    >
       {
         userInformation &&
         <div className='container lg:grid grid-flow-row-dense grid-cols-10 gap-4 auto-rows-auto mx-auto bg-bgcolor pt-4 pb-4 px-8 rounded-md'>
@@ -196,7 +223,29 @@ export default function UserInfo() {
                 {userInformation.firstName}
               </h3>
               <Stars rate={userInformation.rating} />
-              <span className='block text-lg font-light mb-2'>{userJob && userJob.jobName[currentLang]}</span>
+              <span className='block text-lg font-light mb-2'>
+              {userJob && userJob.jobName[currentLang]}
+                {
+                  // show the guard time availabilality
+                  currentUserInfo?.jobId.toLowerCase() === "guardpharmacy" &&
+                  <div
+                    className='w-full px-[0.2rem] flex flex-col border-gray-100 border-2'>
+                    <h2
+                      className={`${currentLang === 'ar' && "self-end"}`}
+                    >{usersInfoTxt?.from}
+                    </h2>
+                      <h2 className="pl-2">{formatedDate1}</h2>
+
+                    <h2
+                      className={`${currentLang === 'ar' && "self-end"}`}
+                    >{usersInfoTxt?.to}
+                    </h2>
+
+                      <h2 className="pl-2">{formatedDate2}</h2>
+
+                  </div>
+                }
+              </span>
               {
                 !currentUser ?
                   <div className='border-2 border-secondary px-4 py-2 hover:bg-secondary hover:text-white'>
@@ -208,39 +257,28 @@ export default function UserInfo() {
                     <span className='block text-md'>Email: {userInformation.email}</span>
                     <span className='block text-md'>Phone: {userInformation.phone}</span>
                     <div className='flex gap-x-4 mt-2'>
-                      <Icon icon={<a href={userInformation.facebookAccountUrl} target="blank"><FaFacebookF className='group-hover:text-blue-500' /></a>} />
-                      <Icon icon={<a href={userInformation.instagramAccountUrl} target="blank"><FaInstagram className='group-hover:text-pink-400' /></a>} />
-                      <Icon icon={<a href={userInformation.youtubeAccountUrl} target="blank"><FaYoutube className='group-hover:text-red-500' /></a>} />
-                      <Icon icon={<a href={userInformation.websiteUrl} target="blank"><SiWebflow className='group-hover:text-blue-800' /></a>} />
+                      <Icon icon={<a href={userInformation.facebookAccountUrl} target="blank">
+                        <FaFacebookF size={25} className='group-hover:text-blue-500' /></a>} />
+                      <Icon icon={
+                        <a href={userInformation.instagramAccountUrl} target="blank">
+                        <FaInstagram size={25} className='group-hover:text-pink-400' />
+                        </a>
+                      } 
+                        />
+                      <Icon icon={
+                        <a href={userInformation.youtubeAccountUrl} target="blank">
+                        <FaYoutube size={25} className='group-hover:text-red-500' />
+                        </a>
+                      } 
+                      />
+                      <Icon icon={
+                        <a href={userInformation.websiteUrl} target="blank">
+                        <SiWebflow size={25} className='group-hover:text-blue-800' />
+                        </a>
+                      } 
+                      />
                     </div>
                   </>
-              }
-              {
-                // show the guard time availabilality
-                userInformation?.jobId.toLowerCase() === "guardpharmacy" ?
-                  <div
-                    className='
-                    w-full
-                    p-[0.5rem] my-2
-                    flex flex-col
-                    shadow-lg
-                  '
-                  >
-                    <h2
-                      className={`flex items-center justify-between ${currentLang === 'ar' && 'flex-row-reverse'}`}
-                    >{usersInfoTxt?.from}
-                      <span>{new Date(currentUserInfo?.jobDetails.startDate).toLocaleString()}</span>
-
-                    </h2>
-                    <h2
-                      className={`flex items-center justify-between ${currentLang === 'ar' && 'flex-row-reverse'}`}
-                    >{usersInfoTxt?.to}
-                      <span>{new Date(currentUserInfo?.jobDetails.endDate).toLocaleString()}</span>
-
-                    </h2>
-
-                  </div>
-                  : ''
               }
             </div>
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang === "ar") ? " md:mr-auto" : " md:ml-auto"}`}>
@@ -258,7 +296,10 @@ export default function UserInfo() {
                 <span className='block font-bold'>{userInformation.rating}/5</span>
               </div>
               <button
-                className="py-1 px-2 mt-2 border-2 border-secondary hover:bg-secondary hover:text-white font-semibold"
+                className="
+                  py-1 px-2 mt-2 border-2 border-secondary
+                  hover:bg-secondary hover:text-white 
+                  font-semibold rounded-md"
                 onClick={() => { setRatMe(true) }}
               >
                 {usersInfoTxt && usersInfoTxt.feedBackOrder}
@@ -285,24 +326,29 @@ export default function UserInfo() {
               {
                 galerieSelected
                   ?
-                  // <AnimatePresence>
+                  <AnimatePresence
+                    exitBeforeEnter={true}
 
+                  >
 
-                  portFolio && portFolio.map((elm) => {
+                    {
+                      portFolio && portFolio.map((elm) =>
 
-                    elm.map((media, i) => (
-                      <motion.div
-                        key={i} onClick={() => popupImg(media.mediaUrl)}
-                        variants={popup}
-                        initial="hidden"
-                        animate="show"
-                        data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen"
-                        className="overflow-hidden max-h-96">
-                        <motion.img layoutId={media.mediaUrl} src={media.mediaUrl} alt={media.mediaType} className="w-full h-full object-cover hover:scale-105 transition-all ease-in-out" />
-                      </motion.div>
-                    ))
+                        elm.map((media, i) => (
+                          <motion.div
+                            key={i} onClick={() => popupImg(media.mediaUrl)}
+                            variants={popup}
+                            initial="hidden"
+                            animate="show"
+                            data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen"
+                            className="overflow-hidden max-h-96 cursor-pointer">
+                            <motion.img layoutId={media.mediaUrl} src={media.mediaUrl} alt={media.mediaType} className="w-full h-full object-cover hover:scale-105 transition-all ease-in-out" />
+                          </motion.div>
+                        ))
 
-                  })
+                      )
+                    }
+                  </AnimatePresence>
                   :
                   feedback && feedback.map((feed, i) => {
                     return (
@@ -327,30 +373,28 @@ export default function UserInfo() {
               hiddeRate={hiddeRate}
               canRate={canRate}
               getRatingInformation={rateUser}
-              variants={popup}
-              initial="hidden"
-              animate="show"
+              setRatMe={setRatMe}
             />}
           </AnimatePresence>
         </div>
       }
-      <AnimatePresence>
+      <AnimatePresence
+        exitBeforeEnter={true}
+      >
         {showModal &&
           <PopupModal
             usersInfoTxt={usersInfoTxt}
             url={imgUrl}
             setShowModal={setShowModal}
-            variants={popup}
-            initial="hidden"
-            animate="show"
+
           />
         }
       </AnimatePresence>
-    </>
+    </motion.div>
   )
 }
 
-function RateMe({ getRatingInformation, canRate, hiddeRate, txts }) {
+function RateMe({ getRatingInformation, canRate, hiddeRate, txts, setRatMe }) {
   const [rating, setRating] = useState();
   const [feedbackMessage, setFeedbackMessage] = useState();
   const [error, setError] = useState();
@@ -378,7 +422,15 @@ function RateMe({ getRatingInformation, canRate, hiddeRate, txts }) {
   }
 
   return (
-    <div onClick={hiddeRate} id="cont" className='fixed top-0 left-0 w-screen h-screen bg-transparent'>
+    <>
+    <motion.div 
+      variants={dropIn}
+      initial="hidden"
+      animate="show"
+      exit="exit"
+      onClick={hiddeRate} 
+      id="cont" 
+      className='fixed top-0 z-50 left-0 w-screen h-screen bg-transparent'>
       <div
         className='w-2/3 bg-additional text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 py-2 px-4 rounded-lg'
       >
@@ -396,8 +448,11 @@ function RateMe({ getRatingInformation, canRate, hiddeRate, txts }) {
           submit
         </button>
       </div>
-    </div>
 
+
+    </motion.div>
+      <div onClick={() => setRatMe(false)} className="opacity-80 fixed inset-0 z-40 bg-black"></div>
+      </>
   );
 }
 
@@ -409,7 +464,10 @@ function PopupModal({ url, setShowModal, usersInfoTxt }) {
   }
   return (
     <>
-      <div
+      <motion.div
+        variants={popup}
+        initial="hidden"
+        animate="show"
         onClick={handleExit}
         className="popup justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
       >
@@ -432,7 +490,7 @@ function PopupModal({ url, setShowModal, usersInfoTxt }) {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
       <div className="opacity-80 fixed inset-0 z-40 bg-black"></div>
     </>
   )
