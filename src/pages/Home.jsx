@@ -11,9 +11,9 @@ const style = {
     copyContainer: `w-1/2 flex-1 mt-16`,
     title: `relative text-black text-[46px] font-bold`,
     description: `text-2xl font-medium mt-8 mb-2`,
-    ctacontainer: `flex my-[1rem]`,
-    accentedButton: `px-4 py-3 bg-[#2191e2] rounded-lg mr-3 text-white hover:bg-[#42a0ff] cursor-pointer`,
-    button: `flex justify-center items-center px-4 py-3 bg-[#363840] rounded-lg mr-3 text-[#e4e8ea] hover:bg-[#4c505c] cursor-pointer`,
+    ctacontainer: `flex  my-[1rem]`,
+    accentedButton: `w-full px-5 py-3 border border-transparent text-base font-medium rounded-md text-white md:py-2 md:text-lg md:px-5  bg-[#2191e2] hover:bg-[#42a0ff] cursor-pointer`,
+    button: `ml-[2rem] flex items-center w-full px-5 py-3 border border-transparent text-base font-medium rounded-md text-white md:py-2 md:text-lg md:px-5 bg-[#363840] hover:bg-[#4c505c] cursor-pointer`,
     cardContainer: `rounded-[3rem] max-w-[400px] md:my-[1.5rem] mx-5`,
 }
 
