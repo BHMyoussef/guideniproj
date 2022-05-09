@@ -7,13 +7,13 @@ import {fadeIn} from "../animation";
 
 const style = {
     wrapper: `container relative mx-auto md:text-left md:flex mt-12`,
-    contentWrapper: `flex h-screen relative justify-center flex-wrap items-center`,
+    contentWrapper: `flex h-screen relative justify-evenly flex-wrap items-center`,
     copyContainer: `w-1/2 flex-1 mt-16`,
     title: `relative text-black text-[46px] font-bold`,
-    description: `text-2xl font-medium mt-8 mb-2`,
+    description: `text-md font-medium mt-8 mb-2`,
     ctacontainer: `flex  my-[1rem]`,
     accentedButton: `w-full px-5 py-3 border border-transparent text-base font-medium rounded-md text-white md:py-2 md:text-lg md:px-5  bg-[#2191e2] hover:bg-[#42a0ff] cursor-pointer`,
-    button: `ml-[2rem] flex items-center w-full px-5 py-3 border border-transparent text-base font-medium rounded-md text-white md:py-2 md:text-lg md:px-5 bg-[#363840] hover:bg-[#4c505c] cursor-pointer`,
+    button: `flex items-center justify-between px-5 py-3 border border-transparent text-base font-medium rounded-md text-white md:py-2 md:text-lg md:px-5 bg-[#363840] hover:bg-[#4c505c] cursor-pointer mx-5`,
     cardContainer: `rounded-[3rem] max-w-[400px] md:my-[1.5rem] mx-5`,
 }
 
@@ -42,10 +42,10 @@ export default function Home() {
                            </div>
                          </Link>
                            <Link to="/download">
-                             <div className={style.button}>
-                               {homeTxt?.download}
-                               <FaGooglePlay className="ml-[10px]"/>
-                             </div>
+                             <button className={`${style.button} ${(currentLang!=="ar")&&" flex-row-reverse"}`}>
+                              <svg className="fill-current w-4 h-4 mx-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                              <span>{homeTxt?.download}</span>
+                            </button>
                          </Link>
                      </div>
                  </div>

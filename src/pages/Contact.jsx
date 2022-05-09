@@ -79,7 +79,7 @@ function Contact() {
                      <h4 className="font-bold text-dark text-xl mb-1">
                         {contact?.email}
                      </h4>
-                     <p className="text-base text-body-color">info@yourdomain.com</p>
+                     <p className="text-base text-body-color">guideni@gmail.com</p>
                   </div>
                </div>
             </div>

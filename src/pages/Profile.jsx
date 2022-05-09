@@ -121,7 +121,9 @@ function Profile() {
           getDoc(docRef)
             .then(result => {
               let info = result.data();
-              let feed = { image: info?.imageUrl, name: info?.firstName, rateDetails: document.data().ratingDetails, rate: document.data().rating }
+              let feed = { image: info?.imageUrl, name: info?.firstName, rateDetails: document.data().ratingDetails, rate: document.data().rating,
+                rank: info?.rank.toString()
+                }
               tmpFeedback = [...tmpFeedback, feed];
               setFeedback(tmpFeedback)
             })
@@ -494,6 +496,7 @@ function Profile() {
                         image={feed.image}
                         rateDetails={feed.rateDetails}
                         rate={feed.rate}
+                        rank={feed.rank}
                       />
                     )
                   })

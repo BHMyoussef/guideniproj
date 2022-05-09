@@ -1,8 +1,56 @@
 import Stars from "./Stars";
 
-export default function FeedBack({ image, name, rateDetails, rate }) {
+export default function FeedBack({ image, name, rateDetails, rate, rank }) {
+
+  console.log({rank})
   return (
-    <div className='feedback flex items-center pt-4 pb-4 border-t-2 border-secondary'>
+    <div  className="bg-white w-full flex items-center p-2 mx-auto my-[1rem] rounded-xl shadow border">
+    <div className="relative flex items-center space-x-4">
+      <img 
+        src={image}
+        alt={name}
+         className="w-[100px] h-[100px] rounded-full" 
+         />
+    </div>
+    <div className="flex-grow p-3 ml-5">
+      <div className="relative font-semibold text-gray-700">
+        {name}
+        <span className="absolute rounded-full w-[40px] h-[40px] top-0 right-[-1rem]">
+          <img
+            src={`${window.origin}/resources/rank/${rank.toString()?.toLowerCase()}.svg`}
+            alt={`rank ${rank}`}
+          />
+      </span>
+      </div>
+
+      <div className={`text-sm text-gray-500 ${(rank?.toLowerCase() === 'gold' ? 'text-[#ffd700]' : (rank?.toLowerCase() === 'silver' ? ' text-[#c0c0c0]' : 'text-[#cd7f32]'))}`}>
+        {rank?.toUpperCase()}
+      </div>
+      
+      <div className="text-sm text-gray-500">
+        <Stars rate={rate} />
+      </div>
+
+      <div className="font-sm text-gray-500">
+        {rateDetails}
+      </div>
+    </div>
+    {/* we may need it if he asked us to add s.th here
+      <div className="p-2">
+          <span className="block rounded-full self-start top-[-2rem] right-0">
+            ...
+          </span>
+    </div>
+          */
+    }
+  </div>
+  )
+}
+
+/**
+
+
+<div className='feedback flex items-center pt-4 pb-4 border-t-2 border-secondary'>
       <div className='image-container w-28 h-28'>
         <img
           className='h-full w-full rounded-full'
@@ -16,32 +64,4 @@ export default function FeedBack({ image, name, rateDetails, rate }) {
         <Stars rate={rate} />
       </div>
     </div>
-  )
-}
-
-/**
- <div className=" w-full lg:max-w-full lg:flex">
-    <div className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" style="background-image: url('/mountain.jpg')" title="Mountain">
-    </div>
-    <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-      <div className="mb-8">
-        <p className="text-sm text-gray-600 flex items-center">
-          <svg className="fill-current text-gray-500 w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-            <path d="M4 8V6a6 6 0 1 1 12 0v2h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-8c0-1.1.9-2 2-2h1zm5 6.73V17h2v-2.27a2 2 0 1 0-2 0zM7 6v2h6V6a3 3 0 0 0-6 0z" />
-          </svg>
-          Members only
-        </p>
-        <div className="text-gray-900 font-bold text-xl mb-2">Best Mountain Trails 2020</div>
-        <p className="text-gray-700 text-base">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, Nonea! Maiores et perferendis eaque, exercitationem praesentium nihil.</p>
-      </div>
-      <div className="flex items-center">
-        <img className="w-10 h-10 rounded-full mr-4" src="/ben.png" alt="Avatar of Writer">
-        <div className="text-sm">
-          <p className="text-gray-900 leading-none">John Smith</p>
-          <p className="text-gray-600">Aug 18</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
  */

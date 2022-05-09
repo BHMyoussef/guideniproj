@@ -11,7 +11,7 @@ import StarsRate from '../components/StarsRate';
 import { useAuth } from '../contexts/AuthProvider';
 import { useLang } from '../contexts/LangProvider';
 import { firestore } from '../firebase';
-import { FaWindowClose, FaAward } from "react-icons/fa";
+import { FaWindowClose } from "react-icons/fa";
 // animation things
 import { motion, AnimatePresence } from "framer-motion"
 import { fadeIn, popup, dropIn } from "../animation";
@@ -130,7 +130,10 @@ export default function UserInfo() {
           getDoc(docRef)
             .then(result => {
               let info = result.data();
-              let feed = { image: info?.imageUrl, name: info?.firstName, rateDetails: document.data().ratingDetails, rate: document.data().rating }
+              console.log({info})
+              let feed = { image: info?.imageUrl, name: info?.firstName, rateDetails: document.data().ratingDetails, rate: document.data().rating,
+                rank: info?.rank.toString()
+               }
               tmpFeedback = [...tmpFeedback, feed];
               setFeedback(tmpFeedback)
             })
@@ -282,7 +285,7 @@ export default function UserInfo() {
               }
             </div>
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang === "ar") ? " md:mr-auto" : " md:ml-auto"}`}>
-              <div className={`flex items-center justify-evenly ${currentLang == "ar" ? "flex-row-reverse" : ""}`}>
+              <div className={`flex items-center justify-evenly ${currentLang === "ar" ? "flex-row-reverse" : ""}`}>
                 {/*<FaAward color={userInformation?.rank} size={30}/>*/}
                 <img src={`${window.origin}/resources/rank/${userInformation?.rank.toLowerCase()}.svg`} alt={userInformation?.rank} />
                 <span className={`font-bold text-${userInformation?.rank}`}>{userInformation?.rank}</span>
@@ -358,6 +361,7 @@ export default function UserInfo() {
                         image={feed.image}
                         rateDetails={feed.rateDetails}
                         rate={feed.rate}
+                        rank={feed.rank}
                       />
                     )
                   })
