@@ -7,7 +7,7 @@ export default function FeedBack({ image, name, rateDetails, rate, rank }) {
     <div  className="bg-white w-full flex items-center p-2 mx-auto my-[1rem] rounded-xl shadow border">
     <div className="relative flex items-center space-x-4">
       <img 
-        src={image}
+        src={image || `${window.location.origin}/resources/profile.png`}
         alt={name}
          className="w-[100px] h-[100px] rounded-full" 
          />

@@ -260,7 +260,7 @@ function Profile() {
     const end = new Date(to);
 
     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    const formateLang = (currentLang === "eng") ? 'en-us' : (currentLang === 'fr') ? 'fr' : 'ar-ma';
+    const formateLang = ((currentLang === "eng") ? 'en-us' : (currentLang === 'fr') ? 'fr' : 'ar-ma') || "eng"; // by default
     
     console.log({formateLang})
     setFormatedDate1(start.toLocaleDateString(formateLang, options))

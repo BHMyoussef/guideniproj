@@ -50,7 +50,7 @@ export default function Home() {
                      </div>
                  </div>
                  <div className={style.cardContainer}>
-                     <img src="http://localhost:3000/resources/home.png" alt="Guideni home" />
+                     <img src="/resources/home.png" alt="Guideni home" />
                  </div>
              </div>
          <div className="hidden lg:flex bg-gray-600 text-white items-center justify-center w-40 ml-8">ads Here</div>

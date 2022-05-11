@@ -47,7 +47,7 @@ export default function UserInfo() {
     getPortfolio();
     getFeedback();
     getCanRate();
-    formatDate();
+    formatDate(userInformation?.jobDetails?.startDate, userInformation?.jobDetails?.endDate);
   }, [])
 
   useEffect(() => {
@@ -178,14 +178,14 @@ export default function UserInfo() {
     setShowModal(true);
   }
 
-  function formatDate(){
-    if(currentUserInfo?.jobId.toLowerCase() === "guardpharmacy"){
+  function formatDate(from=userInformation?.jobDetails?.startDate, to=userInformation?.jobDetails?.endDate){
+    if(userInformation?.jobId.toLowerCase() === "guardpharmacy"){
 
-    const start = new Date(currentUserInfo?.jobDetails.startDate);
-    const end = new Date(currentUserInfo?.jobDetails.endDate);
+    const start = new Date(from);
+    const end = new Date(to);
 
     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    const formateLang = (currentLang === "eng") ? 'en-us' : (currentLang === 'fr') ? 'fr' : 'ar-ma';
+    const formateLang = ((currentLang === "eng") ? 'en-us' : (currentLang === 'fr') ? 'fr' : 'ar-ma') || "eng"; // by default
     
     console.log({formateLang})
     setFormatedDate1(start.toLocaleDateString(formateLang, options))
@@ -230,7 +230,7 @@ export default function UserInfo() {
               {userJob && userJob.jobName[currentLang]}
                 {
                   // show the guard time availabilality
-                  currentUserInfo?.jobId.toLowerCase() === "guardpharmacy" &&
+                  userInformation?.jobId.toLowerCase() === "guardpharmacy" &&
                   <div
                     className='w-full px-[0.2rem] flex flex-col border-gray-100 border-2'>
                     <h2
