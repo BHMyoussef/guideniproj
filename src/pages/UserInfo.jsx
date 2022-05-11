@@ -47,7 +47,7 @@ export default function UserInfo() {
     getPortfolio();
     getFeedback();
     getCanRate();
-    formatDate(userInformation?.jobDetails?.startDate, userInformation?.jobDetails?.endDate);
+    formatDate(userInformation?.jobDetails.startDate, userInformation?.jobDetails.endDate);
   }, [])
 
   useEffect(() => {
@@ -178,14 +178,14 @@ export default function UserInfo() {
     setShowModal(true);
   }
 
-  function formatDate(from=userInformation?.jobDetails?.startDate, to=userInformation?.jobDetails?.endDate){
+  function formatDate(from=userInformation?.jobDetails.startDate, to=userInformation?.jobDetails.endDate){
     if(userInformation?.jobId.toLowerCase() === "guardpharmacy"){
 
     const start = new Date(from);
     const end = new Date(to);
 
     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    const formateLang = ((currentLang === "eng") ? 'en-us' : (currentLang === 'fr') ? 'fr' : 'ar-ma') || "eng"; // by default
+    const formateLang = ((currentLang === "eng") ? 'en-us' : (currentLang === 'fr') ? 'fr' : 'ar-ma') || "en-us"; // by default
     
     console.log({formateLang})
     setFormatedDate1(start.toLocaleDateString(formateLang, options))
