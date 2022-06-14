@@ -17,7 +17,7 @@ export default function JobsProvider() {
     const [ jobName, setJobName ] = useState();
     const [ cities,setCities ] = useState()
     const params = useParams()
-    const { users:usersTxt, currentLang } = useLang()
+    const { users:usersTxt, currentLang } = useLang();
 
     function getCities(){
         const citiesRef = collection(firestore,"cities");

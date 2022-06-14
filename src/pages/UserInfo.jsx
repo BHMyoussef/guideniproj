@@ -8,18 +8,24 @@ import FeedBack from '../components/Feedback';
 import Icon from '../components/Icon';
 import Stars from '../components/Stars';
 import StarsRate from '../components/StarsRate';
+import LeftMenu from '../components/LeftMenu';
+
 import { useAuth } from '../contexts/AuthProvider';
 import { useLang } from '../contexts/LangProvider';
 import { firestore } from '../firebase';
 import { FaWindowClose } from "react-icons/fa";
+import { HiDotsVertical } from "react-icons/hi";
+
 // animation things
 import { motion, AnimatePresence } from "framer-motion"
 import { fadeIn, popup, dropIn } from "../animation";
 
 
 export default function UserInfo() {
+
   const [userInformation, setUserInformation] = useState();
   const [userCity, setUserCity] = useState()
+  const [userNeighborhood, setUserNeighborhood] = useState()
   const [galerieSelected, setgalerieSelected] = useState(true);
   const [feedback, setFeedback] = useState();
   const [rateme, setRatMe] = useState(false);
@@ -38,9 +44,6 @@ export default function UserInfo() {
   const { currentUser, currentUserInfo } = useAuth()
   const { userInfo: usersInfoTxt, currentLang } = useLang();
   const params = useParams('id')
-
-  console.log({ params })
-
 
   useEffect(() => {
     getUserInfo();
@@ -91,10 +94,19 @@ export default function UserInfo() {
 
   function getUserCity() {
     if (userInformation) {
-      const docRef = doc(firestore, `cities/${userInformation.userCity}`)
+      let docRef = doc(firestore, `cities/${userInformation.userCity}`)
       getDoc(docRef)
         .then(result => {
           setUserCity(result.data().cityName)
+        })
+      docRef = doc(
+          firestore, 
+          `cities/${userInformation.userCity}/neighborhoods/${userInformation?.userNeighborhood}`
+        )
+
+      getDoc(docRef)
+        .then(result => {
+          setUserNeighborhood(result.data().neighborhoodName)
         })
     }
   }
@@ -195,6 +207,8 @@ export default function UserInfo() {
     }
   }
 
+  const [openMenu, setOpenMenu] = useState(false);
+
   return (
     <motion.div
       variants={fadeIn}
@@ -205,10 +219,11 @@ export default function UserInfo() {
       {
         userInformation &&
         <div className='container lg:grid grid-flow-row-dense grid-cols-10 gap-4 auto-rows-auto mx-auto bg-bgcolor pt-4 pb-4 px-8 rounded-md'>
+
           <div className="hidden col-span-2 row-span-2 text-white lg:block">
-            <span className='bg-gray-600 w-40 h-[600px] flex items-center justify-center'>Ads Here</span>
+            <span  className='bg-gray-600 w-40 h-[600px] flex items-center justify-center'>Ads Here</span>
           </div>
-          <div className={`col-start-3 col-span-6 flex flex-col md:flex-row items-center ${(currentLang === "ar") && " md:flex-row-reverse"}`}>
+          <div className={` bg-red-300 col-start-3 col-span-6 flex flex-col md:flex-row items-center ${(currentLang === "ar") && " md:flex-row-reverse"}`}>
 
             <div
               className='image-container w-48 h-48 mb-4 cursor-pointer'
@@ -256,8 +271,9 @@ export default function UserInfo() {
                   </div>
                   :
                   <>
+                    {/*  user address here */}
                     <span className='block text-md'>{userCity}</span>
-                    <span className='block text-md'>Email: {userInformation.email}</span>
+                    <span className='block text-md'>{userNeighborhood}</span>
                     <span className='block text-md'>Phone: {userInformation.phone}</span>
                     <div className='flex gap-x-4 mt-2'>
                       <Icon icon={<a href={userInformation.facebookAccountUrl} target="blank">
@@ -285,6 +301,19 @@ export default function UserInfo() {
               }
             </div>
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang === "ar") ? " md:mr-auto" : " md:ml-auto"}`}>
+              <div className="leftmenu-container flex bg-white">
+                <LeftMenu className={openMenu ? "": "hidden"} />
+                <HiDotsVertical 
+                  size={40} 
+                  onClick={() => {
+                    console.log("sss")
+                    setOpenMenu(!openMenu)
+                  }} 
+                  className="cursor-pointer"
+                  />
+
+              </div>
+
               <div className={`flex items-center justify-evenly ${currentLang === "ar" ? "flex-row-reverse" : ""}`}>
                 {/*<FaAward color={userInformation?.rank} size={30}/>*/}
                 <img src={`${window.origin}/resources/rank/${userInformation?.rank.toLowerCase()}.svg`} alt={userInformation?.rank} />

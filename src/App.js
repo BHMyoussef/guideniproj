@@ -19,6 +19,7 @@ import Edit from './blogs/pages/Edit'
 import ResetMail from './pages/ResetMail'
 import Contact from './pages/Contact'
 import Download from './pages/Download'
+//import Favorite from './pages/Favorite'
 
 function App() {
 
@@ -37,6 +38,9 @@ function App() {
           <Route path="/setting" element = { <Setting/>} />
           <Route path="/help" element = { <Contact/>} />
           <Route path="/download" element = { <Download/>} />
+
+          { /* <Route path="/favorite" element = { <Favorite/>} /> */ }
+          
           <Route path="/blog" element = { <Bloga/>} />
           <Route path="/blog/:id" element = { <Blog/>} />
           <Route path="/edit/:id" element = { <Edit/>} />
