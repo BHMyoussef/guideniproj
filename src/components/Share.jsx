@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { FacebookShareButton, TwitterShareButton, WhatsappShareButton, EmailShareButton } from 'react-share';
 import { AiOutlineMail } from "react-icons/ai"
 import { FaShareAlt } from "react-icons/fa"
@@ -8,7 +8,7 @@ import { useLang } from '../contexts/LangProvider';
 
 // animation things
 import { motion, AnimatePresence } from "framer-motion"
-import { fadeIn, popup, dropIn } from "../animation";
+import {dropIn } from "../animation";
 
 export default function Share(){
     const [ sharePanel, setSharePanel] = useState(false);

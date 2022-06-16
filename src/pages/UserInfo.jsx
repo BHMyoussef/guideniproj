@@ -13,7 +13,6 @@ import LeftMenu from '../components/LeftMenu';
 import { useAuth } from '../contexts/AuthProvider';
 import { useLang } from '../contexts/LangProvider';
 import { firestore } from '../firebase';
-import { FaWindowClose } from "react-icons/fa";
 import { HiDotsVertical } from "react-icons/hi";
 
 // animation things
@@ -223,7 +222,7 @@ export default function UserInfo() {
           <div className="hidden col-span-2 row-span-2 text-white lg:block">
             <span  className='bg-gray-600 w-40 h-[600px] flex items-center justify-center'>Ads Here</span>
           </div>
-          <div className={` bg-red-300 col-start-3 col-span-6 flex flex-col md:flex-row items-center ${(currentLang === "ar") && " md:flex-row-reverse"}`}>
+          <div className={` col-start-3 col-span-6 flex flex-col md:flex-row items-center ${(currentLang === "ar") && " md:flex-row-reverse"}`}>
 
             <div
               className='image-container w-48 h-48 mb-4 cursor-pointer'
@@ -272,8 +271,7 @@ export default function UserInfo() {
                   :
                   <>
                     {/*  user address here */}
-                    <span className='block text-md'>{userCity}</span>
-                    <span className='block text-md'>{userNeighborhood}</span>
+                    <span className='block text-md'>{userCity +", "+userNeighborhood}</span>
                     <span className='block text-md'>Phone: {userInformation.phone}</span>
                     <div className='flex gap-x-4 mt-2'>
                       <Icon icon={<a href={userInformation.facebookAccountUrl} target="blank">
@@ -301,16 +299,16 @@ export default function UserInfo() {
               }
             </div>
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang === "ar") ? " md:mr-auto" : " md:ml-auto"}`}>
-              <div className="leftmenu-container flex bg-white">
-                <LeftMenu className={openMenu ? "": "hidden"} />
-                <HiDotsVertical 
-                  size={40} 
+              <div className="flex justify-end relative top-[-2rem] right-[-1.5rem]">
+                {openMenu && <LeftMenu setRatMe={setRatMe} usersInfoTxt={usersInfoTxt}/>}
+                <div
+                  className={openMenu? "bg-white cursor-pointer" : "cursor-pointer"}
                   onClick={() => {
-                    console.log("sss")
                     setOpenMenu(!openMenu)
                   }} 
-                  className="cursor-pointer"
-                  />
+                >
+                <HiDotsVertical size={40} />
+                  </div>
 
               </div>
 
@@ -327,15 +325,7 @@ export default function UserInfo() {
                 <p>{usersInfoTxt && usersInfoTxt.rate}</p>
                 <span className='block font-bold'>{userInformation.rating}/5</span>
               </div>
-              <button
-                className="
-                  py-1 px-2 mt-2 border-2 border-secondary
-                  hover:bg-secondary hover:text-white 
-                  font-semibold rounded-md"
-                onClick={() => { setRatMe(true) }}
-              >
-                {usersInfoTxt && usersInfoTxt.feedBackOrder}
-              </button>
+              
               <Share />
             </div>
           </div>
