@@ -8,6 +8,10 @@ import {motion} from "framer-motion";
 import {fadeIn, popup} from "../animation"
 
 export default function Card({id, name, image, jobName, rate, totalRating, texts, city, rank}) {
+    if (rank === 0)
+        rank = "bronze"
+    else 
+        rank = rank.toString()
   return (
     <motion.div
 
