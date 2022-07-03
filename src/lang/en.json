@@ -67,7 +67,9 @@
         "close": "Close",
         "yes": "Yes",
         "sure": "Are you sure?",
-        "sureText": "By clicking on yes, you will end your up your guard period"
+        "sureText": "By clicking on yes, you will end your up your guard period",
+        "addtofav": "Add to Favorite",
+        "report": "Report user"
     },
     "signIn":{
         "title": "Login",

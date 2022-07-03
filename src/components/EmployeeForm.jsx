@@ -71,19 +71,19 @@ export default class EmployeeForm extends Form {
 
   setCity=(cityId)=>{
     let data = this.state.data;
-    data.cityId = cityId
-    this.setState({data})
+    data.cityId = cityId;
+    this.setState({data: data.sort()});
   }
   setCategory=(categoryId)=>{
     let data = this.state.data;
     data.categoryId = categoryId;
-    this.setState({data});
+    this.setState({data: data.sort()});
     this.getSubCategories();
   }
   setSubCategory=(subCategoryId)=>{
     let data = this.state.data;
     data.subCategoryId = subCategoryId
-    this.setState({data})
+    this.setState({data: data.sort()});
   }
 
   getCities(){
@@ -100,7 +100,7 @@ export default class EmployeeForm extends Form {
         }
         citiesdb = [...citiesdb,obj]
       });
-      cities = citiesdb;
+      cities = citiesdb.sort((a,b) => a.name - b.name);
       this.setState({cities})
     })
     .catch(error=>{
@@ -208,9 +208,9 @@ export default class EmployeeForm extends Form {
 			const newDoc = doc(firestore,`users/${userCredential.user.uid}`);
 			setDoc(newDoc,docData)
 		}))
-		
+
 	}
-  
+
 
   render() {
     const { cities, categories, subCategories } = this.state
@@ -231,8 +231,8 @@ export default class EmployeeForm extends Form {
               <SelectForm title="enter your SubCategory" choices={ subCategories[value.currentLang] } setProperty={this.setSubCategory}/>
               {	this.renderButton(value.signUp &&value.signUp.signUpBtn,this.state.loading)	}
             </form>
-            <SignWith />  
-            <Link 
+            <SignWith />
+            <Link
                 to="/signUp"
                 className='hover:border-b-2 hover:scale-105'
                 >

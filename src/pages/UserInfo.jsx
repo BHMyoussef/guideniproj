@@ -1,5 +1,5 @@
 import { addDoc, collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
-import { FaFacebookF, FaYoutube, FaInstagram } from 'react-icons/fa'
+import { FaFacebookF, FaYoutube, FaInstagram, FaInfoCircle, FaHeart, FaShareAlt } from 'react-icons/fa'
 import { SiWebflow } from 'react-icons/si'
 import Share from '../components/Share';
 import React, { useEffect, useState } from 'react'
@@ -8,11 +8,11 @@ import FeedBack from '../components/Feedback';
 import Icon from '../components/Icon';
 import Stars from '../components/Stars';
 import StarsRate from '../components/StarsRate';
-import LeftMenu from '../components/LeftMenu';
 
 import { useAuth } from '../contexts/AuthProvider';
 import { useLang } from '../contexts/LangProvider';
 import { firestore } from '../firebase';
+import {MdReport} from 'react-icons/md';
 import { HiDotsVertical } from "react-icons/hi";
 
 // animation things
@@ -99,7 +99,7 @@ export default function UserInfo() {
           setUserCity(result.data().cityName)
         })
       docRef = doc(
-          firestore, 
+          firestore,
           `cities/${userInformation.userCity}/neighborhoods/${userInformation?.userNeighborhood}`
         )
 
@@ -197,7 +197,7 @@ export default function UserInfo() {
 
     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
     const formateLang = ((currentLang === "eng") ? 'en-us' : (currentLang === 'fr') ? 'fr' : 'ar-ma') || "en-us"; // by default
-    
+
     console.log({formateLang})
     setFormatedDate1(start.toLocaleDateString(formateLang, options))
     setFormatedDate2(end.toLocaleDateString(formateLang, options))
@@ -207,6 +207,22 @@ export default function UserInfo() {
   }
 
   const [openMenu, setOpenMenu] = useState(false);
+
+  function handleOpenMenu(){
+    console.log({openMenu})
+    if(openMenu){
+
+    document.addEventListener("click", (e) => {
+      console.log("click happended!!")
+      if(!e.target.classList.contains('little_menu')){
+        setOpenMenu(false)
+      }
+    })
+    }
+    else{
+      setOpenMenu(true)
+    }
+  }
 
   return (
     <motion.div
@@ -280,19 +296,19 @@ export default function UserInfo() {
                         <a href={userInformation.instagramAccountUrl} target="blank">
                         <FaInstagram size={25} className='group-hover:text-pink-400' />
                         </a>
-                      } 
+                      }
                         />
                       <Icon icon={
                         <a href={userInformation.youtubeAccountUrl} target="blank">
                         <FaYoutube size={25} className='group-hover:text-red-500' />
                         </a>
-                      } 
+                      }
                       />
                       <Icon icon={
                         <a href={userInformation.websiteUrl} target="blank">
                         <SiWebflow size={25} className='group-hover:text-blue-800' />
                         </a>
-                      } 
+                      }
                       />
                     </div>
                   </>
@@ -300,17 +316,66 @@ export default function UserInfo() {
             </div>
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang === "ar") ? " md:mr-auto" : " md:ml-auto"}`}>
               <div className="flex justify-end relative top-[-2rem] right-[-1.5rem]">
-                {openMenu && <LeftMenu setRatMe={setRatMe} usersInfoTxt={usersInfoTxt}/>}
-                <div
-                  className={openMenu? "bg-white cursor-pointer" : "cursor-pointer"}
-                  onClick={() => {
-                    setOpenMenu(!openMenu)
-                  }} 
-                >
-                <HiDotsVertical size={40} />
+                {openMenu &&                  
+                  <div 
+                    id="dropdown"
+                    className="little_menu z-10 bg-white divide-y divide-gray-100 rounded shadow w-44" 
+                    style={{
+                      position: "absolute",
+                      inset: "auto auto 0px 0px",
+                      margin: '0px',
+                      transform: "translate(-7.6rem, 5rem)"
+                    }}
+                    data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top">
+                      <ul className="py-1 text-sm text-gray-700" aria-labelledby="dropdownDefault">
+                        <li
+
+                          className="flex justify-between hover:bg-gray-200 mb-1 cursor-pointer">
+                          <button 
+                              className="block px-4 py-2">
+
+                            {usersInfoTxt && usersInfoTxt.addtofav}
+                          </button>                                                   
+                          <FaHeart className="px-2" size={35} color='red' />
+                          
+                        </li>
+                        <li 
+                            onClick={() => { setRatMe(true) }}
+
+                            className="flex justify-between hover:bg-gray-200 mb-1 cursor-pointer">
+                          <button 
+                              className="block px-4 py-2 ">
+                            {usersInfoTxt && usersInfoTxt.feedBackOrder}
+                          </button>
+                          <FaInfoCircle className="px-2" size={35} color='skyblue' />
+                          
+                        </li>
+                        <li className="flex justify-between hover:bg-gray-200 mb-1 cursor-pointer">
+                          <button 
+                              className="block px-4 py-2"
+                              >
+
+                            {usersInfoTxt && usersInfoTxt.report}
+                          </button>
+                          <MdReport className="px-2" size={35} color='orange' />
+                          
+                        </li>
+                      </ul>
                   </div>
 
-              </div>
+
+               }
+               <button 
+                  id="dropdownDefault" 
+                  data-dropdown-toggle="dropdown"
+                  className="focus:outline-none font-mediumtext-sm text-center inline-flex items-center"
+                  type="button"
+                  onClick={handleOpenMenu}
+                  >
+               
+                  <HiDotsVertical size={40} className="py-[.5rem]"/>
+                  </button>
+                  </div>
 
               <div className={`flex items-center justify-evenly ${currentLang === "ar" ? "flex-row-reverse" : ""}`}>
                 {/*<FaAward color={userInformation?.rank} size={30}/>*/}
@@ -325,7 +390,7 @@ export default function UserInfo() {
                 <p>{usersInfoTxt && usersInfoTxt.rate}</p>
                 <span className='block font-bold'>{userInformation.rating}/5</span>
               </div>
-              
+
               <Share />
             </div>
           </div>
@@ -446,13 +511,13 @@ function RateMe({ getRatingInformation, canRate, hiddeRate, txts, setRatMe }) {
 
   return (
     <>
-    <motion.div 
+    <motion.div
       variants={dropIn}
       initial="hidden"
       animate="show"
       exit="exit"
-      onClick={hiddeRate} 
-      id="cont" 
+      onClick={hiddeRate}
+      id="cont"
       className='fixed top-0 z-50 left-0 w-screen h-screen bg-transparent'>
       <div
         className='w-2/3 bg-additional text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 py-2 px-4 rounded-lg'
