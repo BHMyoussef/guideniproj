@@ -209,19 +209,13 @@ export default function UserInfo() {
   const [openMenu, setOpenMenu] = useState(false);
 
   function handleOpenMenu(){
-    console.log({openMenu})
-    if(openMenu){
+    setOpenMenu(!openMenu)
+    document.addEventListener("mousedown", (e) => {
+      console.log(e.target)
+      if(!e.target.classList.contains("little_menu") || e.target.tagName !== "BUTTON" || e.target.tagName !== "LI")
 
-    document.addEventListener("click", (e) => {
-      console.log("click happended!!")
-      if(!e.target.classList.contains('little_menu')){
         setOpenMenu(false)
-      }
-    })
-    }
-    else{
-      setOpenMenu(true)
-    }
+    });
   }
 
   return (
@@ -368,7 +362,7 @@ export default function UserInfo() {
                <button 
                   id="dropdownDefault" 
                   data-dropdown-toggle="dropdown"
-                  className="focus:outline-none font-mediumtext-sm text-center inline-flex items-center"
+                  className="font-mediumtext-sm text-center inline-flex items-center"
                   type="button"
                   onClick={handleOpenMenu}
                   >
