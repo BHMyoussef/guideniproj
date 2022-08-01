@@ -106,7 +106,9 @@
         "save": "Save",
         "Change password": "Change password",
         "update": "Update",
-        "account": "Account"
+        "account": "Account",
+        "city": "City",
+        "neighborhood": "Neighborhood"
 
 
     },

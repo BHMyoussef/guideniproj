@@ -3,7 +3,7 @@ import { FaPlusCircle } from "react-icons/fa"
 // import image
 import { useEffect, useState } from 'react'
 import { firestore, storage } from '../firebase'
-import { doc, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc, getDocs, collection } from 'firebase/firestore'
 import { useAuth } from '../contexts/AuthProvider'
 import { Link, Navigate } from 'react-router-dom'
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
@@ -27,12 +27,28 @@ const Settings = ({ userId }) => {
     instagramAccount: '',
     youtube: '',
     website: '',
+    userCity: '',
+    userNeighborhood: ''
   });
-  const { setting, currentLang } = useLang()
-  console.log({ setting, currentLang })
+  const { setting, currentLang } = useLang();
+  // Get from DB
+  const [city, setCity] = useState([]);
+  const [neighbors, setNeighbors] = useState([]);
+  // Form input
+  const [userCity, setUserCity] = useState();
+  const [userNeighborhood, setUserNeighborhood] = useState();
 
-  useEffect(() => {
-    setFormData(currentUserInfo)
+  useEffect(async () => {
+    await setFormData(currentUserInfo);
+    await getCities();
+    console.log({currentUser,currentUserInfo})
+
+    await city.forEach(c => {
+          if(c.cityId === currentUserInfo.userCity) setUserCity(c[0].cityName);
+        }
+      )
+
+    console.log({city,userCity})
   }, [])
 
   // handle submit
@@ -60,7 +76,6 @@ const Settings = ({ userId }) => {
   const changePasswd = (e) => {
     setPass1(window.password.value)
     setPass2(window.cpassword.value)
-    console.log({ pass1, pass2 });
   }
   const updatePasswd = () => {
     if (pass1 === pass2 && pass1.trim() !== "" && pass2.trim() !== '') {
@@ -73,6 +88,57 @@ const Settings = ({ userId }) => {
     }
 
   }
+
+  function getCities(){
+      const citiesRef = collection(firestore,"cities");
+      let citiesdb = []
+
+      getDocs(citiesRef)
+      .then(results=>{
+          results.forEach(city=>{
+              citiesdb = [...citiesdb, city.data()]
+          });
+          // citiesdb.sort((a,b)=>{
+          //   if ( a.cityName < b.cityName ){
+          //     return -1;
+          //   }
+          //   if ( a.cityName > b.cityName ){
+          //     return 1;
+          //   }
+          //   return 0;
+          // })
+          setCity(citiesdb);
+      })
+      .catch(error=>{
+          console.error( "error eccured: " ,error );
+      })
+  }
+  function getNeighborhoods(cityId){
+      const colRef = collection(firestore, `cities/${cityId}/neighborhoods`);
+      let neighborsTmp = [];
+
+      getDocs(colRef)
+      .then(results=>{
+          results.forEach(n=>{
+              neighborsTmp = [...neighborsTmp,n.data()]
+          });
+          neighborsTmp.sort((a,b)=>{
+            if ( a.neighborhoodName < b.neighborhoodName ){
+              return -1;
+            }
+            if ( a.neighborhoodName > b.neighborhoodName ){
+              return 1;
+            }
+            return 0;
+          })
+          setNeighbors(neighborsTmp)
+      })
+      .catch(error=>{
+          console.log( "error eccured: " ,error );
+      })
+  }
+
+
   async function uploadImag(image) {
     if (image !== currentUserInfo.imageUrl && image) {
       try {
@@ -80,7 +146,7 @@ const Settings = ({ userId }) => {
         const storageRef = ref(storage, currentUserInfo.imageUrl);
         await deleteObject(storageRef);
       } catch (err) {
-        console.log("deleete: ", err);
+        console.log("delete: ", err);
       }
 
       const storageRef = ref(storage, `/UsersFiles/${currentUserInfo.userId}/profileImage/${image.name}`)
@@ -120,7 +186,7 @@ const Settings = ({ userId }) => {
   }
 
   return (
-    !currentUser ? 
+    !currentUser ?
       <img className='absolute left-1/2 -translate-x-1/2' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
     :
       <StyledSettings
@@ -130,7 +196,7 @@ const Settings = ({ userId }) => {
         exit="exit"
 
          className='container shadow'>
-        }
+
         <StyledForm  onSubmit={handleSubmit}>
           <h2 className='text-2xl block mx-auto font-semibold mb-4'>{setting?.personal}</h2>
           <div className="inputs edit-image">
@@ -143,11 +209,11 @@ const Settings = ({ userId }) => {
           </div>
           <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""}`}>
             <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="fullName">{setting?.fullName}</label>
-            <input onChange={change} type="text" id="fullName" name="firstName" placeholder={formData?.firstName} />
+            <input onChange={change} type="text" id="fullName" name="firstName" placeholder={currentUserInfo?.firstName} />
           </div>
           <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
             <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="email">{setting?.email}</label>
-            <input onChange={change} type="email" placeholder={formData?.email} id="email" name="email" />
+            <input onChange={change} type="email" placeholder={currentUserInfo?.email} id="email" name="email" />
           </div>
           <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
             <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="password">{setting?.password}</label>
@@ -157,35 +223,46 @@ const Settings = ({ userId }) => {
             <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="cpassword">{setting?.repeatPass}</label>
             <input onChange={changePasswd} value={pass2} type="password" id="cpassword" name="cpassword" placeholder='Confirm Password' />
           </div>
-          {currentUserInfo?.jobId && <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""}`}>
+
+          {currentUserInfo?.jobId &&
+           <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""}`}>
             <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="phone">{setting?.phone}</label>
-            <input onChange={change} type="tel" id="phone" placeholder={formData?.phone} name="phone" />
+            <input onChange={change} type="tel" id="phone" placeholder={currentUserInfo?.phone} name="phone" />
           </div>}
 
-          
+          <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+            <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="userCity">{setting?.city}</label>
+            <input onChange={change} type="text" id="userCity" name="userCity" placeholder={userCity} />
 
-          {currentUserInfo?.jobId && <div>
-            <h2 className='my-8 font-medium'>{setting?.contact} </h2>
-            <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""} `}>
-              <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="facebook">{setting?.facebook}</label>
-              <input onChange={change} type="text" id="facebookAccount" placeholder={formData?.facebookAccount} name="facebookAccount" />
-            </div>
-            <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""} `}>
-              <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="Youtube">{setting?.youtube}</label>
-              <input onChange={change} type="text" id="youtube" placeholder={formData?.youtube} name="youtube" />
-            </div>
-            <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""} `}>
-              <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="instagram">{setting?.instagram}</label>
-              <input onChange={change} type="text" id="instagramAccount" placeholder={formData?.instagramAccount} name="instagramAccount" />
-            </div>
-            <div className={`inputs ${currentLang == "ar" ? "flex-row-reverse": ""} `}>
-              <label className={`${currentLang == "ar" ? "flex-row-reverse": ""}`} htmlFor="website">{setting?.website}</label>
-              <input onChange={change} type="text" id="website" placeholder={formData?.website} name="website"  />
-            </div>
-          </div>}
+          </div>
+
+
+
+          {
+            currentUserInfo?.jobId &&
+            <div>
+              <h2 className='my-8 font-medium'>{setting?.contact} </h2>
+              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="facebook">{setting?.facebook}</label>
+                <input onChange={change} type="text" id="facebookAccount" placeholder={formData?.facebookAccount} name="facebookAccount" />
+              </div>
+              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="Youtube">{setting?.youtube}</label>
+                <input onChange={change} type="text" id="youtube" placeholder={formData?.youtube} name="youtube" />
+              </div>
+              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="instagram">{setting?.instagram}</label>
+                <input onChange={change} type="text" id="instagramAccount" placeholder={formData?.instagramAccount} name="instagramAccount" />
+              </div>
+              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="website">{setting?.website}</label>
+                <input onChange={change} type="text" id="website" placeholder={formData?.website} name="website"  />
+              </div>
+          </div>
+        }
             <div className='text-center'>
               {
-                !currentUserInfo?.jobId && 
+                !currentUserInfo?.jobId &&
                 <Link to="/addJob" className={`save-btn inline-block mr-2 border-2 rounded border-sky-500 bg-sky-500 text-white hover:bg-white hover:text-sky-500  px-5 `}
                 >
                         {setting?.addJob}
