@@ -17,7 +17,9 @@ export default function JobsCategories() {
     const [filtredJobsCategories, setFiltredJobsCategories] = useState();
     const [ popUpShown, setpopUpShown ] = useState(false)
     const [ jobsProvider, setJobsProvider ] = useState([])
-    const [ cities,setCities ] = useState()
+    const [ cities,setCities ] = useState();
+    const [ firstSearch, setFirstSearch ] = useState(false)
+    const [ searchLoader, setSearchLoader] = useState(false);
     const { categories: categoriesTxt, currentLang, users:usersTxt } = useLang();
 
     function getCities(){
@@ -130,11 +132,26 @@ export default function JobsCategories() {
                 popUpShown && 
                 <div className='container mx-auto fixed overflow-scroll top-0 left-1/2 -translate-x-1/2 bg-secondary w-full h-screen'>
                     <FaArrowLeft className='hover:cursor-pointer text-white mb-10 hover:scale105 ' onClick={()=>setpopUpShown(false)} />
-                    <SearchBarV2 addclassName="justify-center" getFiltredJobProvider={getFiltredJobProvider} placeHolder={categoriesTxt && categoriesTxt.search} />
+                    <SearchBarV2 
+                        addclassName="justify-center" 
+                        getFiltredJobProvider={getFiltredJobProvider} 
+                        placeHolder={categoriesTxt && categoriesTxt.search} 
+                        setFirstSearch={()=>setFirstSearch(true)} 
+                        setSearchLoader = {setSearchLoader} 
+                    />
                     <div className="grid-template-370 mt-4 grid gap-2">
+                    
                     {
-                        !jobsProvider || jobsProvider.length===0?
-                            <img className='absolute left-1/2 -translate-x-1/2 w-3/4 max-h-96' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
+                        searchLoader ? 
+                        <img 
+                            className='absolute left-1/2 -translate-x-1/2 mt-28 '
+                            src={`${window.location.origin}/resources/widget-loader.gif`} 
+                        /> 
+                        :
+                        !jobsProvider || jobsProvider.length===0 ?
+                            firstSearch ?
+                                <img className='absolute left-1/2 -translate-x-1/2 w-3/4 max-h-96' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
+                            : <></>
                         : jobsProvider.map((user,index)=>{
                             return(
                             <Card

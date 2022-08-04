@@ -5,11 +5,18 @@ import { firestore } from "../firebase";
 import Icon from "./Icon";
 
 
-export default function SearchBarV2({addclassName, placeHolder, getFiltredJobProvider}){
+export default function SearchBarV2({addclassName, placeHolder, getFiltredJobProvider, setFirstSearch, setSearchLoader}){
     const [ value, setValue ] = useState("");
     const [ diseabled, setDiseabled ] = useState(false);
 
+    function handleKeyUp(e){
+        if(e.key === "Enter")
+            handleSearch()
+    }
+
     function handleSearch(){
+        setFirstSearch(true);
+        setSearchLoader(true);
         setDiseabled(true);
         let jobProviders = []
         getFiltredJobProvider(jobProviders)
@@ -29,13 +36,14 @@ export default function SearchBarV2({addclassName, placeHolder, getFiltredJobPro
                 }
             })
             setDiseabled(false);
+            setSearchLoader(false)
         })
         .catch(e => console.log(e))
     }
 
     return (
         <div className={'flex items-center '+addclassName} >
-            <input className='disabled:opacity-5 inline-block mr-2 p-1 outline-none border-2 rounded-lg' type="text" placeholder={placeHolder} onChange={(e)=>setValue(e.target.value)} />
+            <input onKeyUp={handleKeyUp}  className='disabled:opacity-5 inline-block mr-2 p-1 outline-none border-2 rounded-lg' type="text" placeholder={placeHolder} onChange={(e)=>setValue(e.target.value)} />
             <button disabled={diseabled} onClick={handleSearch}><Icon  icon={<FaSearch />}/></button>
         </div>
     );
