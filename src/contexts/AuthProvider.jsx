@@ -6,7 +6,8 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
     FacebookAuthProvider,
-    updatePassword
+    updatePassword,
+    updateEmail
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
@@ -114,7 +115,8 @@ export default function AuthProvider({ children }) {
         SignInWith: SignInWith,
         updateUserInfo,
         isAdmin,
-        updatePassword
+        updatePassword,
+        updateEmail
     }
     console.log(currentUserInfo)
     return (

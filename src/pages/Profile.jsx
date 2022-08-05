@@ -307,7 +307,7 @@ function Profile() {
                 {userJob && userJob.jobName[currentLang]}
                 {
                   // show the guard time availabilality
-                  currentUserInfo?.jobId.toLowerCase() === "guardpharmacy" &&
+                  currentUserInfo?.jobId&&currentUserInfo?.jobId.toLowerCase() === "guardpharmacy" &&
                   <div
                     className='w-full px-10 flex flex-col border-gray-100 border-2 rounded-2xl'>
                     <h2
@@ -334,14 +334,14 @@ function Profile() {
                   <span className='block text-md'>{currentUserInfo?.phone}</span>
                   <div className='flex gap-x-4 mt-2'>
                     {/* Just removed the 'Url' word at the end of the property*/}
-                    <Icon icon={<a href={currentUserInfo?.facebookAccount} target="blank"><FaFacebookF size={25} className='group-hover:text-blue-500' /></a>} />
-                    <Icon icon={<a href={currentUserInfo?.instagramAccount} target="blank"><FaInstagram size={25} className='group-hover:text-pink-400' /></a>} />
-                    <Icon icon={<a href={currentUserInfo?.youtubeAccount} target="blank"><FaYoutube size={25} className='group-hover:text-red-500' /></a>} />
-                    <Icon icon={<a href={currentUserInfo?.website} target="blank"><SiWebflow size={25} className='group-hover:text-blue-800' /></a>} />
+                    <Icon icon={<a href={currentUserInfo?.facebookAccountUrl} target="blank"><FaFacebookF size={25} className='group-hover:text-blue-500' /></a>} />
+                    <Icon icon={<a href={currentUserInfo?.instagramAccountUrl} target="blank"><FaInstagram size={25} className='group-hover:text-pink-400' /></a>} />
+                    <Icon icon={<a href={currentUserInfo?.youtubeAccountUrl} target="blank"><FaYoutube size={25} className='group-hover:text-red-500' /></a>} />
+                    <Icon icon={<a href={currentUserInfo?.websiteUrl} target="blank"><SiWebflow size={25} className='group-hover:text-blue-800' /></a>} />
                   </div>
 
 
-                  {currentUserInfo?.jobId.toLowerCase() === "normalpharmacy" ?
+                  {currentUserInfo?.jobId&&currentUserInfo?.jobId.toLowerCase() === "normalpharmacy" ?
                     <button
                       onClick={() => setDatePicker(true)}
                       className="
