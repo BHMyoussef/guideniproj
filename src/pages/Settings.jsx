@@ -1,11 +1,13 @@
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import { firestore, storage } from '../firebase'
-import { doc, updateDoc, getDocs, collection } from 'firebase/firestore'
+import { doc, updateDoc, getDocs, collection, query, where } from 'firebase/firestore'
 import { useAuth } from '../contexts/AuthProvider'
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { useLang } from '../contexts/LangProvider'
 import { Link, Navigate } from 'react-router-dom'
+import Joi from "joi"
+import SelectForm from "../components/SelectForm";
 
 
 
@@ -16,6 +18,17 @@ import {fadeIn} from "../animation";
 const Settings = ({userId}) => {
   const { currentUser, currentUserInfo, updateUserInfo, updatePassword, updateEmail } = useAuth();
   const { setting, currentLang } = useLang();
+  //
+  const [ cities,setCities ] = useState()
+  const [ neighborhoods,setNeighborhoods ] = useState()
+  const [ categories, setCategories ] = useState();
+  const [ subCategories, setSubCategories ] = useState();
+  const [ error, setError ] = useState()
+
+  const [ category,setCategory ] = useState();
+  const [ subCategory,setSubCategory ] = useState();
+  const [ city,setCity ] = useState();
+  const [ userNeighborhood,setUserNeighborhood ] = useState();
   //
   const [choix, setChoix] = useState("personal");
   const [pass1, setPass1] = useState('')
@@ -29,23 +42,164 @@ const Settings = ({userId}) => {
     instagramAccountUrl: '',
     youtubeAccountUrl: '',
     websiteUrl: '',
-    
+
   });
+  // data schema:
+  const schema = {
+    firstName: Joi.string().required(),
+    city: Joi.string().required(),
+    category: Joi.string().required(),
+    subCategory: Joi.string().required(),
+  }
 
   useEffect(() => {
      setFormData(currentUserInfo);
-  }, [])
+     setCity(currentUserInfo?.userCity);
+     setUserNeighborhood(currentUserInfo?.userNeighborhood);
+      getCities()
+      getCategories()
+  },[])
+
+  useEffect(()=>{
+      category&&getSubCategories();
+  },[category])
+  useEffect(()=>{
+      city&&getNeighborhoods();
+  },[city])
+
+  function getNeighborhoods(){
+    // console.log(city)
+    // return;
+    const docRef = collection(firestore,"cities/"+city+"/neighborhoods/");
+    let neighboorsdb = []
+
+    getDocs(docRef)
+    .then(results=>{
+        results.forEach(city=>{
+            const obj = {
+                id: city.data().neighborhoodId,
+                name : city.data().neighborhoodName
+            }
+            neighboorsdb = [...neighboorsdb,obj]
+        });
+
+        neighboorsdb.sort((a,b)=>{
+            if ( a.name < b.name ){
+                return -1;
+            }
+            if ( a.name > b.name ){
+                return 1;
+            }
+            return 0;
+        })
+
+        setNeighborhoods(neighboorsdb)
+    })
+    .catch(error=>{
+        console.log( "error eccured: " ,error );
+    })
+  }
+
+
+  function getCities(){
+      const citiesRef = collection(firestore,"cities");
+      let citiesdb = []
+
+      getDocs(citiesRef)
+      .then(results=>{
+          results.forEach(city=>{
+              const obj = {
+                  id: city.data().cityId,
+                  name : city.data().cityName
+              }
+              citiesdb = [...citiesdb,obj]
+          });
+
+          citiesdb.sort((a,b)=>{
+              if ( a.name < b.name ){
+                  return -1;
+              }
+              if ( a.name > b.name ){
+                  return 1;
+              }
+              return 0;
+          })
+
+          setCities(citiesdb)
+      })
+      .catch(error=>{
+          console.log( "error eccured: " ,error );
+      })
+  }
+
+  function getCategories(){
+      const CategoryRef = collection(firestore,"jobsCategories");
+      let categoriesdb = [];
+
+      getDocs(CategoryRef)
+      .then(results=>{
+        results.forEach(category=>{
+          const obj = {
+            id: category.data().categoryId,
+            name : category.data().categoryName
+          }
+          categoriesdb = [...categoriesdb,obj]
+        });
+       setCategories(categoriesdb)
+      })
+      .catch(error=>{
+        console.log( "error eccured: " ,error );
+      })
+    }
+
+  function getSubCategories(){
+      const subCategoryRef = collection(firestore,"jobs");
+      const q = query( subCategoryRef, where('categoryId','==',category));
+
+      let subCategoriesdb = [];
+
+      getDocs(q)
+      .then(results=>{
+          results.forEach(category=>{
+          const obj = {
+              id: category.data().jobId,
+              name : category.data().jobName
+          }
+          subCategoriesdb = [...subCategoriesdb,obj]
+          });
+          setSubCategories(subCategoriesdb)
+      })
+      .catch(error=>{
+          console.log( "error eccured: " ,error );
+      })
+  }
 
   const handleSubmit = () => {
-    console.log({formData})
-    updateMail()
-    updatePasswd()
+    console.log(formData)
+    const c = cities.filter(e => e.id===city)[0].name;
+    const n = neighborhoods.filter(e => e.id===userNeighborhood)[0].name;
+    console.log({c,n,subCategory})
+    return;
+
+    formData.email && updateMail();
+    pass1 && updatePasswd();
+    if(
+      !formData.firstName.trim() ||
+      !formData.facebookAccountUrl.trim() ||
+      !formData.instagramAccountUrl.trim() ||
+      !formData.youtubeAccountUrl.trim() ||
+      !formData.websiteUrl.trim()
+    ){
+      setError("Check your information Again");
+      return;
+    }
+
+    const data = {...formData, userCity: c, userNeighborhood: n, jobId: subCategory};
     const docRef = doc(firestore, `users/${currentUserInfo.userId}`)
-    updateDoc(docRef, formData)
+    updateDoc(docRef, data)
       .then(result => {
         updateUserInfo();
       })
-      .then(() => window.refresh)
   }
 
   const change = (e) => {
@@ -61,7 +215,7 @@ const Settings = ({userId}) => {
     setPass2(window.cpassword.value)
   }
   const updateMail = () =>  {
-    if(formData.email!==currentUserInfo && formData.email.match(/^\S+@\S+\.\S/)){
+    if(formData?.email!==currentUserInfo?.email && formData?.email.match(/^\S+@\S+\.\S/)){
       updateEmail(currentUser, formData.email)
         .then(() => console.log('Email changed'))
     }
@@ -133,19 +287,21 @@ const Settings = ({userId}) => {
       animate="show"
       exit="exit"
 
-      className='container shadow'>
+      className='container mx-auto shadow flex justify-center'>
+      { error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
+      <div className="w-full mt-[1.5rem]">
      <Header>
        <button
           onClick={_ => setChoix("personal")}
           autoFocus
           className={`outline-none font-bold py-2 px-4 rounded border-2 focus:bg-gray-200`}>
-           Personal Information
+           {setting?.personal}
         </button>
        <button
           onClick={_ => setChoix("contact")}
           className={`outline-none font-bold py-2 px-4 rounded border-2 focus:bg-gray-200`}
           >
-          Contact Information
+          {setting?.contact}
           </button>
      </Header>
      <Middle>
@@ -158,25 +314,34 @@ const Settings = ({userId}) => {
              </div>
              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="firstName">{setting?.fullName}</label>
-               <input onChange={change} name="firstName" id="firstName" type="text" placeholder="firstName" />
+               <input onChange={change} name="firstName" id="firstName" type="text" placeholder={currentUserInfo?.firstName} />
              </div>
 
              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="email">{setting?.email}</label>
-               <input onChange={change} name="email" id="email" type="email" placeholder="email" />
+               <input onChange={change} name="email" id="email" type="email" placeholder={currentUserInfo?.email} />
              </div>
 
              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="password">{setting?.password}</label>
-               <input onChange={changePasswd} name="password" id="password" type="password" placeholder="password" />
+               <input onChange={changePasswd} name="password" id="password" type="password" placeholder={setting?.password} />
              </div>
 
              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="cpassword">{setting?.repeatPass}</label>
-               <input onChange={changePasswd} name="cpassword" id="cpassword" type="password" placeholder="repeat password" />
+               <input onChange={changePasswd} name="cpassword" id="cpassword" type="password" placeholder={setting?.repeatPass} />
              </div>
+             <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+               <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="address">Address</label>
+               <SelectForm title={currentUserInfo?.userCity}  choices={ cities } setProperty={(city)=>setCity(city)}/>
+               <SelectForm title={currentUserInfo?.userNeighborhood}  choices={ neighborhoods } setProperty={(city)=>setUserNeighborhood(city)}/>
+            </div>
+            <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+              <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="job">Category</label>
+              <SelectForm choices={ categories } setProperty={(cat)=>setCategory(cat)}/>
+              <SelectForm choices={ subCategories } setProperty={(subCat)=>setSubCategory(subCat)}/>
+            </div>
 
-             
 
            </div>
          :
@@ -188,28 +353,28 @@ const Settings = ({userId}) => {
               </div>
             }
             {
-              
+
             currentUserInfo?.jobId &&
             <>
                          <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                          <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="facebookAccountUrl">{setting?.facebook}</label>
-                           
-                           <input onChange={change} name="facebookAccountUrl" id="facebookAccountUrl" type="text" />
+
+                           <input onChange={change} name="facebookAccountUrl" id="facebookAccountUrl" type="text" placeholder={currentUserInfo?.facebookAccountUrl} />
                          </div>
-            
+
                          <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                            <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="youtubeAccountUrl">{setting?.youtube}</label>
-                           <input onChange={change} name="youtubeAccountUrl" id="youtubeAccountUrl" type="text" />
+                           <input onChange={change} name="youtubeAccountUrl" id="youtubeAccountUrl" type="text" placeholder={currentUserInfo?.youtubeAccountUrl} />
                          </div>
-            
+
                          <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                          <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="instagram">{setting?.instagram}</label>
-                           <input onChange={change} name="instagramAccountUrl" id="instagramAccountUrl" type="text" />
+                           <input onChange={change} name="instagramAccountUrl" id="instagramAccountUrl" type="text" placeholder={currentUserInfo?.instagramAccountUrl} />
                          </div>
-            
+
                          <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                            <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="websiteUrl">{setting?.website}</label>
-                           <input onChange={change} name="websiteUrl" id="websiteUrl" type="text" />
+                           <input onChange={change} name="websiteUrl" id="websiteUrl" type="text" placeholder={currentUserInfo?.websiteUrl}/>
                          </div>
             </>
             }
@@ -217,23 +382,23 @@ const Settings = ({userId}) => {
        }
        </div>
        <div
-         className="w-full py-[.5rem] pr-[1rem] flex justify-end">
+         className="w-full py-[.5rem] pr-[1rem] flex justify-around">
          {
                 !currentUserInfo?.jobId &&
-                <Link 
+                <Link
                     to="/addJob"
-                    className="border-blue-500 text-blue-500 w-[100px] mr-1 hover:bg-blue-700 hover:text-white font-bold py-2 px-4 rounded">
+                    className="border-2 border-gray-500 text-gray-700 w-auto mr-1 hover:bg-gray-700 hover:text-white font-bold py-2 px-4 rounded">
                         {setting?.addJob}
                 </Link>
           }
          <button
            onClick={handleSubmit}
            className="bg-blue-500 w-[150px] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-           Save
+           {setting?.save}
          </button>
      </div>
      </Middle>
-
+     </div>
    </div>
   )
 }
@@ -264,18 +429,19 @@ const Middle = styled.div`
     justify-content: space-between;
   }
   .image {
-    width: 120px;
-    height: 120px;
-    border-raduis: 50%;
-    align-self: center;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 1rem auto;
     overflow:hidden;
+    background: red;
     input{
       display:none;
     }
     img {
-      width: 100%;
-      height:100%;
       object-fit:cover;
+      width:100%;
+      height:100%;
       cursor:pointer;
     }
   }
@@ -284,13 +450,18 @@ const Middle = styled.div`
     border-radius:.5rem;
     padding:.5rem 1rem;
     justify-content:space-between;
+    label {
+      display: block;
+      width:100%;
+      display: flex;
+    }
   }
 
   input, select {
     display: block;
     width: 100%;
     padding: 8px 16px;
-    margin: .5rem auto;
+    margin: .3rem auto;
     line-height: 25px;
     font-weight: 700;
     font-family: inherit;
