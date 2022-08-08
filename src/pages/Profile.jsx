@@ -39,6 +39,7 @@ function Profile() {
   */
   const [userJob, setUserJob] = useState();
   const [userCity, setUserCity] = useState("");
+  const [userNeighborhood, setUserNeighborhood] = useState("");
   const [galerieSelected, setgalerieSelected] = useState(true);
   const [addGallerie, setAddGallerie] = useState(false)
   const [portFolio, setPortfolio] = useState();
@@ -142,14 +143,22 @@ function Profile() {
   }
   function getUserCity() {
     if (currentUser) {
-      const docRef = doc(firestore, `cities/${currentUserInfo.userCity}`)
+      let docRef = doc(firestore, `cities/${currentUser.userCity}`)
       getDoc(docRef)
         .then(result => {
-          setUserCity(result.data()?.cityName)
+          setUserCity(result.data().cityName)
+        })
+      docRef = doc(
+        firestore,
+        `cities/${currentUser.userCity}/neighborhoods/${currentUser?.userNeighborhood}`
+      )
+
+      getDoc(docRef)
+        .then(result => {
+          setUserNeighborhood(result.data().neighborhoodName)
         })
     }
   }
-
   function switchButton(e) {
     if (e.target.id === "galerie")
       setgalerieSelected(true)
@@ -252,7 +261,7 @@ function Profile() {
       setAddGallerie(false)
     }
   }
-  
+
   function formatDate(from=currentUserInfo?.jobDetails?.startDate, to=currentUserInfo?.jobDetails?.endDate){
     if(currentUserInfo?.jobId.toLowerCase() === "guardpharmacy"){
 
@@ -261,7 +270,7 @@ function Profile() {
 
     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
     const formateLang = ((currentLang === "eng") ? 'en-us' : (currentLang === 'fr') ? 'fr' : 'ar-ma') || "en-us"; // by default
-    
+
     console.log({formateLang})
     setFormatedDate1(start.toLocaleDateString(formateLang, options))
     setFormatedDate2(end.toLocaleDateString(formateLang, options))
@@ -329,8 +338,7 @@ function Profile() {
 
               {
                 <>
-                  <span className='block text-md'>{userCity}</span>
-                  <span className='block text-md'>Email: {currentUserInfo?.email}</span>
+                  <span className='block text-md'>{userNeighborhood}, {userCity}</span>
                   <span className='block text-md'>{currentUserInfo?.phone}</span>
                   <div className='flex gap-x-4 mt-2'>
                     {/* Just removed the 'Url' word at the end of the property*/}
@@ -387,7 +395,7 @@ function Profile() {
                             font-semibold hover:text-white
                             p-2 border border-rose-500
                             hover:border-transparent rounded
-                            text-left 
+                            text-left
                             ">
                       {profile?.retToNormal}
                     </button> : ''}
@@ -528,7 +536,7 @@ function Profile() {
               currentLang={currentLang}
               currentUserInfo={currentUserInfo}
               updateUserInfo={updateUserInfo}
-              
+
             />
           }
         </AnimatePresence>
@@ -541,7 +549,7 @@ function Profile() {
               currentLang={currentLang}
               currentUserInfo={currentUserInfo}
               updateUserInfo={updateUserInfo}
-              
+
             />
           }
         </AnimatePresence>
@@ -628,7 +636,7 @@ function DatePickers({ setDatePicker, formatDate, profile, currentLang, currentU
   return (
     <>
     <motion.div
-    
+
       variants={popup}
       initial="hidden"
       animate="show"
@@ -815,7 +823,7 @@ function AreUSure({ setShowSure, profile, currentLang, currentUserInfo, updateUs
                 type="button"
                 className="
                     text-gray-500 bg-white
-                    hover:bg-gray-100 
+                    hover:bg-gray-100
                     rounded-lg border border-gray-200
                     text-sm font-medium px-5 py-2.5
                     hover:text-gray-500 focus:z-10

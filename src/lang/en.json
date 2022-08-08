@@ -108,8 +108,9 @@
         "update": "Update",
         "account": "Account",
         "city": "City",
-        "neighborhood": "Neighborhood"
-
+        "neighborhood": "Neighborhood",
+        "address": "Address",
+        "Job": "Job"
 
     },
     "profile":{

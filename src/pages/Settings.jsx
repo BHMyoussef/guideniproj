@@ -19,16 +19,19 @@ const Settings = ({userId}) => {
   const { currentUser, currentUserInfo, updateUserInfo, updatePassword, updateEmail } = useAuth();
   const { setting, currentLang } = useLang();
   //
-  const [ cities,setCities ] = useState()
-  const [ neighborhoods,setNeighborhoods ] = useState()
-  const [ categories, setCategories ] = useState();
-  const [ subCategories, setSubCategories ] = useState();
+  const [ cities,setCities ] = useState([])
+  const [ neighborhoods,setNeighborhoods ] = useState([])
+  const [ categories, setCategories ] = useState([]);
+  const [ subCategories, setSubCategories ] = useState([]);
   const [ error, setError ] = useState()
 
   const [ category,setCategory ] = useState();
   const [ subCategory,setSubCategory ] = useState();
   const [ city,setCity ] = useState();
   const [ userNeighborhood,setUserNeighborhood ] = useState();
+  // to use them as value for the SelectForm
+  const [ userCityValue,setUserCityValue ] = useState();
+  const [ userNeighborhoodValue,setUserNeighborhoodValue ] = useState();
   //
   const [choix, setChoix] = useState("personal");
   const [pass1, setPass1] = useState('')
@@ -44,20 +47,28 @@ const Settings = ({userId}) => {
     websiteUrl: '',
 
   });
-  // data schema:
-  const schema = {
-    firstName: Joi.string().required(),
-    city: Joi.string().required(),
-    category: Joi.string().required(),
-    subCategory: Joi.string().required(),
-  }
+
 
   useEffect(() => {
-     setFormData(currentUserInfo);
-     setCity(currentUserInfo?.userCity);
-     setUserNeighborhood(currentUserInfo?.userNeighborhood);
-      getCities()
-      getCategories()
+    (async () => {
+      //iota: I added the async/await so that we can avoid the undefined
+      // value that appears before the loading finises (i guess '^_^)
+      await setFormData(currentUserInfo);
+      await getCities()
+      await getCategories()
+      // --commented code
+      console.log({currentUserInfo})
+      await setCity(currentUserInfo?.userCity);
+      await getNeighborhoods();
+      let a;
+      a = cities.filter(e => e.id===currentUserInfo?.userCity);
+      await setUserCityValue(a[0].name);
+      console.log({a})
+      a = neighborhoods.filter(e => e.id===currentUserInfo?.userNeighborhood);
+      await setUserNeighborhoodValue(a[0].name);
+      console.log({aa: a})
+   })()
+
   },[])
 
   useEffect(()=>{
@@ -68,9 +79,8 @@ const Settings = ({userId}) => {
   },[city])
 
   function getNeighborhoods(){
-    // console.log(city)
-    // return;
-    const docRef = collection(firestore,"cities/"+city+"/neighborhoods/");
+
+    const docRef = collection(firestore, `cities/${city}/neighborhoods/`);
     let neighboorsdb = []
 
     getDocs(docRef)
@@ -143,8 +153,20 @@ const Settings = ({userId}) => {
             id: category.data().categoryId,
             name : category.data().categoryName
           }
+
           categoriesdb = [...categoriesdb,obj]
         });
+        //
+        categoriesdb.sort((a,b)=>{
+            if ( a.name < b.name ){
+                return -1;
+            }
+            if ( a.name > b.name ){
+                return 1;
+            }
+            return 0;
+        })
+
        setCategories(categoriesdb)
       })
       .catch(error=>{
@@ -167,6 +189,15 @@ const Settings = ({userId}) => {
           }
           subCategoriesdb = [...subCategoriesdb,obj]
           });
+          subCategoriesdb.sort((a,b)=>{
+              if ( a.name < b.name ){
+                  return -1;
+              }
+              if ( a.name > b.name ){
+                  return 1;
+              }
+              return 0;
+          })
           setSubCategories(subCategoriesdb)
       })
       .catch(error=>{
@@ -176,10 +207,14 @@ const Settings = ({userId}) => {
 
   const handleSubmit = () => {
     console.log(formData)
-    const c = cities.filter(e => e.id===city)[0].name;
-    const n = neighborhoods.filter(e => e.id===userNeighborhood)[0].name;
+    let c = city,n = userNeighborhood;
+    if(city !== currentUserInfo.userCity){
+
+      c = cities.filter(e => e.id===city)[0].name;
+      n = neighborhoods.filter(e => e.id===userNeighborhood)[0].name;
+      console.log({c,n,subCategory})
+    }
     console.log({c,n,subCategory})
-    return;
 
     formData.email && updateMail();
     pass1 && updatePasswd();
@@ -248,10 +283,11 @@ const Settings = ({userId}) => {
       uploadImage.on(
         'state_changed',
         // work with uploaded file
-        (snapshot) => {
-          const progress = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
-          )
+        (s) => {
+          console.log("Uploading!!!")
+          // const progress = Math.round(
+          //   (s.bytesTransferred / s.totalBytes) * 100,
+          // )
         }, // to handle Errors
         (err) => {
           console.error('Error:', err)
@@ -282,14 +318,15 @@ const Settings = ({userId}) => {
     !currentUser ?
       <img className='absolute left-1/2 -translate-x-1/2' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
     :
-    <div variants={fadeIn}
-      initial="hidden"
-      animate="show"
-      exit="exit"
+      <div
+        variants={fadeIn}
+        initial="hidden"
+        animate="show"
+        exit="exit"
 
       className='container mx-auto shadow flex justify-center'>
-      { error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
-      <div className="w-full mt-[1.5rem]">
+        <div className="w-full mt-[1.5rem]">
+          {error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
      <Header>
        <button
           onClick={_ => setChoix("personal")}
@@ -333,8 +370,8 @@ const Settings = ({userId}) => {
              </div>
              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="address">Address</label>
-               <SelectForm title={currentUserInfo?.userCity}  choices={ cities } setProperty={(city)=>setCity(city)}/>
-               <SelectForm title={currentUserInfo?.userNeighborhood}  choices={ neighborhoods } setProperty={(city)=>setUserNeighborhood(city)}/>
+               <SelectForm v={false} title={userCityValue}  choices={ cities } setProperty={(city)=>setCity(city)}/>
+               <SelectForm v={false} title={userNeighborhoodValue}  choices={ neighborhoods } setProperty={(city)=>setUserNeighborhood(city)}/>
             </div>
             <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
               <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="job">Category</label>
