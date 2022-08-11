@@ -1,20 +1,18 @@
 import { collection, doc, getDoc, getDocs, query, addDoc, where, updateDoc, deleteField } from "firebase/firestore";
 import { FaFacebookF, FaYoutube, FaInstagram, FaCalendar } from 'react-icons/fa'
 import { SiWebflow } from 'react-icons/si'
-import { useEffect, useRef, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import FeedBack from "../components/Feedback";
 import Stars from "../components/Stars";
 import { useAuth } from "../contexts/AuthProvider";
 import { useLang } from "../contexts/LangProvider";
-import { firestore, storage, functions } from "../firebase";
+import { firestore, storage } from "../firebase";
 import { FaPlusCircle, FaArrowLeft, FaAward } from "react-icons/fa"
 import { AiFillCloseCircle } from "react-icons/ai"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import Input from "../components/Input";
 import Joi from "joi";
 import Icon from "../components/Icon";
-import { httpsCallable } from "firebase/functions";
 
 // Animations stuff
 import { motion, AnimatePresence } from "framer-motion";
@@ -182,7 +180,7 @@ function Profile() {
     return new Promise((resolve, reject) => {
       images.map((image, i) => {
         //upload images
-        const storageRef = ref(storage, `UsersFiles/${currentUserInfo.userId}/${Date.now()}${image.image.name}`)
+        const storageRef = ref(storage, `/UsersFiles/${currentUserInfo.userId}/portfolio/${Date.now()}${image.image.name}`)
         /* To upload file to firebase/storage*/
         const uploadImage = uploadBytesResumable(storageRef, image.image)
         uploadImage.on('state_changed',
@@ -263,7 +261,7 @@ function Profile() {
   }
 
   function formatDate(from=currentUserInfo?.jobDetails?.startDate, to=currentUserInfo?.jobDetails?.endDate){
-    if(currentUserInfo?.jobId.toLowerCase() === "guardpharmacy"){
+    if(currentUserInfo?.jobId && currentUserInfo?.jobId.toLowerCase() === "guardpharmacy"){
 
     const start = new Date(from);
     const end = new Date(to);
@@ -627,10 +625,6 @@ function DatePickers({ setDatePicker, formatDate, profile, currentLang, currentU
         setDatePicker(false)
         formatDate(from, to);
       })
-    console.log({ from, to })
-    console.log({ docRef })
-
-
   }
 
   return (
