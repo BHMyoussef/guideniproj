@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { firestore, storage } from '../firebase'
 import { doc, updateDoc, getDocs, collection, query, where } from 'firebase/firestore'
 import { useAuth } from '../contexts/AuthProvider'
@@ -25,6 +25,7 @@ const Settings = ({userId}) => {
   const [ subCategories, setSubCategories ] = useState([]);
   const [ error, setError ] = useState()
 
+  // for user changes
   const [ category,setCategory ] = useState();
   const [ subCategory,setSubCategory ] = useState();
   const [ city,setCity ] = useState();
@@ -36,39 +37,32 @@ const Settings = ({userId}) => {
   const [choix, setChoix] = useState("personal");
   const [pass1, setPass1] = useState('')
   const [pass2, setPass2] = useState('')
-  const [formData, setFormData] = useState({
-    firstName: '',
-    imageUrl: '',
-    email: '',
-    phone: '',
-    facebookAccountUrl: '',
-    instagramAccountUrl: '',
-    youtubeAccountUrl: '',
-    websiteUrl: '',
-
-  });
+  const [formData, setFormData] = useState();
 
 
   useEffect(() => {
     (async () => {
-      //iota: I added the async/await so that we can avoid the undefined
-      // value that appears before the loading finises (i guess '^_^)
-      await setFormData(currentUserInfo);
-      await getCities()
-      await getCategories()
-      // --commented code
-      console.log({currentUserInfo})
-      await setCity(currentUserInfo?.userCity);
+      await getCities();
+      await getCategories();
+      await setCity(currentUserInfo.userCity);
+      console.log({city, cities});
       await getNeighborhoods();
-      let a;
-      a = cities.filter(e => e.id===currentUserInfo?.userCity);
-      await setUserCityValue(a[0].name);
-      console.log({a})
-      a = neighborhoods.filter(e => e.id===currentUserInfo?.userNeighborhood);
-      await setUserNeighborhoodValue(a[0].name);
-      console.log({aa: a})
-   })()
+      console.log({userNeighborhood, neighborhoods});
+      if(cities.length){
 
+        setUserCityValue(cities.filter(e => e.id===currentUserInfo?.userCity)[0].name);
+      }
+      if(neighborhoods.length){
+        setUserNeighborhoodValue(neighborhoods.filter(e => e.id===currentUserInfo?.userNeighborhood));
+      }
+      console.log({userCityValue, userNeighborhoodValue})
+
+   })()
+   return () => {
+     cities.length=0;
+     neighborhoods.length=0;
+     console.log("Cleaning...");
+   }
   },[])
 
   useEffect(()=>{
@@ -205,36 +199,11 @@ const Settings = ({userId}) => {
       })
   }
 
-  const handleSubmit = () => {
-    console.log(formData)
-    let c = city,n = userNeighborhood;
-    if(city !== currentUserInfo.userCity){
-
-      c = cities.filter(e => e.id===city)[0].name;
-      n = neighborhoods.filter(e => e.id===userNeighborhood)[0].name;
-      console.log({c,n,subCategory})
-    }
-    console.log({c,n,subCategory})
-
-    formData.email && updateMail();
-    pass1 && updatePasswd();
-    if(
-      !formData.firstName.trim() ||
-      !formData.facebookAccountUrl.trim() ||
-      !formData.instagramAccountUrl.trim() ||
-      !formData.youtubeAccountUrl.trim() ||
-      !formData.websiteUrl.trim()
-    ){
-      setError("Check your information Again");
-      return;
-    }
-
-    const data = {...formData, userCity: c, userNeighborhood: n, jobId: subCategory};
-    const docRef = doc(firestore, `users/${currentUserInfo.userId}`)
-    updateDoc(docRef, data)
-      .then(result => {
-        updateUserInfo();
-      })
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submited');
+    console.log({...formData, city, userNeighborhood, subCategory});
+    // TODO: validate user input form data and update user doc
   }
 
   const change = (e) => {
@@ -326,8 +295,8 @@ const Settings = ({userId}) => {
 
       className='container mx-auto shadow flex justify-center'>
         <div className="w-full mt-[1.5rem]">
-          {error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
      <Header>
+       {error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
        <button
           onClick={_ => setChoix("personal")}
           autoFocus
@@ -347,7 +316,7 @@ const Settings = ({userId}) => {
            <div className="divs personal">
              <div className="image">
               <input onChange={changeImage} type="file" id="image" name="image" accept="image/*" />
-              <img onClick={()=>window.image.click()} src={currentUserInfo?.imageUrl ?? window.location.origin+"/resources/profile.png"} alt="profile" />
+              <img onClick={()=>window.image.click()} src={formData?.imageUrl ?? window.location.origin+"/resources/profile.png"} alt="profile" />
              </div>
              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="firstName">{setting?.fullName}</label>

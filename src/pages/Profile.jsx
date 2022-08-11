@@ -157,6 +157,7 @@ function Profile() {
         .then(result => {
           setUserNeighborhood(result.data().neighborhoodName)
         })
+        console.log({userCity, userNeighborhood})
     }
   }
   function switchButton(e) {
