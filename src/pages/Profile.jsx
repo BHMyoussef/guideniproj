@@ -143,7 +143,7 @@ function Profile() {
   }
   function getUserCity() {
     if (currentUser) {
-      let docRef = doc(firestore, `cities/${currentUser.userCity}`)
+      let docRef = doc(firestore, `cities/${currentUser?.userCity}`)
       getDoc(docRef)
         .then(result => {
           setUserCity(result.data().cityName)
@@ -157,7 +157,6 @@ function Profile() {
         .then(result => {
           setUserNeighborhood(result.data().neighborhoodName)
         })
-        console.log({userCity, userNeighborhood})
     }
   }
   function switchButton(e) {
