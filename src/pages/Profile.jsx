@@ -23,18 +23,6 @@ import DateTimePicker from 'react-datetime-picker';
 
 
 function Profile() {
-  /**
-  console.log({httpsCallable, functions});
-  for later use:
-  const func_name = httpsCallable(functions, 'func_name');
-  func_name({ params })
-  .then((result) => {
-    // Read result of the Cloud Function.
-    const data = result.data;
-    ...
-  });
-  ['normal']
-  */
   const [userJob, setUserJob] = useState();
   const [userCity, setUserCity] = useState("");
   const [userNeighborhood, setUserNeighborhood] = useState("");

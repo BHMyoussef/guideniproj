@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { auth, firestore } from '../firebase';
-import { 
+import {
     signOut,
     onAuthStateChanged,
     GoogleAuthProvider,
@@ -23,7 +23,7 @@ export default function AuthProvider({ children }) {
 
     useEffect(()=>{
       const unsubscribe = onAuthStateChanged(auth,(user)=>{
-        setCurrentUser(user); 
+        setCurrentUser(user);
       });
       return unsubscribe;
     },[])
@@ -51,7 +51,7 @@ export default function AuthProvider({ children }) {
 					const newDoc = doc(firestore,`users/${user.uid}`);
 					setDoc(newDoc,docData)
 				  }).catch((error) => {
-            
+
 				  });
 				break;
 			case "Facebook":
@@ -105,9 +105,9 @@ export default function AuthProvider({ children }) {
 
     function signOutLogin(){
         return signOut(auth);
-    }  
-    
-    
+    }
+
+
     const value = {
         currentUser: currentUser,
         currentUserInfo:currentUserInfo,
@@ -118,7 +118,7 @@ export default function AuthProvider({ children }) {
         updatePassword,
         updateEmail
     }
-    console.log(currentUserInfo)
+    //console.log(currentUserInfo)
     return (
         <AuthContext.Provider value={ value }>
             { children }

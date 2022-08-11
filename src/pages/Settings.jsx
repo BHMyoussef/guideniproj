@@ -1,15 +1,13 @@
 import styled from 'styled-components'
 import { useEffect, useState, useMemo } from 'react'
 import { firestore, storage } from '../firebase'
-import { doc, updateDoc, getDocs, collection, query, where } from 'firebase/firestore'
+import { doc, updateDoc, getDocs, collection, query, where, getDoc } from 'firebase/firestore'
 import { useAuth } from '../contexts/AuthProvider'
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { useLang } from '../contexts/LangProvider'
 import { Link, Navigate } from 'react-router-dom'
 import Joi from "joi"
 import SelectForm from "../components/SelectForm";
-
-
 
 // animations
 import {motion} from "framer-motion";
@@ -33,37 +31,50 @@ const Settings = ({userId}) => {
   // to use them as value for the SelectForm
   const [ userCityValue,setUserCityValue ] = useState();
   const [ userNeighborhoodValue,setUserNeighborhoodValue ] = useState();
+  const [ categoryName,setCategoryName ] = useState();
+  const [ subCategoryName,setSubCategoryName ] = useState();
   //
   const [choix, setChoix] = useState("personal");
   const [pass1, setPass1] = useState('')
   const [pass2, setPass2] = useState('')
-  const [formData, setFormData] = useState();
+  const [formData, setFormData] = useState({
+    firstName:'',
+    email:'',
+    phone:'',
+    jobId:'',
+    facebookAccountUrl:'',
+    instagramAccountUrl:'',
+    youtubeAccountUrl:'',
+    websiteUrl:'',
+  });
 
-
+  // added currentUser,currentUserInfo as dependencies cuz we need those info to present for our logic
   useEffect(() => {
-    (async () => {
-      await getCities();
-      await getCategories();
-      await setCity(currentUserInfo.userCity);
-      console.log({city, cities});
-      await getNeighborhoods();
-      console.log({userNeighborhood, neighborhoods});
-      if(cities.length){
+    if(currentUserInfo?.jobId){
+      // Get user address: city,neighborhood
+      getDoc(doc(firestore, `/cities/${currentUserInfo?.userCity}`))
+        .then(res => {
+          setCity(res.data().cityId);
+          setUserCityValue(res.data().cityName);
+        });
 
-        setUserCityValue(cities.filter(e => e.id===currentUserInfo?.userCity)[0].name);
-      }
-      if(neighborhoods.length){
-        setUserNeighborhoodValue(neighborhoods.filter(e => e.id===currentUserInfo?.userNeighborhood));
-      }
-      console.log({userCityValue, userNeighborhoodValue})
+      getDoc(doc(firestore, `/cities/${currentUserInfo?.userCity}/neighborhoods/${currentUserInfo?.userNeighborhood}`))
+        .then(res => setUserNeighborhoodValue(res.data().neighborhoodName));
+      getDoc(doc(firestore, `/jobs/${currentUserInfo?.jobId}`))
+        .then(res => {
+          setSubCategoryName(res.data().jobName[currentLang]);
+          setSubCategory(res.data().jobId)
+          getDoc(doc(firestore, `/jobsCategories/${res.data().categoryId}`))
+            .then(r => setCategoryName(r.data().categoryName[currentLang]));
+        })
 
-   })()
-   return () => {
-     cities.length=0;
-     neighborhoods.length=0;
-     console.log("Cleaning...");
-   }
-  },[])
+
+      // run other functions
+      getCities();
+      getCategories();
+  }
+
+},[currentUser, currentUserInfo, currentLang])
 
   useEffect(()=>{
       category&&getSubCategories();
@@ -150,16 +161,9 @@ const Settings = ({userId}) => {
 
           categoriesdb = [...categoriesdb,obj]
         });
-        //
-        categoriesdb.sort((a,b)=>{
-            if ( a.name < b.name ){
-                return -1;
-            }
-            if ( a.name > b.name ){
-                return 1;
-            }
-            return 0;
-        })
+
+        categoriesdb.sort((a, b) => (a.name[currentLang].split(' ')[0] > b.name[currentLang].split(' ')[0]) ? 1 : -1);
+
 
        setCategories(categoriesdb)
       })
@@ -183,15 +187,8 @@ const Settings = ({userId}) => {
           }
           subCategoriesdb = [...subCategoriesdb,obj]
           });
-          subCategoriesdb.sort((a,b)=>{
-              if ( a.name < b.name ){
-                  return -1;
-              }
-              if ( a.name > b.name ){
-                  return 1;
-              }
-              return 0;
-          })
+          subCategoriesdb.sort((a, b) => (a.name[currentLang].split(' ')[0] > b.name[currentLang].split(' ')[0]) ? 1 : -1);
+
           setSubCategories(subCategoriesdb)
       })
       .catch(error=>{
@@ -201,9 +198,62 @@ const Settings = ({userId}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submited');
-    console.log({...formData, city, userNeighborhood, subCategory});
+    // check and validate inputs
+    const data = {};
+    console.log(formData)
+      if(formData?.firstName.trim()!=='' && formData?.firstName.trim()!== currentUserInfo?.firstName){
+        data["firstName"]=formData?.firstName;
+      }
+      if(formData?.email && formData?.email !== currentUserInfo?.email){
+        const res =
+          Joi.object(
+              {email: Joi.string().email({ minDomainSegments: 2, tlds: {} })}
+            ).validate({email:formData?.email})
+            if(!res.error){
+              // NB: changing the email will cuz problems for now
+              // until i figure out a secure way of doing it, i'll just change it in the user information
+              // updateEmail(currentUser, formData.email)
+              //   .then(() => console.log('Email changed'))
+              data["email"]=formData?.email
+            }
+      }
+      // A big check, to avoid the case of a simple user
+      if(currentUserInfo?.jobId){
+
+        if(city!==currentUserInfo?.userCity){
+          data["userCity"]=city;
+        }
+        if(userNeighborhood!==currentUserInfo?.userNeighborhood){
+          data["userNeighborhood"]=userNeighborhood;
+        }
+        if(subCategory !== currentUserInfo?.jobId){
+          data["jobId"]=subCategory;
+        }
+        if(formData?.facebookAccountUrl.trim() && formData?.facebookAccountUrl.trim()!== currentUserInfo?.facebookAccountUrl){
+          data["facebookAccountUrl"]=formData?.facebookAccountUrl;
+        }
+        if(formData?.instagramAccountUrl.trim() && formData?.instagramAccountUrl.trim()!== currentUserInfo?.instagramAccountUrl){
+          data["instagramAccountUrl"]=formData?.instagramAccountUrl;
+        }
+        if(formData?.youtubeAccountUrl.trim() && formData?.youtubeAccountUrl.trim()!== currentUserInfo?.youtubeAccountUrl){
+          data["youtubeAccountUrl"]=formData?.youtubeAccountUrl;
+        }
+        if(formData?.websiteUrl.trim() && formData?.websiteUrl.trim()!== currentUserInfo?.websiteUrl){
+          data["websiteUrl"]=formData?.websiteUrl;
+        }
+
+      }
+    updatePasswd();
+    console.log({data})
+    const docRef = doc(firestore, `users/${currentUserInfo.userId}`)
+    updateDoc(docRef, data)
+      .then(result => {
+        updateUserInfo();
+        console.log({currentUserInfo});
+        window.location.reload(false);
+      })
     // TODO: validate user input form data and update user doc
+
   }
 
   const change = (e) => {
@@ -218,14 +268,8 @@ const Settings = ({userId}) => {
     setPass1(window.password.value)
     setPass2(window.cpassword.value)
   }
-  const updateMail = () =>  {
-    if(formData?.email!==currentUserInfo?.email && formData?.email.match(/^\S+@\S+\.\S/)){
-      updateEmail(currentUser, formData.email)
-        .then(() => console.log('Email changed'))
-    }
-  }
   const updatePasswd = () => {
-    if (pass1 === pass2 && pass1.trim() !== "" && pass2.trim() !== '') {
+    if (pass1 === pass2 && pass1.trim() !== "" && pass2.trim() !== '' && pass1.match(/[\S]{8,}/)) {
      updatePassword(currentUser, pass1)
         .then(_ => {
           console.log('pass updated.....')
@@ -337,17 +381,20 @@ const Settings = ({userId}) => {
                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="cpassword">{setting?.repeatPass}</label>
                <input onChange={changePasswd} name="cpassword" id="cpassword" type="password" placeholder={setting?.repeatPass} />
              </div>
-             <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
-               <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="address">Address</label>
-               <SelectForm v={false} title={userCityValue}  choices={ cities } setProperty={(city)=>setCity(city)}/>
-               <SelectForm v={false} title={userNeighborhoodValue}  choices={ neighborhoods } setProperty={(city)=>setUserNeighborhood(city)}/>
-            </div>
-            <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
-              <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="job">Category</label>
-              <SelectForm choices={ categories } setProperty={(cat)=>setCategory(cat)}/>
-              <SelectForm choices={ subCategories } setProperty={(subCat)=>setSubCategory(subCat)}/>
-            </div>
-
+           {currentUserInfo?.jobId &&
+             <>
+               <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+                 <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="address">Address</label>
+                 <SelectForm v={false} title={userCityValue}  choices={ cities } setProperty={(city)=>setCity(city)}/>
+                 <SelectForm v={false} title={userNeighborhoodValue}  choices={ neighborhoods } setProperty={(city)=>setUserNeighborhood(city)}/>
+              </div>
+              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
+                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="job">Category</label>
+                <SelectForm v={false} title={categoryName} choices={ categories } setProperty={(cat)=>setCategory(cat)}/>
+                <SelectForm v={false} title={subCategoryName} choices={ subCategories } setProperty={(subCat)=>setSubCategory(subCat)}/>
+              </div>
+              </>
+            }
 
            </div>
          :
