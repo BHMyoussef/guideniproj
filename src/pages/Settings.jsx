@@ -39,7 +39,6 @@ const Settings = ({userId}) => {
   const [pass2, setPass2] = useState('')
   const [formData, setFormData] = useState({
     firstName:'',
-    email:'',
     phone:'',
     jobId:'',
     facebookAccountUrl:'',
@@ -59,7 +58,11 @@ const Settings = ({userId}) => {
         });
 
       getDoc(doc(firestore, `/cities/${currentUserInfo?.userCity}/neighborhoods/${currentUserInfo?.userNeighborhood}`))
-        .then(res => setUserNeighborhoodValue(res.data().neighborhoodName));
+        .then(res => {
+         setUserNeighborhoodValue(res.data().neighborhoodName)
+	 setUserNeighborhood(res.data().neighborhoodId)
+        
+        });
       getDoc(doc(firestore, `/jobs/${currentUserInfo?.jobId}`))
         .then(res => {
           setSubCategoryName(res.data().jobName[currentLang]);
@@ -212,9 +215,11 @@ const Settings = ({userId}) => {
             if(!res.error){
               // NB: changing the email will cuz problems for now
               // until i figure out a secure way of doing it, i'll just change it in the user information
-              // updateEmail(currentUser, formData.email)
-              //   .then(() => console.log('Email changed'))
+              updateEmail(currentUser, formData.email)
+                 .then(() => console.log('Email changed'))
               data["email"]=formData?.email
+            }else{
+            console.error(res.error)
             }
       }
       // A big check, to avoid the case of a simple user
@@ -250,7 +255,7 @@ const Settings = ({userId}) => {
       .then(result => {
         updateUserInfo();
         console.log({currentUserInfo});
-        window.location.reload(false);
+        alert("Your Profile has been updated");
       })
     // TODO: validate user input form data and update user doc
 
@@ -360,7 +365,7 @@ const Settings = ({userId}) => {
            <div className="divs personal">
              <div className="image">
               <input onChange={changeImage} type="file" id="image" name="image" accept="image/*" />
-              <img onClick={()=>window.image.click()} src={formData?.imageUrl ?? window.location.origin+"/resources/profile.png"} alt="profile" />
+              <img onClick={()=>window.image.click()} src={currentUserInfo?.imageUrl ?? window.location.origin+"/resources/profile.png"} alt="profile" />
              </div>
              <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="firstName">{setting?.fullName}</label>

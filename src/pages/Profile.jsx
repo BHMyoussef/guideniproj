@@ -82,6 +82,11 @@ function Profile() {
 
     formatDate()
   }, [currentLang,])
+  
+  useEffect(() => {
+    getUserCity();
+    getUserJob();
+  }, [currentUserInfo])
 
   function getPortfolio() {
     if (!currentUserInfo) return
@@ -128,16 +133,16 @@ function Profile() {
     }
   }
   function getUserCity() {
-    if (currentUser) {
-      let docRef = doc(firestore, `cities/${currentUser?.userCity}`)
+    if (currentUserInfo) {
+      let docRef = doc(firestore, `cities/${currentUserInfo.userCity}`)
       getDoc(docRef)
         .then(result => {
           setUserCity(result.data().cityName)
         })
       docRef = doc(
-        firestore,
-        `cities/${currentUser.userCity}/neighborhoods/${currentUser?.userNeighborhood}`
-      )
+          firestore,
+          `cities/${currentUserInfo.userCity}/neighborhoods/${currentUserInfo?.userNeighborhood}`
+        )
 
       getDoc(docRef)
         .then(result => {
@@ -145,6 +150,7 @@ function Profile() {
         })
     }
   }
+  
   function switchButton(e) {
     if (e.target.id === "galerie")
       setgalerieSelected(true)
