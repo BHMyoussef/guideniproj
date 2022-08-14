@@ -8,6 +8,7 @@ import FeedBack from '../components/Feedback';
 import Icon from '../components/Icon';
 import Stars from '../components/Stars';
 import StarsRate from '../components/StarsRate';
+import Signaler from '../components/Signaler';
 
 import { useAuth } from '../contexts/AuthProvider';
 import { useLang } from '../contexts/LangProvider';
@@ -27,6 +28,7 @@ export default function UserInfo() {
   const [userNeighborhood, setUserNeighborhood] = useState()
   const [galerieSelected, setgalerieSelected] = useState(true);
   const [feedback, setFeedback] = useState();
+  const [signaler, setSignaler] = useState(true);
   const [rateme, setRatMe] = useState(false);
   const [canRate, setCanRate] = useState(false);
   const [userJob, setUserJob] = useState();
@@ -281,7 +283,7 @@ export default function UserInfo() {
                   :
                   <>
                     {/*  user address here */}
-                    <span className='block text-md'>{userCity +", "+userNeighborhood}</span>
+                    <span className='block text-md'>{userNeighborhood + ", " + userCity}</span>
                     <span className='block text-md'>Phone: {userInformation.phone}</span>
                     <div className='flex gap-x-4 mt-2'>
                       <Icon icon={<a href={userInformation.facebookAccountUrl} target="blank">
@@ -313,7 +315,8 @@ export default function UserInfo() {
                 {openMenu &&                  
                   <div 
                     id="dropdown"
-                    className="little_menu z-10 bg-white divide-y divide-gray-100 rounded shadow w-44" 
+                    className={
+			   (currentLang === "ar") && "flex-row-reverse"+ "little_menu z-10 bg-white divide-y divide-gray-100 rounded shadow w-auto"} 
                     style={{
                       position: "absolute",
                       inset: "auto auto 0px 0px",
@@ -344,7 +347,10 @@ export default function UserInfo() {
                           <FaInfoCircle className="px-2" size={35} color='skyblue' />
                           
                         </li>
-                        <li className="flex justify-between hover:bg-gray-200 mb-1 cursor-pointer">
+                        <li 
+
+				onClick={() => setSignaler(true)}
+				className="flex justify-between hover:bg-gray-200 mb-1 cursor-pointer">
                           <button 
                               className="block px-4 py-2"
                               >
@@ -374,7 +380,7 @@ export default function UserInfo() {
               <div className={`flex items-center justify-evenly ${currentLang === "ar" ? "flex-row-reverse" : ""}`}>
                 {/*<FaAward color={userInformation?.rank} size={30}/>*/}
                 <img src={`${window.origin}/resources/rank/${userInformation?.rank.toLowerCase()}.svg`} alt={userInformation?.rank} />
-                <span className={`font-bold text-${userInformation?.rank}`}>{userInformation?.rank}</span>
+	      {/*<span className={`font-bold text-${userInformation?.rank}`}>{userInformation?.rank}</span>*/}
               </div>
               <div className='text-center text-lg'>
                 <p>{usersInfoTxt && usersInfoTxt.totalNote}</p>
@@ -457,6 +463,11 @@ export default function UserInfo() {
               getRatingInformation={rateUser}
               setRatMe={setRatMe}
             />}
+          </AnimatePresence>
+	  <AnimatePresence>
+            {
+		    signaler && <Signaler />
+            }
           </AnimatePresence>
         </div>
       }
