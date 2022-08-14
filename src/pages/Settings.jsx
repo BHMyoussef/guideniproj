@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState} from 'react'
 import { firestore, storage } from '../firebase'
 import { doc, updateDoc, getDocs, collection, query, where, getDoc } from 'firebase/firestore'
-import { useAuth } from '../contexts/AuthProvider'
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import { useAuth } from '../contexts/AuthProvider'
 import { useLang } from '../contexts/LangProvider'
 import { Link, Navigate } from 'react-router-dom'
 import Joi from "joi"

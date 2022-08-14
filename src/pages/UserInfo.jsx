@@ -28,7 +28,7 @@ export default function UserInfo() {
   const [userNeighborhood, setUserNeighborhood] = useState()
   const [galerieSelected, setgalerieSelected] = useState(true);
   const [feedback, setFeedback] = useState();
-  const [signaler, setSignaler] = useState(true);
+  const [signaler, setSignaler] = useState(false);
   const [rateme, setRatMe] = useState(false);
   const [canRate, setCanRate] = useState(false);
   const [userJob, setUserJob] = useState();
@@ -212,12 +212,13 @@ export default function UserInfo() {
 
   function handleOpenMenu(){
     setOpenMenu(!openMenu)
-    document.addEventListener("mousedown", (e) => {
-      console.log(e.target)
-      if(!e.target.classList.contains("little_menu") || e.target.tagName !== "BUTTON" || e.target.tagName !== "LI")
+   // document.addEventListener("mousedown", (e) => {
+     // console.log(e.target)
+      //if(!e.target.classList.contains("little_menu") || e.target.tagName !== "BUTTON" || e.target.tagName !== "LI")
 
-        setOpenMenu(false)
-    });
+        //setOpenMenu(false)
+    
+    //});
   }
 
   return (
@@ -312,22 +313,23 @@ export default function UserInfo() {
             </div>
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang === "ar") ? " md:mr-auto" : " md:ml-auto"}`}>
               <div className="flex justify-end relative top-[-2rem] right-[-1.5rem]">
-                {openMenu &&                  
-                  <div 
+              
+	      {/* needs a way to handle the close of the litte menu */}
+	      {openMenu &&
+                  <div
                     id="dropdown"
-                    className={
-			   (currentLang === "ar") && "flex-row-reverse"+ "little_menu z-10 bg-white divide-y divide-gray-100 rounded shadow w-auto"} 
+                    className={"little_menu z-10 bg-white divide-y divide-gray-100 rounded shadow"} 
                     style={{
                       position: "absolute",
                       inset: "auto auto 0px 0px",
                       margin: '0px',
                       transform: "translate(-7.6rem, 5rem)"
-                    }}
-                    data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top">
-                      <ul className="py-1 text-sm text-gray-700" aria-labelledby="dropdownDefault">
+                    }}>
+                      <ul 
+			className="w-full py-1 text-sm text-gray-700" aria-labelledby="dropdownDefault">
                         <li
 
-                          className="flex justify-between hover:bg-gray-200 mb-1 cursor-pointer">
+                          className="flex w-full justify-between hover:bg-gray-200 mb-1 cursor-pointer">
                           <button 
                               className="block px-4 py-2">
 
@@ -466,7 +468,7 @@ export default function UserInfo() {
           </AnimatePresence>
 	  <AnimatePresence>
             {
-		    signaler && <Signaler />
+		    signaler && <Signaler setSignaler={setSignaler} />
             }
           </AnimatePresence>
         </div>
