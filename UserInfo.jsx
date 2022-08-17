@@ -9,7 +9,6 @@ import Icon from '../components/Icon';
 import Stars from '../components/Stars';
 import StarsRate from '../components/StarsRate';
 import Signaler from '../components/Signaler';
-import DotsMenu from '../components/DotsMenu';
 
 import { useAuth } from '../contexts/AuthProvider';
 import { useLang } from '../contexts/LangProvider';
@@ -209,7 +208,18 @@ export default function UserInfo() {
     }
   }
 
-  const [openMenu, setOpenMenu] = useState(true);
+  const [openMenu, setOpenMenu] = useState(false);
+
+  function handleOpenMenu(){
+    setOpenMenu(!openMenu)
+   // document.addEventListener("mousedown", (e) => {
+     // console.log(e.target)
+      //if(!e.target.classList.contains("little_menu") || e.target.tagName !== "BUTTON" || e.target.tagName !== "LI")
+
+        //setOpenMenu(false)
+    
+    //});
+  }
 
   return (
     <motion.div
@@ -304,21 +314,66 @@ export default function UserInfo() {
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang === "ar") ? " md:mr-auto" : " md:ml-auto"}`}>
               <div className="flex justify-end relative top-[-2rem] right-[-1.5rem]">
               
-	      
-	      {openMenu && 
-		      <DotsMenu
-			
-		      	titles={usersInfoTxt}
-			setRatMe={setRatMe}
-			setSignaler={setSignaler}
-			setOpenMenu={setOpenMenu}
-		      />  
-	      }
+	      {/* needs a way to handle the close of the litte menu */}
+	      {openMenu &&
+
+                  <div
+                    id="dropdown"
+                    className={"little_menu z-10 bg-white divide-y divide-gray-100 rounded shadow"} 
+                    style={{
+                      position: "absolute",
+                      inset: "auto auto 0px 0px",
+                      margin: '0px',
+                      transform: "translate(-7.6rem, 5rem)"
+                    }}>
+                      <ul 
+			className="w-full py-1 text-sm text-gray-700" aria-labelledby="dropdownDefault">
+                        <li
+
+                          className="flex w-full justify-between hover:bg-gray-200 mb-1 cursor-pointer">
+                          <button 
+                              className="block px-4 py-2">
+
+                            {usersInfoTxt && usersInfoTxt.addtofav}
+                          </button>                                                   
+                          <FaHeart className="px-2" size={35} color='red' />
+                          
+                        </li>
+                        <li 
+                            onClick={() => { setRatMe(true) }}
+
+                            className="flex justify-between hover:bg-gray-200 mb-1 cursor-pointer">
+                          <button 
+                              className="block px-4 py-2 ">
+                            {usersInfoTxt && usersInfoTxt.feedBackOrder}
+                          </button>
+                          <FaInfoCircle className="px-2" size={35} color='skyblue' />
+                          
+                        </li>
+                        <li 
+
+				onClick={() => setSignaler(true)}
+				className="flex justify-between hover:bg-gray-200 mb-1 cursor-pointer">
+                          <button 
+                              className="block px-4 py-2"
+                              >
+
+                            {usersInfoTxt && usersInfoTxt.report}
+                          </button>
+                          <MdReport className="px-2" size={35} color='orange' />
+                          
+                        </li>
+                      </ul>
+                  </div>
+
+
+               }
                <button 
                   id="dropdownDefault" 
+                  data-dropdown-toggle="dropdown"
                   className="font-mediumtext-sm text-center inline-flex items-center"
                   type="button"
-                  onClick={setOpenMenu}
+                  onClick={handleOpenMenu}
                   >
                
                   <HiDotsVertical size={40} className="py-[.5rem]"/>
