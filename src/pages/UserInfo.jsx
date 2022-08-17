@@ -1,5 +1,5 @@
 import { addDoc, collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
-import { FaFacebookF, FaYoutube, FaInstagram, FaInfoCircle, FaHeart, FaShareAlt } from 'react-icons/fa'
+import { FaFacebookF, FaYoutube, FaInstagram  } from 'react-icons/fa'
 import { SiWebflow } from 'react-icons/si'
 import Share from '../components/Share';
 import React, { useEffect, useState } from 'react'
@@ -14,7 +14,7 @@ import DotsMenu from '../components/DotsMenu';
 import { useAuth } from '../contexts/AuthProvider';
 import { useLang } from '../contexts/LangProvider';
 import { firestore } from '../firebase';
-import {MdReport} from 'react-icons/md';
+
 import { HiDotsVertical } from "react-icons/hi";
 
 // animation things
@@ -209,7 +209,7 @@ export default function UserInfo() {
     }
   }
 
-  const [openMenu, setOpenMenu] = useState(true);
+  const [openMenu, setOpenMenu] = useState(false);
 
   return (
     <motion.div
@@ -304,16 +304,6 @@ export default function UserInfo() {
             <div className={`mt-8 flex md:flex-col gap-x-16 gap-4 ${(currentLang === "ar") ? " md:mr-auto" : " md:ml-auto"}`}>
               <div className="flex justify-end relative top-[-2rem] right-[-1.5rem]">
               
-	      
-	      {openMenu && 
-		      <DotsMenu
-			
-		      	titles={usersInfoTxt}
-			setRatMe={setRatMe}
-			setSignaler={setSignaler}
-			setOpenMenu={setOpenMenu}
-		      />  
-	      }
                <button 
                   id="dropdownDefault" 
                   className="font-mediumtext-sm text-center inline-flex items-center"
@@ -412,11 +402,27 @@ export default function UserInfo() {
               setRatMe={setRatMe}
             />}
           </AnimatePresence>
-	  <AnimatePresence>
+	  <AnimatePresence
+		exitBeforeEnter={true}
+	      >
             {
 		    signaler && <Signaler setSignaler={setSignaler} />
             }
           </AnimatePresence>
+	  <AnimatePresence
+		exitBeforeEnter={true}
+	      >
+	      {openMenu &&
+                      <DotsMenu
+
+                        titles={usersInfoTxt}
+                        setRatMe={setRatMe}
+                        setSignaler={setSignaler}
+                        setOpenMenu={setOpenMenu}
+                      />
+              }
+
+	  </AnimatePresence>
         </div>
       }
       <AnimatePresence

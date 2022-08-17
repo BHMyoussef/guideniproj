@@ -4,6 +4,11 @@ import styled from "styled-components";
 import {MdReport} from "react-icons/md"
 import {FaWindowClose, FaHeart, FaInfoCircle} from "react-icons/fa"
 
+// animation
+import {motion} from "framer-motion";
+
+import {dropIn} from "../animation";
+
 
 const DotsMenu = ({titles, setOpenMenu, setRatMe, setSignaler}) => {
 
@@ -16,13 +21,17 @@ const DotsMenu = ({titles, setOpenMenu, setRatMe, setSignaler}) => {
 
 	return (
 		<Container
-		onClick={handleExit}
-		className="container">
+			variants={dropIn}
+      			initial="hidden"
+      			animate="show"
+      			exit="exit"
+			onClick={handleExit}
+			className="container">
 			<Wrapper>
 				<Divs 
 					onClick={()=>setOpenMenu(false)}
 					className={`close`}>
-					<div className="icon"><FaWindowClose size="22" /></div>
+					<div className="icon"><FaWindowClose size={30} /></div>
 				</Divs>
 				<Divs>
 					<div className="text">
@@ -62,10 +71,9 @@ const DotsMenu = ({titles, setOpenMenu, setRatMe, setSignaler}) => {
 }
 
 
-const Container = styled.div`
+const Container = styled(motion.div)`
 	position: fixed;
-	width: 100%;
-	margin: 0;
+	z-index:10;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -73,37 +81,38 @@ const Container = styled.div`
 	display: grid;
 	place-items: center;
 	cursor: pointer;
-	background: #00000050;
 	backdrop-filter: blur(5px);
+	margin: 0 auto;
 
 
 `
 
 const Wrapper = styled.div`
-	width: 450px;
+	width: min(80%,500px);
 	z-index:10;
 	padding: 1rem;
+	padding-bottom: 2rem;
 	background: white;
-	border: 1px solid gray;
 	border-radius: 10px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	box-shadow: 0px 2px 10px #00000030;
+	box-shadow: 0px 2px 15px #00000030;
 
 `
 const Divs = styled.div`
 	width: 90%;
-	margin: 0.5rem auto;
+	margin: 1rem auto;
 	border:none;
 	border-bottom: 1px solid #00000030;
 	border-radius: 0px;
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	font-size: 24px;
+	font-size: 18px;	
 	color: black;
 	transition: all .3s ease;
+	position: relative;
 	&.close {
 		border:none;
 		justify-content: end;
@@ -112,8 +121,22 @@ const Divs = styled.div`
 		transition: all .3s ease;
 		scale: 1.1;
 
+		&:before {
+			width: 7px;
+			transition: all .3s ease;
+		}
 	}
-
+	
+	&:not(.close):before {
+		transition: all .3s ease;
+		content:"";
+		position: absolute;
+		top:0;
+		left:0;
+		width: 0px;
+		height: 100%;
+		background: gray;
+	}
 
 	/* divs inside: */
 	div {
@@ -126,6 +149,20 @@ const Divs = styled.div`
 	.icon {
 		margin:0 .5rem;
 	}
+
+	/* close Icon: */
+	&.close {
+		position: relative;
+		margin-botton: 1rem;
+		padding: 2rem;
+		div {
+			position: absolute;
+			top: -1rem;
+			right: -3rem;
+		}
+	}
+
+
 
 
 `

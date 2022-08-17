@@ -4,9 +4,11 @@ import { useAuth } from '../contexts/AuthProvider'
 import { useLang } from '../contexts/LangProvider'
 
 
-import { firestore as db, storage } from '../firebase'
+import { firestore as db} from '../firebase'
 import { collection, addDoc } from 'firebase/firestore'
-
+// animation:
+import {motion} from "framer-motion";
+import {dropIn} from "../animation";
 
 const Signaler = ({setSignaler}) => {
 	const { currentUser, currentUserInfo } = useAuth();
@@ -57,6 +59,10 @@ const Signaler = ({setSignaler}) => {
 
 	return(
 		<Model
+			variants={dropIn}
+      			initial="hidden"
+      			animate="show"
+      			exit="exit"
 			className="model"
 			onClick={exit}
 			>
@@ -86,7 +92,7 @@ const Signaler = ({setSignaler}) => {
 
 }
 
-const Model = styled.div`
+const Model = styled(motion.div)`
 
 	position: fixed;
 	top:0;
@@ -96,11 +102,11 @@ const Model = styled.div`
 	background: rgba(0,0,0,0.7);
 	display: grid;
 	place-items: center;
-	z-index:1000;
+	z-index:2000;
 `;
 
 const Form = styled.div`
-	width: max(40%,500px);
+	width: min(90%,500px);
 	height:400px;
 
 	padding: 0.5rem 1rem;
