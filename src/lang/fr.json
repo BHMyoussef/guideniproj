@@ -67,8 +67,8 @@
         "yes": "Oui",
         "sure": "Êtes-vous sûr ?",
         "sureText": "En cliquant sur oui, vous terminez votre période de garde",
-        "addtofav": "Ajouter aux favorit",
-        "report": "Report user"
+        "addtofav": "Ajouter aux favoris",
+        "report": "Signaler l'utilisateur"
     },
     "signIn":{
         "title": "Se connecter",
@@ -105,7 +105,11 @@
         "save": "Sauvegarder",
         "Change password": "Changer le mot de pass",
         "update": "Màj",
-        "account": "Compte"
+        "account": "Compte",
+        "city": "Ville",
+        "neighborhood": "Quartier",
+        "address": "Adresse",
+        "Job": "Emploi"
 
     },
     "profile":{
