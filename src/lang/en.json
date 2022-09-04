@@ -45,7 +45,10 @@
             "totalNote": "Total Note",
             "rate": "Rate",
             "btnText": "See Profile"
-        }
+        },
+        "filter":"Filter",
+        "filterCity":"Filter By City",
+        "filterNeighborhood":"Filter By Neighborhood"
     },
     "userInfo":{
         "signAlert": "Sign In to see all the information",

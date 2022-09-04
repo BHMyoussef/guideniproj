@@ -44,7 +44,10 @@
             "rate": "Rate",
             "totalNote": "Note Totale",
             "btnText": "voir profil"
-        }
+        },
+        "filter": "Filtrer",
+        "filterCity": "Filtrer par ville",
+        "filterNeighborhood": "Filtrer par quartier"
     },
     "userInfo":{
         "signAlert": "Connectez-vous pour voir toutes les informations",

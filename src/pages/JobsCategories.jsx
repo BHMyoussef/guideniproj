@@ -109,7 +109,11 @@ export default function JobsCategories() {
             className='container mx-auto'>
             <div className={`w-full flex justify-between items-center mb-2 ${(currentLang === "ar") && " flex-row-reverse"}`}>
                 <h3 className='text-xl font-medium '>{categoriesTxt && categoriesTxt.title} </h3>
-                <button onClick={()=>setpopUpShown(true)} className='border-2 px-4 py-2 rounded-md hover:bg-primary hover:text-white'>Search</button>
+                <button
+                    className='border-2 px-4 py-2 rounded-md hover:bg-primary hover:text-white'>
+                    Quick Search
+                </button>
+
                 <SearchBar jobs={jobsCategoriesList} getFiltredJob={getFiltredJob} nameKey="categoryName" placeHolder={categoriesTxt && categoriesTxt.search} />
             </div>
             <hr />
@@ -128,7 +132,7 @@ export default function JobsCategories() {
                         )
                     })}
             </div>
-            {
+            {/*
                 popUpShown && 
                 <div className='container mx-auto fixed overflow-scroll top-0 left-1/2 -translate-x-1/2 bg-secondary w-full h-screen'>
                     <FaArrowLeft className='hover:cursor-pointer text-white mb-10 hover:scale105 ' onClick={()=>setpopUpShown(false)} />
@@ -171,7 +175,7 @@ export default function JobsCategories() {
                         }
                     </div>
                 </div>
-            }
+                    */}
         </motion.div>
     )
 }

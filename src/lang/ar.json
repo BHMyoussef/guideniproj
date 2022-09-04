@@ -44,7 +44,10 @@
             "rate": "التقييم",
             "totalNote": "النقطة الكاملة",
             "btnText": "الملف الشخصي"
-        }
+        },
+        "filter": "مرشحات",
+        "filterCity": "ترشيح حسب المدينة",
+        "filterNeighborhood": "ترشيح حسب الحي"
     },
     "userInfo":{
         "signAlert": "سجل الدخول لرؤية كل المعلومات",
