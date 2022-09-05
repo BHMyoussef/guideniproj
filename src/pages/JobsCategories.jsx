@@ -15,7 +15,7 @@ import Card from '../components/Card';
 export default function JobsCategories() {
     const [jobsCategoriesList, setJobsCategoriesList] = useState();
     const [filtredJobsCategories, setFiltredJobsCategories] = useState();
-    const [ popUpShown, setpopUpShown ] = useState(false)
+    const [ popUpShown, setPopUpShown ] = useState(false)
     const [ jobsProvider, setJobsProvider ] = useState([])
     const [ cities,setCities ] = useState();
     const [ firstSearch, setFirstSearch ] = useState(false)
@@ -80,11 +80,16 @@ export default function JobsCategories() {
                 querySnapshot.forEach((doc) => {
                     jobs = [...jobs, doc.data()]
                 })
-                jobs.sort((a, b) =>
-                    (a.categoryName[currentLang].toLowerCase().trim().split(' ')[0]
-                        > b.categoryName[currentLang].toLowerCase().trim().split(' ')[0]) ?
-                        1 : -1
-                );
+                try {
+                    
+                    jobs.sort((a, b) =>
+                        (a.categoryName[currentLang].toLowerCase().trim().split(' ')[0]
+                            > b.categoryName[currentLang].toLowerCase().trim().split(' ')[0]) ?
+                            1 : -1
+                    );
+                } catch (error) {
+                    console.log(error.message)
+                }
 
                 setJobsCategoriesList(jobs)
             })
@@ -111,7 +116,9 @@ export default function JobsCategories() {
                 <h3 className='text-xl font-medium '>{categoriesTxt && categoriesTxt.title} </h3>
                 <button
                     className='border-2 px-4 py-2 rounded-md hover:bg-primary hover:text-white'>
-                    Quick Search
+                    <a href='/quicksearch' className='inline-block w-full '>
+                        Quick Search
+                    </a>
                 </button>
 
                 <SearchBar jobs={jobsCategoriesList} getFiltredJob={getFiltredJob} nameKey="categoryName" placeHolder={categoriesTxt && categoriesTxt.search} />
@@ -132,11 +139,15 @@ export default function JobsCategories() {
                         )
                     })}
             </div>
-            {/*
+            {
+
                 popUpShown && 
-                <div className='container mx-auto fixed overflow-scroll top-0 left-1/2 -translate-x-1/2 bg-secondary w-full h-screen'>
-                    <FaArrowLeft className='hover:cursor-pointer text-white mb-10 hover:scale105 ' onClick={()=>setpopUpShown(false)} />
+                <div 
+                    className='mx-auto fixed top-0 left-0 bottom-0 right-0 z-900 bg-gray-600 flex flex-col justify-between'
+                    >
+                    {/* <FaArrowLeft className='hover:cursor-pointer text-white mb-10 hover:scale105 ' onClick={()=>setPopUpShown(false)} /> */}
                     <SearchBarV2 
+
                         addclassName="justify-center" 
                         getFiltredJobProvider={getFiltredJobProvider} 
                         placeHolder={categoriesTxt && categoriesTxt.search} 
@@ -175,7 +186,8 @@ export default function JobsCategories() {
                         }
                     </div>
                 </div>
-                    */}
+            }
+                    
         </motion.div>
     )
 }

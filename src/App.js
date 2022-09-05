@@ -19,7 +19,7 @@ import Edit from './blogs/pages/Edit'
 import ResetMail from './pages/ResetMail'
 import Contact from './pages/Contact'
 import Download from './pages/Download'
-import FastSearch from './pages/FastSearch'
+import QuickSearch from "./pages/QuickSearch";
 //import Favorite from './pages/Favorite'
 
 function App() {
@@ -39,7 +39,7 @@ function App() {
           <Route path="/setting" element = { <Setting/>} />
           <Route path="/help" element = { <Contact/>} />
           <Route path="/download" element = { <Download/>} />
-          <Route path="/fastsearch" element = { <FastSearch/>} />
+          <Route path="/quicksearch" element = { <QuickSearch/>} />
 
           { /* <Route path="/favorite" element = { <Favorite/>} /> */ }
           
