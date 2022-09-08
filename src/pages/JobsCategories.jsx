@@ -4,7 +4,6 @@ import Service from '../components/Service';
 import { collection, getDocs } from 'firebase/firestore';
 import { firestore } from '../firebase'
 import { useLang } from '../contexts/LangProvider';
-import { FaArrowLeft } from 'react-icons/fa';
 import SearchBarV2 from '../components/SearchBarV2';
 // Animation
 import {motion} from "framer-motion";
@@ -117,7 +116,7 @@ export default function JobsCategories() {
                 <button
                     className='border-2 px-4 py-2 rounded-md hover:bg-primary hover:text-white'>
                     <a href='/quicksearch' className='inline-block w-full '>
-                        Quick Search
+                        {categoriesTxt && categoriesTxt.quickSearch}
                     </a>
                 </button>
 
@@ -139,54 +138,6 @@ export default function JobsCategories() {
                         )
                     })}
             </div>
-            {
-
-                popUpShown && 
-                <div 
-                    className='mx-auto fixed top-0 left-0 bottom-0 right-0 z-900 bg-gray-600 flex flex-col justify-between'
-                    >
-                    {/* <FaArrowLeft className='hover:cursor-pointer text-white mb-10 hover:scale105 ' onClick={()=>setPopUpShown(false)} /> */}
-                    <SearchBarV2 
-
-                        addclassName="justify-center" 
-                        getFiltredJobProvider={getFiltredJobProvider} 
-                        placeHolder={categoriesTxt && categoriesTxt.search} 
-                        setFirstSearch={()=>setFirstSearch(true)} 
-                        setSearchLoader = {setSearchLoader} 
-                    />
-                    <div className="grid-template-370 mt-4 grid gap-2">
-                    
-                    {
-                        searchLoader ? 
-                        <img 
-                            className='absolute left-1/2 -translate-x-1/2 mt-28 '
-                            src={`${window.location.origin}/resources/widget-loader.gif`} 
-                        /> 
-                        :
-                        !jobsProvider || jobsProvider.length===0 ?
-                            firstSearch ?
-                                <img className='absolute left-1/2 -translate-x-1/2 w-3/4 max-h-96' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
-                            : <></>
-                        : jobsProvider.map((user,index)=>{
-                            return(
-                            <Card
-                                key={index}
-                                id={ user.userId }
-                                name = {user.firstName }
-                                image = { user.imageUrl}
-                                city = {cities && cities.filter(elm=>elm.cityId===user.userCity)}
-                                jobName = { user.jobsDetail.jobName[currentLang] }
-                                rate = { user.rating }
-                                totalRating = { user.totalRating }
-                                texts = { usersTxt && usersTxt.cardText}
-                                rank = { user.rank }
-                            />
-                            );
-                        })
-                        }
-                    </div>
-                </div>
-            }
                     
         </motion.div>
     )

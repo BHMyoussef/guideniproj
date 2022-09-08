@@ -30,7 +30,9 @@
     },
     "categories":{
         "title": "Categorie d'emplois",
-        "search": "Recharcher un service"
+        "search": "Recharcher un service",
+        "searchByName": "Rechercher une personne",
+        "quickSearch": "Recherche rapide"
     },
     "services":{
         "title": "Traveux",

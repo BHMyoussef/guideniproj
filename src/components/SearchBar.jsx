@@ -1,6 +1,5 @@
 import Icon from '../components/Icon';
 import { FaSearch } from 'react-icons/fa';
-import { useState } from 'react';
 
 export default function SearchBar({placeHolder, jobs, getFiltredJob, nameKey, addclassName}){
     

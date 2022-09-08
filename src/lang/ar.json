@@ -30,7 +30,9 @@
     },
     "categories":{
         "title": "صنف الوظيفة",
-        "search": "إبحث عن عمل"
+        "search": "إبحث عن عمل",
+        "quickSearch": "بحث سريع",
+        "byName": "بحث عن شخص"
     },
     "services":{
         "title": "أعمال",

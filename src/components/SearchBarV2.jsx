@@ -5,7 +5,7 @@ import { firestore } from "../firebase";
 import Icon from "./Icon";
 import styled from "styled-components";
 
-export default function SearchBarV2({addclassName, placeHolder, getFiltredJobProvider, setFirstSearch, setSearchLoader}){
+export default function SearchBarV2({placeHolder, getFiltredJobProvider, setFirstSearch, setSearchLoader}){
     const [ value, setValue ] = useState("");
     const [ diseabled, setDiseabled ] = useState(false);
 

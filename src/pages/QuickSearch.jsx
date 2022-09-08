@@ -49,7 +49,7 @@ const QuickSearch = () => {
 
             addclassName="justify-center" 
             getFiltredJobProvider={getFiltredJobProvider} 
-            placeHolder={categoriesTxt && categoriesTxt.search} 
+            placeHolder={categoriesTxt && categoriesTxt.searchByName} 
             setFirstSearch={()=>setFirstSearch(true)} 
             setSearchLoader = {setSearchLoader} 
             />

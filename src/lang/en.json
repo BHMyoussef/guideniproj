@@ -31,7 +31,9 @@
     },
     "categories":{
         "title": "Jobs Categories",
-        "search": "search for a service"
+        "search": "search for a service",
+        "searchByName": "Search for a person",
+        "quickSearch": "Quick Search"
     },
     "services":{
         "title": "jobs",
