@@ -4,22 +4,17 @@ import Service from '../components/Service';
 import { collection, getDocs } from 'firebase/firestore';
 import { firestore } from '../firebase'
 import { useLang } from '../contexts/LangProvider';
-import SearchBarV2 from '../components/SearchBarV2';
 // Animation
 import {motion} from "framer-motion";
 import {fadeIn} from "../animation";
-import Card from '../components/Card';
 
 
 export default function JobsCategories() {
     const [jobsCategoriesList, setJobsCategoriesList] = useState();
     const [filtredJobsCategories, setFiltredJobsCategories] = useState();
-    const [ popUpShown, setPopUpShown ] = useState(false)
     const [ jobsProvider, setJobsProvider ] = useState([])
     const [ cities,setCities ] = useState();
-    const [ firstSearch, setFirstSearch ] = useState(false)
-    const [ searchLoader, setSearchLoader] = useState(false);
-    const { categories: categoriesTxt, currentLang, users:usersTxt } = useLang();
+    const { categories: categoriesTxt, currentLang } = useLang();
 
     function getCities(){
         const citiesRef = collection(firestore,"cities");
@@ -123,7 +118,7 @@ export default function JobsCategories() {
                 <SearchBar jobs={jobsCategoriesList} getFiltredJob={getFiltredJob} nameKey="categoryName" placeHolder={categoriesTxt && categoriesTxt.search} />
             </div>
             <hr />
-            <div className="grid-template-250 mt-4 grid gap-2">
+            <div className="grid-template-250 mt-4 p-4 grid gap-4 bg-[#E5E6E4]">
                 {!filtredJobsCategories ?
                     <img className='absolute left-1/2 -translate-x-1/2' src={`${window.location.origin}/resources/13525-empty.gif`} alt='empty' />
                     : filtredJobsCategories.map((jobCat, index) => {

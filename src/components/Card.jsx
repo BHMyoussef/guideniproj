@@ -1,11 +1,9 @@
-import Icon from './Icon'
-import { FaAward }from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import Stars from './Stars'
 
 /*Animation*/
 import {motion} from "framer-motion";
-import {fadeIn, popup} from "../animation"
+import {popup} from "../animation"
 
 export default function Card({id, name, image, jobName, rate, totalRating, texts, city, rank}) {
     if (rank === 0)
@@ -19,12 +17,12 @@ export default function Card({id, name, image, jobName, rate, totalRating, texts
      initial="hidden"
      animate="show"
 
-     className='card inline-block bg-bgcolor pt-4 pb-4 px-8 rounded-xl hover:scale-105 transition-all ease-linear relative'>
+     className='card inline-block bg-white border-[1px] shadow-xl border-gray-200 mx-1 pt-4 pb-4 px-8 rounded hover:scale-102 transition-all ease-linear relative'>
         <div className={`flex items-center justify-evenly absolute right-0`}>
           <img src={`${window.origin}/resources/rank/${rank.toLowerCase()}.svg`} alt={rank} />
 
         </div>
-        <div className='flex items-center gap-x-10 mb-4'>
+        <div className='flex items-center gap-x-12 mb-4'>
             <div className='image-container w-32 h-32'>
                 <motion.img
                     layoutId={image}
@@ -49,7 +47,7 @@ export default function Card({id, name, image, jobName, rate, totalRating, texts
                 <p>{texts && texts.rate}</p>
                 <span className='font-bold'>{rate}/5</span>
             </div>
-            <Link className='border-2 pt-2 pb-2 px-4 hover:font-semibold hover:text-white hover:bg-primary' to={`/user/${id}`}>{texts && texts.btnText}</Link>
+            <Link className='border-[2px] pt-2 pb-2 px-4 hover:font-semibold hover:text-white hover:bg-primary transition-all ease-linear rounded' to={`/user/${id}`}>{texts && texts.btnText}</Link>
         </div>
     </motion.div>
   )

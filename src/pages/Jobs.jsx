@@ -8,7 +8,7 @@ import { useLang } from '../contexts/LangProvider'
 
 // animation
 import {motion} from "framer-motion"
-import {fadeIn, popup} from "../animation"
+import {fadeIn} from "../animation"
 
 export default function Jobs() {
     const [jobs, setJobs] = useState()
@@ -58,7 +58,7 @@ export default function Jobs() {
                 <SearchBar jobs={jobs} getFiltredJob={getFiltredJob} nameKey="jobName" placeHolder={servicesTxt && servicesTxt.search} />
             </div>
             <hr />
-            <div className="grid-template-250 mt-4 grid gap-2">
+            <div className="grid-template-250 mt-4 p-4 grid gap-2 bg-[#E5E6E4]">
                 {!filtredJobsCategories ?
                     <img
 
