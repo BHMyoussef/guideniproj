@@ -76,14 +76,15 @@ export default class EmployeeForm extends Form {
   }
   setCategory=(categoryId)=>{
     let data = this.state.data;
+    console.log({data})
     data.categoryId = categoryId;
-    this.setState({data: data.sort()});
+    this.setState({data});
     this.getSubCategories();
   }
   setSubCategory=(subCategoryId)=>{
     let data = this.state.data;
     data.subCategoryId = subCategoryId
-    this.setState({data: data.sort()});
+    this.setState({data: data});
   }
 
   getCities(){
@@ -227,8 +228,8 @@ export default class EmployeeForm extends Form {
               {	this.renderInput('password',value.signUp &&value.signUp.password,'password')	}
               { this.renderInput('phone',value.signUp &&value.signUp.phone) }
               <SelectForm title={value.signUp &&value.signUp.city} choices={ cities } setProperty={this.setCity}/>
-              <SelectForm title="enter your category" choices={ categories[value.currentLang] } setProperty={this.setCategory}/>
-              <SelectForm title="enter your SubCategory" choices={ subCategories[value.currentLang] } setProperty={this.setSubCategory}/>
+              <SelectForm title="Select your category" choices={ categories[value.currentLang] } setProperty={this.setCategory}/>
+              <SelectForm title="Select your SubCategory" choices={ subCategories[value.currentLang] } setProperty={this.setSubCategory}/>
               {	this.renderButton(value.signUp &&value.signUp.signUpBtn,this.state.loading)	}
             </form>
             <SignWith />
