@@ -147,9 +147,9 @@ function AddJob() {
             { error && <div className='bg-red-400 mt-2 py-2 px-4 text-white font-medium'>{error}</div>}
             <Input name="firstname" type="text" value={firstname} label={profile?.firstname} onChange={(e)=>setFirstname(e.target.value)}  />
             <Input name="lastname" type="text" value={lastname} label={profile?.lastname} onChange={(e)=>setLastname(e.target.value)}  />
-            <SelectForm title={signUp &&signUp.city} choices={ cities } setProperty={(city)=>setCity(city)}/>
-            <SelectForm title={profile?.enterYourCategory} choices={ categories } setProperty={(cat)=>setCategory(cat)}/>
-            <SelectForm title={profile?.enteryourSubCategory} choices={ subCategories } setProperty={(subCat)=>setSubCategory(subCat)}/>
+            <SelectForm title={signUp &&signUp.city} choices={ cities } onSelect={(city)=>setCity(city)}/>
+            <SelectForm title={profile?.enterYourCategory} choices={ categories } onSelect={(cat)=>setCategory(cat)}/>
+            <SelectForm title={profile?.enteryourSubCategory} choices={ subCategories } onSelect={(subCat)=>setSubCategory(subCat)}/>
             <Input name="text" type="text" value={phone} label={profile?.phoneNumber} onChange={(e)=>setPhone(e.target.value)}  />
             
             <button disabled={error} onClick={handleSubmit} className="hover:bg-secondary hover:text-white disabled:opacity-80 bg-bgcolor  text-xl rounded-md block px-4 py-2 mx-auto">

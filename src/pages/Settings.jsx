@@ -390,13 +390,13 @@ const Settings = ({userId}) => {
              <>
                <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                  <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="address">Address</label>
-                 <SelectForm v={false} title={userCityValue}  choices={ cities } setProperty={(city)=>setCity(city)}/>
-                 <SelectForm v={false} title={userNeighborhoodValue}  choices={ neighborhoods } setProperty={(city)=>setUserNeighborhood(city)}/>
+                 <SelectForm v={false} title={userCityValue}  choices={ cities } onSelect={(city)=>setCity(city)}/>
+                 <SelectForm v={false} title={userNeighborhoodValue}  choices={ neighborhoods } onSelect={(city)=>setUserNeighborhood(city)}/>
               </div>
               <div className={`inputs ${currentLang === "ar" ? "flex-row-reverse": ""} `}>
                 <label className={`${currentLang === "ar" ? "flex-row-reverse": ""}`} htmlFor="job">Category</label>
-                <SelectForm v={false} title={categoryName} choices={ categories } setProperty={(cat)=>setCategory(cat)}/>
-                <SelectForm v={false} title={subCategoryName} choices={ subCategories } setProperty={(subCat)=>setSubCategory(subCat)}/>
+                <SelectForm v={false} title={categoryName} choices={ categories } onSelect={(cat)=>setCategory(cat)}/>
+                <SelectForm v={false} title={subCategoryName} choices={ subCategories } onSelect={(subCat)=>setSubCategory(subCat)}/>
               </div>
               </>
             }

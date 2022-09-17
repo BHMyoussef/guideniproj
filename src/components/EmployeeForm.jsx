@@ -28,6 +28,7 @@ export default class EmployeeForm extends Form {
       ar:[]
     },
     subCategories:[],
+    neighborhoods: [],
 		errors:{},
 		signError:"",
 		loading: false
@@ -67,6 +68,7 @@ export default class EmployeeForm extends Form {
   componentDidMount(){
     this.getCities();
     this.getCategories();
+    this.getNeighborhoods();
   }
 
   setCity=(cityId)=>{
@@ -84,7 +86,13 @@ export default class EmployeeForm extends Form {
   setSubCategory=(subCategoryId)=>{
     let data = this.state.data;
     data.subCategoryId = subCategoryId
-    this.setState({data: data});
+    this.setState({data});
+  }
+
+  setNeighborhood(neighborhoodId){
+    let data = this.state.data;
+    data.neighborhoodId = neighborhoodId;
+    this.setState({data})
   }
 
   getCities(){
@@ -180,6 +188,12 @@ export default class EmployeeForm extends Form {
       console.log( "error eccured: " ,error );
     })
   }
+   getNeighborhoods(){
+    //you can write the logic here to get neighberhoods
+    const neighborhood = []
+    this.setState({neighborhood})
+   }
+  
 
   doSubmit = ()=>{
 		this.setState({signError:"",loading:true})
@@ -214,7 +228,7 @@ export default class EmployeeForm extends Form {
 
 
   render() {
-    const { cities, categories, subCategories } = this.state
+    const { cities, categories, subCategories, neighborhoods } = this.state
     return (
       <langContext.Consumer>
         {
@@ -227,9 +241,10 @@ export default class EmployeeForm extends Form {
               {	this.renderInput('email',value.signUp &&value.signUp.email,'Email') }
               {	this.renderInput('password',value.signUp &&value.signUp.password,'password')	}
               { this.renderInput('phone',value.signUp &&value.signUp.phone) }
-              <SelectForm title={value.signUp &&value.signUp.city} choices={ cities } setProperty={this.setCity}/>
-              <SelectForm title="Select your category" choices={ categories[value.currentLang] } setProperty={this.setCategory}/>
-              <SelectForm title="Select your SubCategory" choices={ subCategories[value.currentLang] } setProperty={this.setSubCategory}/>
+              <SelectForm title={value.signUp &&value.signUp.city} choices={ cities } onSelect={this.setCity}/>
+              <SelectForm title="Select your Neighborhood" choices={ neighborhoods[value.currentLang] } onSelect={this.setNeighborhood}/>
+              <SelectForm title="Select your category" choices={ categories[value.currentLang] } onSelect={this.setCategory}/>
+              <SelectForm title="Select your SubCategory" choices={ subCategories[value.currentLang] } onSelect={this.setSubCategory}/>
               {	this.renderButton(value.signUp &&value.signUp.signUpBtn,this.state.loading)	}
             </form>
             <SignWith />

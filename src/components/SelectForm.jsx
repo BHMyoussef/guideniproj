@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useLang } from '../contexts/LangProvider'
 
-export default function SelectForm({choices,setProperty, title,v=true}) {
+export default function SelectForm({choices,onSelect, title,v=true}) {
     const { currentLang } = useLang()
     function handleSelect(event){
-        setProperty(event.target.value)
+        onSelect(event.target.value)
     }
     // i added the value so that i can show it to the user, in place of the title in setting page
     // The 'v' props is to decide either show the title or hide it
