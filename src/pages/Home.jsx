@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useLang } from "../contexts/LangProvider";
-import { FaGooglePlay } from "react-icons/fa";
 // animation things
 import { motion } from "framer-motion";
 import { fadeIn } from "../animation";
@@ -75,11 +74,6 @@ export default function Home() {
           <img src="/resources/home.png" alt="Guideni home" />
         </div>
       </div>
-      {/* <div className="hidden col-span-2 row-span-2 text-white lg:block">
-        <span className="bg-gray-600 w-40 h-[600px] flex items-center justify-center ml-auto">
-          Ads Here
-        </span>
-      </div> */}
     </motion.div>
   );
 }

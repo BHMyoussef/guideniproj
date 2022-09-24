@@ -16,6 +16,7 @@ export default class EmployeeForm extends Form {
       lastName: '',
       phone:'+212 ',
       cityId:'',
+      neighborhoodId:'',
       email:'',
       password:'',
       categoryId:'',
@@ -68,17 +69,16 @@ export default class EmployeeForm extends Form {
   componentDidMount(){
     this.getCities();
     this.getCategories();
-    this.getNeighborhoods();
   }
 
   setCity=(cityId)=>{
     let data = this.state.data;
     data.cityId = cityId;
-    this.setState({data: data.sort()});
+    this.setState({data});
+    this.getNeighborhoods()
   }
   setCategory=(categoryId)=>{
     let data = this.state.data;
-    console.log({data})
     data.categoryId = categoryId;
     this.setState({data});
     this.getSubCategories();
@@ -90,14 +90,15 @@ export default class EmployeeForm extends Form {
   }
 
   setNeighborhood(neighborhoodId){
-    let data = this.state.data;
-    data.neighborhoodId = neighborhoodId;
-    this.setState({data})
+    console.log({neighborhoodId})
+    // let {data} = this.state;
+    // data.neighborhoodId = neighborhoodId;
+    // this.setState({data})
   }
 
   getCities(){
     const citiesRef = collection(firestore,"cities");
-    let cities = { ...this.state.cities };
+    let cities = [];
     let citiesdb = []
 
     getDocs(citiesRef)
@@ -190,8 +191,34 @@ export default class EmployeeForm extends Form {
   }
    getNeighborhoods(){
     //you can write the logic here to get neighberhoods
-    const neighborhood = []
-    this.setState({neighborhood})
+    
+    let neighborhoods = [...this.state.neighborhoods]
+    if(!this.state.data.cityId) return;
+    const docRef = collection(firestore, `cities/${this.state.data.cityId}/neighborhoods/`);
+    getDocs(docRef)
+    .then(results=>{
+        results.forEach(city=>{
+            const obj = {
+                id: city.data().neighborhoodId,
+                name : city.data().neighborhoodName
+            }
+            neighborhoods = [...neighborhoods,obj]
+        });
+        
+        neighborhoods.sort((a,b)=>{
+          if ( a.name < b.name ){
+            return -1;
+          }
+          if ( a.name > b.name ){
+            return 1;
+          }
+          return 0;
+        })
+        // neighborhoods=neighborhood
+        this.setState({neighborhoods})
+      }).catch(error=>{
+        console.log( "error eccured: " ,error );
+      })
    }
   
 
@@ -215,6 +242,7 @@ export default class EmployeeForm extends Form {
         phone: data.phone,
         userCity: data.cityId,
         jobId: data.categoryId,
+        userNeighborhood:data.neighborhoodId,
         rank: 'Bronze',
         rating: 0,
         totalRatings: 0,
@@ -242,7 +270,7 @@ export default class EmployeeForm extends Form {
               {	this.renderInput('password',value.signUp &&value.signUp.password,'password')	}
               { this.renderInput('phone',value.signUp &&value.signUp.phone) }
               <SelectForm title={value.signUp &&value.signUp.city} choices={ cities } onSelect={this.setCity}/>
-              <SelectForm title="Select your Neighborhood" choices={ neighborhoods[value.currentLang] } onSelect={this.setNeighborhood}/>
+              <SelectForm title="Select your Neighborhood" choices={ neighborhoods } onSelect={this.setNeighborhood}/>
               <SelectForm title="Select your category" choices={ categories[value.currentLang] } onSelect={this.setCategory}/>
               <SelectForm title="Select your SubCategory" choices={ subCategories[value.currentLang] } onSelect={this.setSubCategory}/>
               {	this.renderButton(value.signUp &&value.signUp.signUpBtn,this.state.loading)	}
