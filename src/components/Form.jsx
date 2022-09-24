@@ -53,7 +53,7 @@ class Form extends Component{
 				<button
 						disabled = {loading || this.validate()}
 						type="submit"
-						className="py-2 px-4 bg-bgcolor font-medium mb-4 hover:text-white hover:bg-additional rounded-md disabled:opacity-50"
+						className="py-2 px-4 bg-bgcolor font-medium mb-4  hover:text-white hover:bg-additional rounded-md disabled:opacity-50"
 						style={{cursor:"pointer"}}
 					>
 						{ label }

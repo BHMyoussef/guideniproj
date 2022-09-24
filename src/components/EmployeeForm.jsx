@@ -83,17 +83,17 @@ export default class EmployeeForm extends Form {
     this.setState({data});
     this.getSubCategories();
   }
-  setSubCategory=(subCategoryId)=>{
+  setSubCategory = (subCategoryId) => {
     let data = this.state.data;
     data.subCategoryId = subCategoryId
     this.setState({data});
   }
 
-  setNeighborhood(neighborhoodId){
+  setNeighborhood = (neighborhoodId) => {
     console.log({neighborhoodId})
-    // let {data} = this.state;
-    // data.neighborhoodId = neighborhoodId;
-    // this.setState({data})
+    let {data} = this.state;
+    data.neighborhoodId = neighborhoodId;
+    this.setState({data})
   }
 
   getCities(){
@@ -270,9 +270,9 @@ export default class EmployeeForm extends Form {
               {	this.renderInput('password',value.signUp &&value.signUp.password,'password')	}
               { this.renderInput('phone',value.signUp &&value.signUp.phone) }
               <SelectForm title={value.signUp &&value.signUp.city} choices={ cities } onSelect={this.setCity}/>
-              <SelectForm title="Select your Neighborhood" choices={ neighborhoods } onSelect={this.setNeighborhood}/>
-              <SelectForm title="Select your category" choices={ categories[value.currentLang] } onSelect={this.setCategory}/>
-              <SelectForm title="Select your SubCategory" choices={ subCategories[value.currentLang] } onSelect={this.setSubCategory}/>
+              <SelectForm title={value.signUp &&value.signUp.neighborhood} choices={ neighborhoods } onSelect={this.setNeighborhood}/>
+              <SelectForm title={value.signUp &&value.signUp.category} choices={ categories[value.currentLang] } onSelect={this.setCategory}/>
+              <SelectForm title={value.signUp &&value.signUp.subcategory} choices={ subCategories[value.currentLang] } onSelect={this.setSubCategory}/>
               {	this.renderButton(value.signUp &&value.signUp.signUpBtn,this.state.loading)	}
             </form>
             <SignWith />

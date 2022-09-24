@@ -83,15 +83,18 @@
         "alert": "Vous n'avez pas de compte ? créer une"
     },
     "signUp":{
-        "title": "S'inscrire",
+        "title": "Inscrivez-vous",
         "user": "Utilisateur",
         "employe": "Employé",
         "firstName": "Prénom",
-        "lastName": "Nom de famille",
-        "phone": "Téléphoner",
+        "lastName": "Nom",
+        "phone": "Téléphone",
         "city": "Sélectionnez votre ville",
+        "neighborhood": "Sélectionnez votre quartier",
+        "category": "Sélectionnez votre catégorie",
+        "subcategory": "Sélectionnez votre sous-catégorie",
         "email": "E-mail",
-        "password": "Le mot de passe",
+        "password": "Mot de passe",
         "signUpBtn": "S'inscrire"
     },
     "setting":{

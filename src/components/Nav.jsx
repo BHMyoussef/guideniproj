@@ -128,7 +128,7 @@ function NavBare() {
         <div className="text-center">
           {!currentUser ? (
             <>
-              <Link className="mx-2 py-2 px-3 md:mx-4 text-center text-white rounded border-[1px]  bg-gray-500 hover:border-[1px] hover:bg-white hover:text-gray-500  min-w-[150px] w-auto" to="/signin">
+              <Link className="mx-2 py-2 px-3 md:mx-4 text-center text-white rounded border-[1px] border-gray-500  bg-gray-500 hover:border-[1px] hover:bg-white hover:text-gray-500  min-w-[150px] w-auto" to="/signin">
                 {nav && nav.nav.sign.signIn}
               </Link>
               <Link className="mx-2 py-2 px-3 md:mx-4 text-center bg-white rounded border-[1px] border-gray-400 hover:bg-gray-500 hover:text-white  min-w-[150px] w-auto" to="/signup">
